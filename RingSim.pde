@@ -5,8 +5,8 @@
  */
 
 float h_stepsize = 0.01;
-float n_orboids = 30000;
-float scale = 100;
+float n_orboids = 10000;
+float scale = 1;
 
 //What are the minimum and maximum extents in r for initialisation
 float r_min = 1.5*scale;
@@ -18,7 +18,7 @@ float vtheta_maxinitial = 0.01*scale;
 float amp_rule_1 = 0.5*scale;
 
 //How strong is the forcing to Keplerian motion?
-float amp_rule_2 = 0.1*scale;
+float amp_rule_2 = 0.01*scale;
 
 //How strong is random scattering?
 float amp_rule_4 = 1e-3*scale;
@@ -57,6 +57,11 @@ void draw () {
     // Zero acceleration to start
     x.update();
   }
+  
+  if (mousePressed) {
+    orboids.add(new Orboid(mouseX,mouseY));
+  } 
+  
   //delay(100);
 
 }
