@@ -8,6 +8,7 @@ class Orboid {
     float vtheta;
     float ar;
     float atheta;
+    float scale =100;
     
     Orboid(){
       //Initialise our Orboids.
@@ -15,7 +16,15 @@ class Orboid {
       theta = random(1)*2.0*PI;
       vr = random(1)*vr_maxinitial;
       vtheta = random(1)*vtheta_maxinitial;
-
+    }
+    Orboid(int MouseX, int MouseY){
+      //Initialise our Orboids.
+      float radius =sqrt(sq(MouseX -(width/2)) + sq(MouseY-(height/2)));
+      float angle = atan2(float(MouseY-height/2), float(MouseX-width/2));
+      r = radius/scale;
+      theta = angle;
+      vr = random(1)*vr_maxinitial;
+      vtheta = random(1)*vtheta_maxinitial;
     }
     
     void display(){
@@ -24,7 +33,7 @@ class Orboid {
     //stroke(0);
     //strokeWeight(2);
     
-    point(r*cos(theta), r*sin(theta));
+    point(scale *r*cos(theta), scale*r*sin(theta));
     //ellipse(r*cos(theta),r*sin(theta) , 100, 100);
     
     //print(" x: " + r*cos(theta));
@@ -44,7 +53,7 @@ class Orboid {
     ar = -amp_rule_1*vr;
     
     //Apply rule 2: orboids want to move at Keplerian speed for their orbital distance.
-    atheta = -amp_rule_2*(vtheta - sqrt(1/r))/r;   // theta is an angle, this is basically v=r*omega since aphi is an angular acceleration
+    atheta = -amp_rule_2*(vtheta - sqrt(1/r))/r;    // theta is an angle, this is basically v=r*omega since aphi is an angular acceleration
 
     // Apply rule 3: orboids are pushed away from resonance sites
     ar += a_ringgap(r,r_res_a,w_res_a)*s_res_a;
@@ -80,6 +89,8 @@ class Orboid {
       float temp_a;
       if(r-r_gap >0){
         temp_a = exp(-(pow(((r-r_gap)/w_gap),2)));
+      } else if(r-r_gap ==0){
+        temp_a =0;
       } else {
         temp_a = exp(-(pow(((r-r_gap)/w_gap),2)))*-1;
       }
