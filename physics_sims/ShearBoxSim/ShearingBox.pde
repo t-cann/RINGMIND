@@ -21,4 +21,15 @@ class ShearingBox {
       this.Lx = 1e3;        //Defaults to 1 km.
       this.Ly = 1e3;        //Defaults to 1 km.
     }
+    /** 
+    */
+    void display(){
+      
+    }
+    
+    /** Method to update position
+    */
+    void update() {
+    
+    }
 }

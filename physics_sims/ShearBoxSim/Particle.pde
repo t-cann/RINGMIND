@@ -19,7 +19,7 @@ class Particle {
     float D;
     float C;
     
-    /**Creates a Particle
+    /**CONSTUCTOR Particle
     * @param rho Density of a ring particle [kg/m^3].
     * @param a  Minimum size of a ring particle [m].
     * @param b  Maximum size of a ring particle [m].
@@ -34,15 +34,14 @@ class Particle {
       this.b = b;
       this.lambda = lambda;
       this.D=1.0/( exp(-this.lambda*this.a) -exp(-this.lambda*this.b));
-      this.C= this.D * exp(-this.lambda*this.a);
-      
-      
+      this.C= this.D * exp(-this.lambda*this.a);  
     }
+
+    /**CONSTUCTOR Particle
+    */
     Particle(){
       //Initialise default Particle Object.
-      Particle(1000.0,0.95,1.05,1e-6);
-      
-      
-      
+      this(1000.0,0.95,1.05,1e-6);
+           
     }
 }
