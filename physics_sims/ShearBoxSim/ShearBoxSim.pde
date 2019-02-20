@@ -4,12 +4,15 @@
  *
  */
 
-
+float num_particles = 2000;
+//Simulation dimensions [m]
+float Lx = 1000;
+float Ly = 2000;
 
 //ArrayList<Orboid> orboids;
 
 void setup () {
-  size (900, 900);
+  size (1000, 500);
   
   //orboids = new ArrayList<Orboid>();
   
