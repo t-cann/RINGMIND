@@ -20,7 +20,7 @@ class Particle {
     float C;
     
     /**CONSTUCTOR Particle
-    * @param rho Density of a ring particle [kg/m^3].
+    * @param rho 
     * @param a  Minimum size of a ring particle [m].
     * @param b  Maximum size of a ring particle [m].
     * @param lambda ower law index for the size distribution [dimensionless].
