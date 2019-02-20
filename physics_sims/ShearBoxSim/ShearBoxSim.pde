@@ -63,43 +63,4 @@ void draw () {
   if (mousePressed) {
     orboids.add(new Orboid(mouseX,mouseY));
   } 
-  
-  // If we are recording call saveFrame!
-  // The number signs (#) indicate to Processing to 
-  // number the files automatically
-  if (recording) {
-    saveFrame("output/frames####.png");
-  }
-   
-  // Let's draw some stuff to tell us what is happening
-  // It's important to note that none of this will show up in the
-  // rendered files b/c it is drawn *after* saveFrame()
-  textAlign(CENTER);
-  fill(255);
-  if (!recording) {
-    text("Press r to start recording.", width/2, height-24);
-  } 
-  else {
-    text("Press r to stop recording.", width/2, height-24);
-  }
-  
-  // A red dot for when we are recording
-  stroke(255);
-  if (recording) {
-    fill(255, 0, 0);
-  } else { 
-    noFill();
-  }
-  ellipse(width/2, height-48, 16, 16);
-  
-  //delay(100);
-
-}
-
-void keyPressed() {
-  
-  // If we press r, start or stop recording!
-  if (key == 'r' || key == 'R') {
-    recording = !recording;
-  }
 }
