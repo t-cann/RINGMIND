@@ -60,6 +60,32 @@ class ShearingBox {
       }
       
     }
+    /** Take a step using the Velocity Verlet (Leapfrog) ODE integration algorithm.
+    */
+    void step_verlet() {
+      
+      //Calculate first approximation for acceleration
+      
+      // Integrate to get approximation for new position and velocity
+      
+      //Calculate Second Approximation to the acceleration.
+      
+      //Intergrate to get final new position and velocity.
+      
+      //Have any particles left the simulation box, or collided with the moonlet?
+      //If so, remove and replace them.
+      
+      
+    }
+    
+    /** Computes self-gravity terms and adds them to an existing acceleration vector.
+    */
+    void calculate_self_grav() {
+      for(int i = 0; i < particles.size(); i++) {
+      //Compute relative positon of particle i from the others
+      
+      }
+    }
     
     /** Method to inject a number of Particle object into Shearing Box.
     *@param n  Number of Particle to inject.
