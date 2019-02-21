@@ -6,8 +6,8 @@
 class Particle {
     
     //position vector
-    float x;
-    float y;
+    float x;    //Position of Particle along planet-point line relative to moonlet [m].
+    float y;    //Position of Particle along along orbit relative to moonlet [m].
     //velocity vector
     float vx;
     float vy;
@@ -20,7 +20,16 @@ class Particle {
     */
     Particle(){
       //Initialise default Particle Object.
-                 
+    x= (random(1)-0.5)*Lx;
+    if(x >0){
+        y = -Ly/2;
+      } else if(x ==0){
+        y =0; //Think about this !!
+      } else {
+        y = Ly/2;
+      }
+    vx = 0;
+    vy = 1.5 * Omega0 * x;
     }
 
 
