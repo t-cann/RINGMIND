@@ -48,7 +48,15 @@ class Particle {
     fill(255,0,0);
     stroke(255,0,0);
     ellipseMode(CENTER);  // Set ellipseMode to CENTER
-    ellipse(-y*width/Ly,x*height/Lx,2*radius*width/Ly, 2*radius*height/Lx);
+    //ellipse(-y*width/Ly,-x*height/Lx,20, 20); //Debugging
+    //println(radius);
+    float scale =10; //Makes Particles Visible
+    ellipse(-y*width/Ly,-x*height/Lx,2*scale*radius*width/Ly, 2*scale*radius*height/Lx);
+    }
+    /**Method to Update Particle
+    */
+    void update(){
+     
     }
 
 }

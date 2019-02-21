@@ -3,7 +3,7 @@
 * @version 1.0
 */
 
-float num_particles = 2000;
+float num_particles = 1000;
 //Simulation dimensions [m]
 float Lx = 1000;       //Extent of simulation box along planet-point line [m].
 float Ly = 2000;       //Extent of simulation box along orbit [m].
@@ -36,23 +36,29 @@ class ShearingBox {
     /**CONSTUCTOR Shearing Box 
     */
     ShearingBox(){
-      //Initialise our ShearingBox Object.
-    particles = new ArrayList<Particle>();  
+    //Initialise our ShearingBox Object.
+    particles = new ArrayList<Particle>(); 
+    random_start();
     }
 
     /** 
     */
     void display(){
-    //for (Orboid x : orboids) {
-    //  // Zero acceleration to start
-    //  x.update();
-    //}
+    for (Particle x : particles) {
+      // Zero acceleration to start
+      x.display();
+    }
     }
     
     /** Method to update position
     */
     void update() {
-    
+      
+      for (Particle x : particles) {
+      // Zero acceleration to start
+      x.update();
+      }
+      
     }
     
     /** Method to inject a number of Particle object into Shearing Box.
