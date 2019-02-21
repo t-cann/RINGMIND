@@ -8,7 +8,7 @@ float num_particles = 1000;
 float Lx = 1000;       //Extent of simulation box along planet-point line [m].
 float Ly = 2000;       //Extent of simulation box along orbit [m].
 //Simulation Time step [s]
-float dt =100; 
+float dt =1e-4; 
 //Initialises Simulation Constants
 final float GM = 3.793e16;   //Gravitational parameter for the central body, defaults to Saturn  GM = 3.793e16.
 final float r0 = 130000e3;   //Central position in the ring [m]. Defaults to 130000 km.
@@ -67,6 +67,8 @@ class ShearingBox {
       //Calculate first approximation for acceleration
       
       // Integrate to get approximation for new position and velocity
+      
+      
       
       //Calculate Second Approximation to the acceleration.
       

@@ -12,8 +12,8 @@ class Particle {
     float vx;
     float vy;
     //accleration vector
-    float ax;
-    float ay;
+    float ax=0;
+    float ay=0;
     
     //ShearParticle Properties
     float radius;
@@ -56,7 +56,12 @@ class Particle {
     /**Method to Update Particle
     */
     void update(){
-     
+    //Updates postions
+    x += vx*dt+ 0.5 *ax*pow(dt,2);
+    y += vy*dt+ 0.5 *ay*pow(dt,2);
+    //Updates velocities
+    vx += ax*dt;
+    vy += ay*dt;
     }
 
 }
