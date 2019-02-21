@@ -23,9 +23,14 @@ final float particle_C =particle_D * exp(-particle_lambda*particle_a);
 final float moonlet_r = 50.0;        //Radius of the moonlet [m].
 final float moonlet_density = 900.0; //Density of the moonlet [kg/m]
 final float moonlet_GM = 6.67408e-11*(4*PI/3)*pow(moonlet_r,3)*moonlet_density; //Standard gravitational parameter.
+//
+final float Omega0 = 2.0*PI*sqrt((pow(r0,3))/GM);
+final float S0 = -1.5*Omega0;
 
 class ShearingBox {
 
+    
+    
     ArrayList<Particle> particles;
    
     /**CONSTUCTOR Shearing Box 
