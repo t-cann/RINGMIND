@@ -50,7 +50,7 @@ class Particle {
     ellipseMode(CENTER);  // Set ellipseMode to CENTER
     //ellipse(-y*width/Ly,-x*height/Lx,20, 20); //Debugging
     //println(radius);
-    float scale =10; //Makes Particles Visible
+    float scale =1; //Makes Particles Visible
     ellipse(-y*width/Ly,-x*height/Lx,2*scale*radius*width/Ly, 2*scale*radius*height/Lx);
     }
     /**Method to Update Particle
