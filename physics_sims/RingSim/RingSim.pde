@@ -37,7 +37,7 @@ float w_res_c = 0.01*scale;
 float s_res_c = 0.5*scale;
 
 // Spiral Density Wave effect
-float amp_rule_5 = 1e-3;
+float amp_rule_5 = 1e-5;
 float Q=2;
 float r_gap=2.2;
 float r_moon= r_gap*pow(Q,2/3);
