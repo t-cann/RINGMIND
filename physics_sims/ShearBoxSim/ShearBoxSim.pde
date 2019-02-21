@@ -4,6 +4,7 @@
  *
  */
 float time= 0;
+final float G = 6.67408e-11; //Gravitational Constant
 ShearingBox s;
 void setup () {
   size (1000, 500);

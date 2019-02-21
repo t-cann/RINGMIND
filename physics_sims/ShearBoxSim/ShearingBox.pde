@@ -8,7 +8,7 @@ float num_particles = 1000;
 float Lx = 1000;       //Extent of simulation box along planet-point line [m].
 float Ly = 2000;       //Extent of simulation box along orbit [m].
 //Simulation Time step [s]
-float dt =1e-6; 
+float dt =1e-7; 
 //Initialises Simulation Constants
 final float GM = 3.793e16;   //Gravitational parameter for the central body, defaults to Saturn  GM = 3.793e16.
 final float r0 = 130000e3;   //Central position in the ring [m]. Defaults to 130000 km.
@@ -22,7 +22,7 @@ final float particle_C =particle_D * exp(-particle_lambda*particle_a);
 //Ring Moonlet Properties
 final float moonlet_r = 50.0;        //Radius of the moonlet [m].
 final float moonlet_density = 900.0; //Density of the moonlet [kg/m]
-final float moonlet_GM = 6.67408e-11*(4*PI/3)*pow(moonlet_r,3)*moonlet_density; //Standard gravitational parameter.
+final float moonlet_GM = G*(4*PI/3)*pow(moonlet_r,3)*moonlet_density; //Standard gravitational parameter.
 //
 final float Omega0 = 2.0*PI*sqrt((pow(r0,3))/GM);
 final float S0 = -1.5*Omega0;
@@ -54,20 +54,9 @@ class ShearingBox {
     */
     void update() {
       
-      for (Particle x : particles) {
-      // Zero acceleration to start
-      x.update();
-      }
-      
-      //Have any particles left the simulation box, or collided with the moonlet?
-      //If so, remove and replace them.
-      
-      for (Particle x : particles) {
-      if (particle_outBox(x)){
-        x.Reset();
-      }
+      step_verlet();
        
-      }
+      
       
     }
     /** Take a step using the Velocity Verlet (Leapfrog) ODE integration algorithm.
@@ -75,18 +64,35 @@ class ShearingBox {
     void step_verlet() {
       
       //Calculate first approximation for acceleration
+      for (Particle x : particles) {
+        // Zero acceleration to start
+        x.update_acceleration();
+      }
       
       // Integrate to get approximation for new position and velocity
-      
-      
-      
+      for (Particle x : particles) {
+        // Zero acceleration to start
+        x.update();
+      }
+            
       //Calculate Second Approximation to the acceleration.
-      
+       for (Particle x : particles) {
+        // Zero acceleration to start
+        x.update_acceleration();
+      }
       //Intergrate to get final new position and velocity.
+      for (Particle x : particles) {
+        // Zero acceleration to start
+        x.update();
+      }
       
       //Have any particles left the simulation box, or collided with the moonlet?
       //If so, remove and replace them.
-      
+      for (Particle x : particles) {
+        if (particle_outBox(x)){
+           x.Reset();
+        }
+      }
       
     }
     

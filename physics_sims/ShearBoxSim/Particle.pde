@@ -39,7 +39,7 @@ class Particle {
     vy = 1.5 * Omega0 * x;
     //
     this.radius = - log((particle_C-random(1))/particle_D)/particle_lambda;
-    this.GM = 6.67408e-11* (4*PI/3)*pow(radius,3)*particle_rho;
+    this.GM = G* (4*PI/3)*pow(radius,3)*particle_rho;
     }
     
     /**Method to Display Particle
@@ -50,7 +50,7 @@ class Particle {
     ellipseMode(CENTER);  // Set ellipseMode to CENTER
     //ellipse(-y*width/Ly,-x*height/Lx,20, 20); //Debugging
     //println(radius);
-    float scale =1; //Makes Particles Visible
+    float scale =10; //Makes Particles Visible
     ellipse(-y*width/Ly,-x*height/Lx,2*scale*radius*width/Ly, 2*scale*radius*height/Lx);
     }
     /**Method to Update Particle
@@ -65,7 +65,8 @@ class Particle {
     }
     
     void Reset(){
-      
+    ax=0;
+    ay=0;
     //
     x= (random(1)-0.5)*Lx;
     //
@@ -81,8 +82,16 @@ class Particle {
     vy = 1.5 * Omega0 * x;
     //
     this.radius = - log((particle_C-random(1))/particle_D)/particle_lambda;
-    this.GM = 6.67408e-11* (4*PI/3)*pow(radius,3)*particle_rho;
+    this.GM = G* (4*PI/3)*pow(radius,3)*particle_rho;
       
+    }
+    
+    /** Method to update the acceleration on this particle due to Moonlet (TODO Extend Particle into Moonlet and ShearParticle)
+    */
+    void update_acceleration(){
+      float moonlet_GMr3 = moonlet_GM/pow(sqrt(pow(x,2)+pow(y,2)),3);
+      ax=2*Omega0*S0*x+2*Omega0*vy-moonlet_GMr3*x;
+      ay=-2*Omega0*vx-moonlet_GMr3*y;
     }
 }
 
