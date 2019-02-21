@@ -35,7 +35,7 @@ class ShearingBox {
    
     /**CONSTUCTOR Shearing Box 
     */
-    ShearingBox(float w, float h){
+    ShearingBox(){
       //Initialise our ShearingBox Object.
     particles = new ArrayList<Particle>();  
     }

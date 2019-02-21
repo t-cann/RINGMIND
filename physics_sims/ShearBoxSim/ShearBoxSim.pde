@@ -7,7 +7,7 @@ float time= 0;
 
 void setup () {
   size (1000, 500);
-  ShearingBox s = new ShearingBox(width, height);
+  ShearingBox s = new ShearingBox();
     
 } 
 
