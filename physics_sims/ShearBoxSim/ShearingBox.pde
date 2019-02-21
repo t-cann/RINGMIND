@@ -8,7 +8,7 @@ float num_particles = 1000;
 float Lx = 1000;       //Extent of simulation box along planet-point line [m].
 float Ly = 2000;       //Extent of simulation box along orbit [m].
 //Simulation Time step [s]
-float dt =1e-4; 
+float dt =1e-5; 
 //Initialises Simulation Constants
 final float GM = 3.793e16;   //Gravitational parameter for the central body, defaults to Saturn  GM = 3.793e16.
 final float r0 = 130000e3;   //Central position in the ring [m]. Defaults to 130000 km.
@@ -61,9 +61,12 @@ class ShearingBox {
       
       //Have any particles left the simulation box, or collided with the moonlet?
       //If so, remove and replace them.
-      for (Particle x : particles) {
-      // Zero acceleration to start
       
+      for (Particle x : particles) {
+      if (particle_outBox(x)){
+        x.Reset();
+      }
+       
       }
       
     }
@@ -99,7 +102,7 @@ class ShearingBox {
     *@param x  A Particle to inject.
     *@return True if out of Shearing Box
     */
-    boolean particle_inBox(Particle x){
+    boolean particle_outBox(Particle x){
       if ((x.x >Lx/2)||(x.x<-Lx/2)||(x.y<-Ly/2)||(x.y>Ly/2)){
       return true;
       } else {

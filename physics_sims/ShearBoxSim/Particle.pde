@@ -63,7 +63,27 @@ class Particle {
     vx += ax*dt;
     vy += ay*dt;
     }
-
+    
+    void Reset(){
+      
+    //
+    x= (random(1)-0.5)*Lx;
+    //
+    if(x >0){
+        y = -Ly/2;
+      } else if(x ==0){
+        y =0; //Think about this !!
+      } else {
+        y = Ly/2;
+      }
+    //  
+    vx = 0;
+    vy = 1.5 * Omega0 * x;
+    //
+    this.radius = - log((particle_C-random(1))/particle_D)/particle_lambda;
+    this.GM = 6.67408e-11* (4*PI/3)*pow(radius,3)*particle_rho;
+      
+    }
 }
 
 //TODO
