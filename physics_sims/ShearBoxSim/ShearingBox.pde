@@ -66,6 +66,12 @@ class ShearingBox {
       
     }
     
+    /** Method to Initialise the simulation with a random set of starting particles at the edges (in y).
+    */
+    void random_start(){
+      random_inject(num_particles);    
+    }
+    
     /** Method to calculate the Keplerian orbital period (using Kepler's 3rd law).
     *@param r  Radial position (semi-major axis) to calculate the period [m].
     *@return   The period [s].
