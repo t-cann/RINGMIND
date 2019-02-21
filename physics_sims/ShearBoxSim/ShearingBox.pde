@@ -59,6 +59,13 @@ class ShearingBox {
       x.update();
       }
       
+      //Have any particles left the simulation box, or collided with the moonlet?
+      //If so, remove and replace them.
+      for (Particle x : particles) {
+      // Zero acceleration to start
+      
+      }
+      
     }
     /** Take a step using the Velocity Verlet (Leapfrog) ODE integration algorithm.
     */
@@ -88,7 +95,18 @@ class ShearingBox {
       
       }
     }
-    
+    /** Method to boolean if Particle is out of ShearingBox.
+    *@param x  A Particle to inject.
+    *@return True if out of Shearing Box
+    */
+    boolean particle_inBox(Particle x){
+      if ((x.x >Lx/2)||(x.x<-Lx/2)||(x.y<-Ly/2)||(x.y>Ly/2)){
+      return true;
+      } else {
+      return false;
+      }
+      
+    }
     /** Method to inject a number of Particle object into Shearing Box.
     *@param n  Number of Particle to inject.
     */
