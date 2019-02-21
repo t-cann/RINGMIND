@@ -41,7 +41,15 @@ class Particle {
     this.radius = - log((particle_C-random(1))/particle_D)/particle_lambda;
     this.GM = 6.67408e-11* (4*PI/3)*pow(radius,3)*particle_rho;
     }
-
+    
+    /**Method to Display Particle
+    */
+    void display(){
+    fill(255,0,0);
+    stroke(255,0,0);
+    ellipseMode(CENTER);  // Set ellipseMode to CENTER
+    ellipse(x,y, 2*radius,2*radius);
+    }
 
 }
 
