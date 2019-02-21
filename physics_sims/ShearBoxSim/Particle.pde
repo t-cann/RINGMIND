@@ -48,7 +48,7 @@ class Particle {
     fill(255,0,0);
     stroke(255,0,0);
     ellipseMode(CENTER);  // Set ellipseMode to CENTER
-    ellipse(x*height/Lx,y*width/Ly, 2*radius*height/Lx,2*radius*width/Ly);
+    ellipse(-y*width/Ly,x*height/Lx,2*radius*width/Ly, 2*radius*height/Lx);
     }
 
 }
