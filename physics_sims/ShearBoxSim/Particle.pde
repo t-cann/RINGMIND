@@ -14,7 +14,10 @@ class Particle {
     //accleration vector
     float ax;
     float ay;
-
+    
+    //ShearParticle Properties
+    float radius;
+    float GM;
     
     /**CONSTUCTOR Particle
     */
@@ -30,6 +33,9 @@ class Particle {
       }
     vx = 0;
     vy = 1.5 * Omega0 * x;
+    
+    this.radius = - log((particle_C-random(1))/particle_D)/particle_lambda;
+    this.GM = 6.67408e-11* (4*PI/3)*pow(radius,3)*particle_rho;
     }
 
 
