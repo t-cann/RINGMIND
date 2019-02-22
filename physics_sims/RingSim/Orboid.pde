@@ -1,5 +1,7 @@
-//class Orboid
-
+/** Represents an Orboid
+* @author Thomas Cann 
+* @version 1.0
+*/
 class Orboid {
 
     float r;
@@ -46,9 +48,11 @@ class Orboid {
     
     // Method to update position
     void update() {
+      
     //Zero acceleration to start
     ar=0;
     atheta=0;
+    
     //Apply rule 1: we damp out any motions towards/away from the planet
     //ar = -amp_rule_1*vr;
     
@@ -62,7 +66,7 @@ class Orboid {
     
     //// Apply rule 4: there is a small amount of natural scattering in random directions.
     
-    vr += randomGaussian()*amp_rule_4;
+    vr += randomGaussian()*amp_rule_4;  //Could use inbuilt Noise Function ?
     vtheta += randomGaussian()*amp_rule_4;
     
     //Apply rule 5:
