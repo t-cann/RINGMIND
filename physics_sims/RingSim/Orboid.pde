@@ -14,8 +14,8 @@ class Orboid {
       //Initialise our Orboids.
       r = random(1)*(r_max-r_min) + r_min;
       theta = random(1)*2.0*PI;
-      vr = random(1)*vr_maxinitial;
-      vtheta = random(1)*vtheta_maxinitial;
+      vr = randomGaussian()*vr_maxinitial;
+      vtheta = randomGaussian()*vtheta_maxinitial;
     }
     Orboid(int MouseX, int MouseY){
       //Initialise our Orboids.
@@ -62,8 +62,8 @@ class Orboid {
     
     //// Apply rule 4: there is a small amount of natural scattering in random directions.
     
-    //vr += (random(1)-0.5)*amp_rule_4;
-    //vtheta += (random(1)-0.5)*amp_rule_4;
+    vr += randomGaussian()*amp_rule_4;
+    vtheta += randomGaussian()*amp_rule_4;
     
     //Apply rule 5:
     float temp_theta = theta % (2 *PI);
