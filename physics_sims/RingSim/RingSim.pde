@@ -85,8 +85,8 @@ void update() {
   stroke(255);
   line(0, 0, 400 * cos(theta_moon), 400*sin(theta_moon));
   noFill();
-  circle(0, 0, 150);
   circle(0, 0, 300);
+  circle(0, 0, 600);
   pop();
 }
 
