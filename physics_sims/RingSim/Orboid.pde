@@ -2,6 +2,44 @@
  * @author Thomas Cann 
  * @version 1.0
  */
+
+//What are the minimum and maximum extents in r for initialisation
+float r_min = 1.5;
+float r_max = 3.0;
+float vr_maxinitial = 0;
+float vtheta_maxinitial = 0.1;
+
+//How strong is the damping of radial motions?
+float amp_rule_1 = 0.1;
+
+//How strong is the forcing to Keplerian motion?
+float amp_rule_2 = 0.1;
+
+//How strong is random scattering?
+float amp_rule_4 = 1e-5;
+
+//Where are the orbital resonances (ring gaps) and what is their width, and how
+//strong is the gap. Larger values of w will make the gaps wider, larger values
+//of s will make them emptier.
+float r_res_a = 2.2;
+float w_res_a = 0.1;
+float s_res_a = 0.0005;
+float r_res_b = 2.8;
+float w_res_b = 0.01;
+float s_res_b = 0.5;
+float r_res_c = 1.8;
+float w_res_c = 0.01;
+float s_res_c = 0.5;
+
+// Spiral Density Wave effect
+float amp_rule_5 = 1e-5;
+float Q=2;
+float r_gap=2.2;
+float r_moon= r_gap*pow(Q, 2/3);
+float theta_moon = 0;
+float vtheta_moon = sqrt(1/pow(r_moon, 3));
+
+
 class Orboid {
 
   float r;
