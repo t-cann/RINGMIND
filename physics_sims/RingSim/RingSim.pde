@@ -1,5 +1,12 @@
 /** RingSim extends Chris Arridge work in python.
- * @author Thomas Cann 
+ * Through the implementation of simple boid like rules, a ring system is created.
+ *<ul><li>Rule 1 - Damps out radial motion to artificially simulate collisions</li>
+ *<li>Rule 2 - Applies acceleration to particles so they only orbit at keplerian speed.</li>
+ *<li>Rule 3 - Artificially creates ring gaps based on given clearing properties </li>
+ *<li>Rule 4- Random gaussian noise to simulate collisions</li>
+ *<li>Rule 5- Creates a Shepherd Moon that forms a ring gap through orbital resonance.</li></ul>
+ * @author Thomas Cann
+ * @author Sim Hinson
  * @version 1.0
  */
 
