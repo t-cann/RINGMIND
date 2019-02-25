@@ -1,4 +1,4 @@
-/** RingSim extends Chris Arridge work in python.
+/**<h1>RingSim</h1> extends Chris Arridge work in python.
  * Through the implementation of simple boid like rules, a ring system is created.
  *<ul><li>Rule 1 - Damps out radial motion to artificially simulate collisions</li>
  *<li>Rule 2 - Applies acceleration to particles so they only orbit at keplerian speed.</li>

@@ -1,8 +1,3 @@
-/** Represents an Orboid
- * @author Thomas Cann 
- * @version 1.0
- */
-
 //What are the minimum and maximum extents in r for initialisation
 float r_min = 1.5;
 float r_max = 3.0;
@@ -39,7 +34,11 @@ float r_moon= r_gap*pow(Q, 2/3);
 float theta_moon = 0;
 float vtheta_moon = sqrt(1/pow(r_moon, 3));
 
-
+/**<h1>Orboid</h1> represents an Orboid
+ * @author Thomas Cann 
+ * @author Sim Hinson
+ * @version 1.0
+ */
 class Orboid {
 
   float r;
@@ -51,10 +50,10 @@ class Orboid {
   float scale =100;
 
   /**
-   *
+   *  Class Constuctor - Initialises an Orboid object with a random position and velocity. 
    */
   Orboid() {
-    //Initialise our Orboids.
+
     r = random(1)*(r_max-r_min) + r_min;
     theta = random(1)*2.0*PI;
     vr = randomGaussian()*vr_maxinitial;
@@ -62,7 +61,9 @@ class Orboid {
   }
 
   /**
-   *
+   *  Class Constuctor - Initialises an Orboid at the mouse position with a random velocity.
+   * @param MouseX x coordinate of mouse [pixels]
+   * @param MouseY y coordinate of mouse [pixels]
    */
   Orboid(int MouseX, int MouseY) {
     //Initialise our Orboids.
@@ -70,12 +71,12 @@ class Orboid {
     float angle = atan2(float(MouseY-height/2), float(MouseX-width/2));
     r = radius/scale;
     theta = angle;
-    vr = random(1)*vr_maxinitial;
-    vtheta = random(1)*vtheta_maxinitial;
+    vr = randomGaussian()*vr_maxinitial;
+    vtheta = randomGaussian()*vtheta_maxinitial;
   }
 
   /**
-   *
+   *  Display Method - Renders this object to screen displaying its position and colour.
    */
   void display() {
     fill(255, 0, 0);
@@ -85,16 +86,33 @@ class Orboid {
 
     point(scale *r*cos(theta), scale*r*sin(theta));
     //ellipse(r*cos(theta),r*sin(theta) , 100, 100);
-
-    //print(" x: " + r*cos(theta));
-    //print(" y: " + r*sin(theta));
-    //println();
   }
 
   /**
-   *
+   *  Print Method - Outputs position to console.
    */
-  // Method to update position
+  void print_position() {
+    print(" x: " + r*cos(theta));
+    print(" y: " + r*sin(theta));
+    println();
+  }
+
+  /**
+   *  Print Method -  Outputs all class properties to console.
+   */
+  void print_properties() {
+    print(" r: " + r);
+    print(" theta: " + theta);
+    print(" vr: " + vr);
+    print(" vtheta: " + vtheta);
+    print(" ar: " + ar);
+    print(" atheta: " + atheta);
+    println();
+  }
+
+  /**
+   *  Applies rules to calculate accelerations and integrates to calculate new position and velocity.
+   */
   void update() {
 
     //Zero acceleration to start
@@ -130,19 +148,12 @@ class Orboid {
     r += vr*h_stepsize;
     theta += vtheta*h_stepsize;
 
-    //print(" r: " + r);
-    //print(" theta: " + theta);
-    //print(" vr: " + vr);
-    //print(" vtheta: " + vtheta);
-    //print(" ar: " + ar);
-    //print(" atheta: " + atheta);
-    //println();
-
+    //Displays this object.
     display();
   }
 
   /**
-   * 
+   *  Method to calculate radial acceleration for rule 3.
    */
   float a_ringgap(float r, float r_gap, float w_gap) {
     // Converted in Java np.exp(-((r-r_gap)/w_gap)**2)*np.sign(r-r_gap)
