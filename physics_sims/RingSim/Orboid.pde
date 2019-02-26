@@ -41,12 +41,12 @@ float vtheta_moon = sqrt(1/pow(r_moon, 3));
  */
 class Orboid {
 
-  float r;
-  float theta;
-  float vr;
-  float vtheta;
-  float ar;
-  float atheta;
+  float r;          // Range 0 -> inf
+  float theta;      // Range -inf -> inf
+  float vr;         // Range -inf -> inf
+  float vtheta;     // Range -inf -> inf
+  float ar;         // Range -inf -> inf
+  float atheta;     // Range -inf -> inf
   float scale =100;
 
   /**
