@@ -12,7 +12,7 @@
 
 float time = 0 ;
 float h_stepsize = 0.1;
-float n_orboids = 10000;
+float n_orboids = 7500;
 
 // A boolean to track whether we are recording are not
 boolean recording = false;
@@ -26,7 +26,7 @@ ArrayList<Orboid> orboids;
  *  Adds all Orboid objects orboids arraylist.
  */
 void setup () {
-  size (900, 900);
+  size (650, 650);
 
   orboids = new ArrayList<Orboid>();
 
@@ -48,7 +48,7 @@ void draw () {
   update();
 
   time+= h_stepsize;
-  println(time+ " ");
+  //println(time+ " ");
 
   if (mousePressed) {
     orboids.add(new Orboid(mouseX, mouseY));
@@ -80,13 +80,15 @@ void update() {
   }
 
 
-  theta_moon += vtheta_moon*h_stepsize;
+  theta_moon1 += vtheta_moon1*h_stepsize;
+  theta_moon2 += vtheta_moon2*h_stepsize;
 
   stroke(255);
-  line(0, 0, 400 * cos(theta_moon), 400*sin(theta_moon));
+  line(0, 0, 400 * cos(theta_moon1), 400*sin(theta_moon1));
+  line(0, 0, 400 * cos(theta_moon2), 400*sin(theta_moon2));
   noFill();
-  circle(0, 0, 300);
-  circle(0, 0, 600);
+  circle(0, 0, 150);
+  circle(0, 0, 525);
   pop();
 }
 

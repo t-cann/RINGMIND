@@ -1,6 +1,6 @@
 //What are the minimum and maximum extents in r for initialisation
-float r_min = 1.5;
-float r_max = 3.0;
+float r_min = 1;
+float r_max = 3.5;
 float vr_maxinitial = 0;
 float vtheta_maxinitial = 0.1;
 
@@ -27,16 +27,23 @@ float w_res_c = 0.01;
 float s_res_c = 0.5;
 
 // Spiral Density Wave effect
-float amp_rule_5 = 1e-5;
-float Q=2;
-float r_gap=2.2;
-float r_moon= r_gap*pow(Q, 2/3);
-float theta_moon = 0;
-float vtheta_moon = sqrt(1/pow(r_moon, 3));
+float amp_rule_51 = 1e-4;
+float Q1=2;
+float r_gap1=2.5;
+float r_moon1= r_gap1*pow(Q1, 2/3);
+float theta_moon1 = 0;
+float vtheta_moon1 = sqrt(1/pow(r_moon1, 3));
+
+float amp_rule_52 = 1e-3;
+float Q2=45;
+float r_gap2=1.7;
+float r_moon2= r_gap2*pow(Q2, 2/3);
+float theta_moon2 = PI;
+float vtheta_moon2 = sqrt(1/pow(r_moon2, 3));
 
 /**<h1>Orboid</h1> represents an Orboid
  * @author Thomas Cann 
- * @author Sim Hinson
+ * @author Sam Hinson
  * @version 1.0
  */
 class Orboid {
@@ -47,7 +54,7 @@ class Orboid {
   float vtheta;
   float ar;
   float atheta;
-  float scale =100;
+  float scale =75;
 
   /**
    *  Class Constuctor - Initialises an Orboid object with a random position and velocity. 
@@ -76,41 +83,6 @@ class Orboid {
   }
 
   /**
-   *  Display Method - Renders this object to screen displaying its position and colour.
-   */
-  void display() {
-    fill(255, 0, 0);
-    stroke(255, 0, 0);
-    //stroke(0);
-    //strokeWeight(2);
-
-    point(scale *r*cos(theta), scale*r*sin(theta));
-    //ellipse(r*cos(theta),r*sin(theta) , 100, 100);
-  }
-
-  /**
-   *  Print Method - Outputs position to console.
-   */
-  void print_position() {
-    print(" x: " + r*cos(theta));
-    print(" y: " + r*sin(theta));
-    println();
-  }
-
-  /**
-   *  Print Method -  Outputs all class properties to console.
-   */
-  void print_properties() {
-    print(" r: " + r);
-    print(" theta: " + theta);
-    print(" vr: " + vr);
-    print(" vtheta: " + vtheta);
-    print(" ar: " + ar);
-    print(" atheta: " + atheta);
-    println();
-  }
-
-  /**
    *  Applies rules to calculate accelerations and integrates to calculate new position and velocity.
    */
   void update() {
@@ -130,18 +102,21 @@ class Orboid {
     //ar += a_ringgap(r,r_res_b,w_res_b)*s_res_b;
     //ar += a_ringgap(r,r_res_c,w_res_c)*s_res_c;
 
-    //// Apply rule 4: there is a small amount of natural scattering in random directions.
+    // Apply rule 4: there is a small amount of natural scattering in random directions.
 
     vr += randomGaussian()*amp_rule_4;  //Could use inbuilt Noise Function ?
     vtheta += randomGaussian()*amp_rule_4;
 
     //Apply rule 5:
     float temp_theta = theta % (2 *PI);
-    float temp_theta_moon = theta_moon % (2 *PI);
-    if ( abs(temp_theta_moon-temp_theta) < 1*PI/180) {
-      ar += amp_rule_5* 1/pow(abs(r_moon-r), 2); //(r_moon-r)
+    float temp_theta_moon1 = theta_moon1 % (2 *PI);
+    if ( abs(temp_theta_moon1-temp_theta) < 1*PI/180) {
+      ar += amp_rule_51* 1/pow(abs(r_moon1-r), 2); //(r_moon-r)
     }
-
+    float temp_theta_moon2 = theta_moon2 % (2 *PI);
+    if ( abs(temp_theta_moon2-temp_theta) < 1*PI/180) {
+      ar += amp_rule_52* 1/pow(abs(r_moon2-r), 2); //(r_moon-r)
+    }
     // Update velocities and positons
     vr += ar*h_stepsize;
     vtheta += atheta*h_stepsize;
@@ -168,4 +143,44 @@ class Orboid {
     }
     return temp_a;
   }
+
+  /**
+   *  Display Method - Renders this object to screen displaying its position and colour.
+   */
+  void display() {
+    fill(255, 0, 0);
+    stroke(255, 0, 0);
+    //stroke(0);
+    //strokeWeight(2);
+
+    point(scale *r*cos(theta), scale*r*sin(theta));
+    //ellipse(r*cos(theta),r*sin(theta) , 100, 100);
+  }
+
+  void print_moonv() {
+    print("moon1 v:" + vtheta_moon1);
+    println();
+  }
+
+  /**
+   *  Print Method - Outputs position to console.
+   */
+  //void print_position() {
+  //  print(" x: " + r*cos(theta));
+  //  print(" y: " + r*sin(theta));
+  //  println();
+  //}
+
+  /**
+   *  Print Method -  Outputs all class properties to console.
+   */
+  //void print_properties() {
+  //  print(" r: " + r);
+  //  print(" theta: " + theta);
+  //  print(" vr: " + vr);
+  //  print(" vtheta: " + vtheta);
+  //  print(" ar: " + ar);
+  //  print(" atheta: " + atheta);
+  //  println();
+  //}
 }
