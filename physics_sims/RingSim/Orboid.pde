@@ -28,6 +28,7 @@ float s_res_c = 0.5;
 
 // Spiral Density Wave effect
 float amp_rule_5 = 1e-5;
+float angluar_diff =1; //Difference in angle [degrees] between moon and ringparticle for which the interation is considered.
 float Q=2;
 float r_gap=2.2;
 float r_moon= r_gap*pow(Q, 2/3);
@@ -132,7 +133,7 @@ class Orboid {
     atheta=0;
 
     //Apply rule 1: we damp out any motions towards/away from the planet
-    ar = -amp_rule_1*vr;
+    //ar = -amp_rule_1*vr;
 
     //Apply rule 2: orboids want to move at Keplerian speed for their orbital distance.
     atheta = -amp_rule_2*(vtheta - sqrt(1/r)/r);    // theta is an angle, this is basically v=r*omega since aphi is an angular acceleration
@@ -150,9 +151,13 @@ class Orboid {
     //Apply rule 5:
     float temp_theta = theta % (2 *PI);
     float temp_theta_moon = theta_moon % (2 *PI);
-    if ( abs(temp_theta_moon-temp_theta) < 1*PI/180) {
+    if ( abs(temp_theta_moon-temp_theta) < angluar_diff*PI/180) {
+      
       ar += amp_rule_5* 1/pow(abs(r_moon-r), 2); //(r_moon-r)
+      atheta += amp_rule_5 * r * (temp_theta_moon-theta) *1/pow(abs(r * (temp_theta_moon-theta)), 3);
     }
+    
+    
 
     // Update velocities and positons
     vr += ar*h_stepsize;
@@ -168,8 +173,6 @@ class Orboid {
    *  Method to calculate radial acceleration for rule 3.
    */
   float a_ringgap(float r, float r_gap, float w_gap) {
-    // Converted in Java np.exp(-((r-r_gap)/w_gap)**2)*np.sign(r-r_gap)
-
     float temp_a;
     if (r-r_gap >0) {
       temp_a = exp(-(pow(((r-r_gap)/w_gap), 2)));

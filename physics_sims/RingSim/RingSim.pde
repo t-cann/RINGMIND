@@ -29,8 +29,6 @@ void setup () {
   size (900, 900);
 
   orboids = new ArrayList<Orboid>();
-  
-  orboids.add(new Orboid(,));
 
   for (int i = 0; i < n_orboids; i++) {
     orboids.add(new Orboid());
