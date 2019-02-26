@@ -120,6 +120,13 @@ class Orboid {
     print(" ar: " + ar);
     print(" atheta: " + atheta);
     println();
+  } 
+  
+  /**
+   *  Output Method -  Outputs all class properties to console.
+   */
+  void print_file() {
+    output.println(time + "," + r + "," + theta + "," + vr + "," + vtheta + "," + ar  + "," + atheta);
   }
 
   /**

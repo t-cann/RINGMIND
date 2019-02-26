@@ -18,6 +18,7 @@ float n_orboids = 10000;
 boolean recording = false;
 
 ArrayList<Orboid> orboids;
+PrintWriter output;
 
 
 /** Sets the application size [pixels].
@@ -35,6 +36,7 @@ void setup () {
   for (int i = 0; i < n_orboids; i++) {
     orboids.add(new Orboid());
   }
+  output.println("time , r , theta , vr , vtheta , ar  , atheta");
 } 
 
 /** 
@@ -64,10 +66,14 @@ void draw () {
  *  If 'r' key is pressed, start or stop recording.
  */
 void keyPressed() {
-
+  
   if (key == 'r' || key == 'R') {
     recording = !recording;
   }
+  
+  output.flush(); // Writes the remaining data to the file
+  output.close(); // Finishes the file
+  exit(); // Stops the program
 }
 
 /**
@@ -81,7 +87,7 @@ void update() {
     x.update();
   }
   
-  orboids.get(0).print_properties();
+  orboids.get(0).print_file();
 
   theta_moon += vtheta_moon*h_stepsize;
 
