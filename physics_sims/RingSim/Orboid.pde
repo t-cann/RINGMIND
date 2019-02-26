@@ -61,6 +61,18 @@ class Orboid {
   }
 
   /**
+   *  Class Constuctor - Initialises an Orboid at set radius and theta equals 0 with a random angular velocity.
+   * @param radius radius of orboid in simulation units
+   */
+  Orboid(float radius) {
+    //Initialise our Orboids.
+    r = radius;
+    theta = 0;
+    //vr = randomGaussian()*vr_maxinitial;
+    vtheta = randomGaussian()*vtheta_maxinitial;
+  }
+
+  /**
    *  Class Constuctor - Initialises an Orboid at the mouse position with a random velocity.
    * @param MouseX x coordinate of mouse [pixels]
    * @param MouseY y coordinate of mouse [pixels]
