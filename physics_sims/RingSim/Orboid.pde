@@ -144,15 +144,15 @@ class Orboid {
 
     //// Apply rule 4: there is a small amount of natural scattering in random directions.
 
-    vr += randomGaussian()*amp_rule_4;  //Could use inbuilt Noise Function ?
+    //vr += randomGaussian()*amp_rule_4;  //Could use inbuilt Noise Function ?
     vtheta += randomGaussian()*amp_rule_4;
 
     //Apply rule 5:
-    float temp_theta = theta % (2 *PI);
-    float temp_theta_moon = theta_moon % (2 *PI);
-    if ( abs(temp_theta_moon-temp_theta) < 1*PI/180) {
-      ar += amp_rule_5* 1/pow(abs(r_moon-r), 2); //(r_moon-r)
-    }
+    //float temp_theta = theta % (2 *PI);
+    //float temp_theta_moon = theta_moon % (2 *PI);
+    //if ( abs(temp_theta_moon-temp_theta) < 1*PI/180) {
+    //  ar += amp_rule_5* 1/pow(abs(r_moon-r), 2); //(r_moon-r)
+    //}
 
     // Update velocities and positons
     vr += ar*h_stepsize;

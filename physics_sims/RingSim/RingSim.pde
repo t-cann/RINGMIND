@@ -30,7 +30,7 @@ void setup () {
 
   orboids = new ArrayList<Orboid>();
   
-  orboids.add(new Orboid(,));
+  orboids.add(new Orboid(2));
 
   for (int i = 0; i < n_orboids; i++) {
     orboids.add(new Orboid());
@@ -50,7 +50,7 @@ void draw () {
   update();
 
   time+= h_stepsize;
-  println(time+ " ");
+  //println(time+ " ");
 
   if (mousePressed) {
     orboids.add(new Orboid(mouseX, mouseY));
@@ -80,7 +80,8 @@ void update() {
     // Zero acceleration to start
     x.update();
   }
-
+  
+  orboids.get(0).print_properties();
 
   theta_moon += vtheta_moon*h_stepsize;
 
