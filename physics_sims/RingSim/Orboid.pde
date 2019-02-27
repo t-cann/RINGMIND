@@ -27,19 +27,29 @@ float w_res_c = 0.01;
 float s_res_c = 0.5;
 
 // Spiral Density Wave effect
-float amp_rule_51 = 1e-4;
-float Q1=2;
-float r_gap1=2.5;
-float r_moon1= r_gap1*pow(Q1, 2/3);
+// white line
+float amp_rule_51 = 1e-1;
+float Q1 = 2;
+float r_gap1 = 2.33;
+float r_moon1 = r_gap1*(pow(Q1, 2.0/3.0));
 float theta_moon1 = 0;
 float vtheta_moon1 = sqrt(1/pow(r_moon1, 3));
 
-float amp_rule_52 = 1e-3;
-float Q2=45;
-float r_gap2=1.7;
-float r_moon2= r_gap2*pow(Q2, 2/3);
-float theta_moon2 = PI;
-float vtheta_moon2 = sqrt(1/pow(r_moon2, 3));
+//// green line
+//float amp_rule_52 = 1e-4;
+//float Q2=1.0;
+//float r_gap2=1.5;
+//float r_moon2= r_gap2*pow(Q2, 2.0/3.0);
+//float theta_moon2 = PI;
+//float vtheta_moon2 = sqrt(1/pow(r_moon2, 3));
+
+//// blue line
+//float amp_rule_53 = 1e-1;
+//float Q3=3.5;
+//float r_gap3=3.0;
+//float r_moon3= r_gap3*pow(Q3, 2.0/3.0);
+//float theta_moon3 = PI;
+//float vtheta_moon3 = sqrt(1/pow(r_moon3, 3));
 
 /**<h1>Orboid</h1> represents an Orboid
  * @author Thomas Cann 
@@ -113,10 +123,15 @@ class Orboid {
     if ( abs(temp_theta_moon1-temp_theta) < 1*PI/180) {
       ar += amp_rule_51* 1/pow(abs(r_moon1-r), 2); //(r_moon-r)
     }
-    float temp_theta_moon2 = theta_moon2 % (2 *PI);
-    if ( abs(temp_theta_moon2-temp_theta) < 1*PI/180) {
-      ar += amp_rule_52* 1/pow(abs(r_moon2-r), 2); //(r_moon-r)
-    }
+    //float temp_theta_moon2 = theta_moon2 % (2 *PI);
+    //if ( abs(temp_theta_moon2-temp_theta) < 1*PI/180) {
+    //  ar += amp_rule_52* 1/pow(abs(r_moon2-r), 2); //(r_moon-r)
+    //}
+    //float temp_theta_moon3 = theta_moon3 % (2 *PI);
+    //if ( abs(temp_theta_moon3-temp_theta) < 1*PI/180) {
+    //  ar += amp_rule_53* 1/pow(abs(r_moon3-r), 2); //(r_moon-r)
+    //}
+
     // Update velocities and positons
     vr += ar*h_stepsize;
     vtheta += atheta*h_stepsize;
@@ -155,11 +170,6 @@ class Orboid {
 
     point(scale *r*cos(theta), scale*r*sin(theta));
     //ellipse(r*cos(theta),r*sin(theta) , 100, 100);
-  }
-
-  void print_moonv() {
-    print("moon1 v:" + vtheta_moon1);
-    println();
   }
 
   /**

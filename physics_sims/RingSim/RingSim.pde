@@ -33,6 +33,8 @@ void setup () {
   for (int i = 0; i < n_orboids; i++) {
     orboids.add(new Orboid());
   }
+  //print("moon1 v:" + vtheta_moon1 +" ");
+  print("moon1 r:" + r_moon1 +" ");
 } 
 
 /** 
@@ -79,24 +81,27 @@ void update() {
     x.update();
   }
 
-
   theta_moon1 += vtheta_moon1*h_stepsize;
-  theta_moon2 += vtheta_moon2*h_stepsize;
-
+  //theta_moon2 += vtheta_moon2*h_stepsize;
+  //theta_moon3 += vtheta_moon3*h_stepsize;
+  
   stroke(255);
   line(0, 0, 400 * cos(theta_moon1), 400*sin(theta_moon1));
-  line(0, 0, 400 * cos(theta_moon2), 400*sin(theta_moon2));
+  //stroke(0, 255, 0);
+  //line(0, 0, 400 * cos(theta_moon2), 400*sin(theta_moon2));
+  //stroke(0, 0, 255);
+  //line(0, 0, 400 * cos(theta_moon3), 400*sin(theta_moon3));
   noFill();
+  stroke(255);
   circle(0, 0, 150);
   circle(0, 0, 525);
-  pop();
 }
 
 /**
  *  If recoding output frames and show recording with text and red circle.
  */
 void record_update() {
-  push();
+
   // If we are recording call saveFrame!
   // The number signs (#) indicate to Processing to 
   // number the files automatically
