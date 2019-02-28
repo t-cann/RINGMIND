@@ -27,11 +27,11 @@ float w_res_c = 0.01;
 float s_res_c = 0.5;
 
 // Spiral Density Wave effect
-float amp_rule_5 = 1e-5;
+float amp_rule_5 = 1e-3;
 float angluar_diff =1; //Difference in angle [degrees] between moon and ringparticle for which the interation is considered.
 float Q=2;
 float r_gap=2.2;
-float r_moon= r_gap*pow(Q, 2/3);
+float r_moon= r_gap*pow(Q, 2.0/3.0);
 float theta_moon = 0;
 float vtheta_moon = sqrt(1/pow(r_moon, 3));
 
@@ -133,7 +133,7 @@ class Orboid {
     atheta=0;
 
     //Apply rule 1: we damp out any motions towards/away from the planet
-    //ar = -amp_rule_1*vr;
+    ar = -amp_rule_1*vr;
 
     //Apply rule 2: orboids want to move at Keplerian speed for their orbital distance.
     atheta = -amp_rule_2*(vtheta - sqrt(1/r)/r);    // theta is an angle, this is basically v=r*omega since aphi is an angular acceleration
@@ -153,7 +153,7 @@ class Orboid {
     float temp_theta_moon = theta_moon % (2 *PI);
     if ( abs(temp_theta_moon-temp_theta) < angluar_diff*PI/180) {
       
-      ar += amp_rule_5* 1/pow(abs(r_moon-r), 2); //(r_moon-r)
+      ar += amp_rule_5*(r_moon-r)* 1/pow(abs(r_moon-r), 3); 
       atheta += amp_rule_5 * r * (temp_theta_moon-theta) *1/pow(abs(r * (temp_theta_moon-theta)), 3);
     }
     
