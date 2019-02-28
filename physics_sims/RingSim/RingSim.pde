@@ -56,6 +56,11 @@ void draw () {
 
   record_update();
   //delay(100);
+  
+  fill(0);
+  rect(0,height-20,width,20);
+  fill(255);
+  text("Framerate: " + int(frameRate),10,height-6);
 }
 
 /**
