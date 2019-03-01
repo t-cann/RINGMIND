@@ -26,7 +26,7 @@ ArrayList<Orboid> orboids;
  *  Adds all Orboid objects orboids arraylist.
  */
 void setup () {
-  size (650, 650);
+  size (850, 650);
 
   orboids = new ArrayList<Orboid>();
 
@@ -34,7 +34,7 @@ void setup () {
     orboids.add(new Orboid());
   }
   //print("moon1 v:" + vtheta_moon1 +" ");
-  print("moon1 r:" + r_moon1 +" ");
+  //print("moon1 r:" + r_moon1 +" ");
 } 
 
 /** 
@@ -46,12 +46,15 @@ void setup () {
 void draw () {
 
   background(0); 
-
-  update();
-
   time+= h_stepsize;
   //println(time+ " ");
 
+  if(time<50) {
+    update();
+  }
+  else {
+    update1();
+  }
   if (mousePressed) {
     orboids.add(new Orboid(mouseX, mouseY));
   } 
@@ -81,14 +84,28 @@ void update() {
     x.update();
   }
 
+  stroke(255);
+  noFill();
+  stroke(255);
+  circle(0, 0, 150);
+  circle(0, 0, 525);
+}
+void update1() {
+  push();
+  translate(width/2, height/2);
+  for (Orboid x : orboids) {
+    // Zero acceleration to start
+    x.update1();
+  }
+
   theta_moon1 += vtheta_moon1*h_stepsize;
-  //theta_moon2 += vtheta_moon2*h_stepsize;
+  theta_moon2 += vtheta_moon2*h_stepsize;
   //theta_moon3 += vtheta_moon3*h_stepsize;
-  
+
   stroke(255);
   line(0, 0, 400 * cos(theta_moon1), 400*sin(theta_moon1));
-  //stroke(0, 255, 0);
-  //line(0, 0, 400 * cos(theta_moon2), 400*sin(theta_moon2));
+  stroke(0, 255, 0);
+  line(0, 0, 400 * cos(theta_moon2), 400*sin(theta_moon2));
   //stroke(0, 0, 255);
   //line(0, 0, 400 * cos(theta_moon3), 400*sin(theta_moon3));
   noFill();
@@ -96,7 +113,6 @@ void update() {
   circle(0, 0, 150);
   circle(0, 0, 525);
 }
-
 /**
  *  If recoding output frames and show recording with text and red circle.
  */

@@ -28,20 +28,20 @@ float s_res_c = 0.5;
 
 // Spiral Density Wave effect
 // white line
-float amp_rule_51 = 1e-1;
-float Q1 = 2;
+float amp_rule_51 = 1e-3;
+float Q1 = 2.0;
 float r_gap1 = 2.33;
 float r_moon1 = r_gap1*(pow(Q1, 2.0/3.0));
 float theta_moon1 = 0;
 float vtheta_moon1 = sqrt(1/pow(r_moon1, 3));
 
-//// green line
-//float amp_rule_52 = 1e-4;
-//float Q2=1.0;
-//float r_gap2=1.5;
-//float r_moon2= r_gap2*pow(Q2, 2.0/3.0);
-//float theta_moon2 = PI;
-//float vtheta_moon2 = sqrt(1/pow(r_moon2, 3));
+// green line
+float amp_rule_52 = 1e-3;
+float Q2=2.0;
+float r_gap2=2.33;
+float r_moon2= r_gap2*pow(Q2, 2.0/3.0);
+float theta_moon2 = PI;
+float vtheta_moon2 = sqrt(1/pow(r_moon2, 3));
 
 //// blue line
 //float amp_rule_53 = 1e-1;
@@ -117,20 +117,54 @@ class Orboid {
     vr += randomGaussian()*amp_rule_4;  //Could use inbuilt Noise Function ?
     vtheta += randomGaussian()*amp_rule_4;
 
+    // Update velocities and positons
+    vr += ar*h_stepsize;
+    vtheta += atheta*h_stepsize;
+    r += vr*h_stepsize;
+    theta += vtheta*h_stepsize;
+
+    //Displays this object.
+    display();
+  }
+  
+   void update1() {
+
+    //Zero acceleration to start
+    ar=0;
+    atheta=0;
+
+    //Apply rule 1: we damp out any motions towards/away from the planet
+    ar = -amp_rule_1*vr;
+
+    //Apply rule 2: orboids want to move at Keplerian speed for their orbital distance.
+    atheta = -amp_rule_2*(vtheta - sqrt(1/r)/r);    // theta is an angle, this is basically v=r*omega since aphi is an angular acceleration
+
+    // Apply rule 3: orboids are pushed away from resonance sites
+    //ar += a_ringgap(r,r_res_a,w_res_a)*s_res_a;
+    //ar += a_ringgap(r,r_res_b,w_res_b)*s_res_b;
+    //ar += a_ringgap(r,r_res_c,w_res_c)*s_res_c;
+
+    // Apply rule 4: there is a small amount of natural scattering in random directions.
+
+    vr += randomGaussian()*amp_rule_4;  //Could use inbuilt Noise Function ?
+    vtheta += randomGaussian()*amp_rule_4;
+
     //Apply rule 5:
     float temp_theta = theta % (2 *PI);
     float temp_theta_moon1 = theta_moon1 % (2 *PI);
-    if ( abs(temp_theta_moon1-temp_theta) < 1*PI/180) {
-      ar += amp_rule_51* 1/pow(abs(r_moon1-r), 2); //(r_moon-r)
-    }
-    //float temp_theta_moon2 = theta_moon2 % (2 *PI);
-    //if ( abs(temp_theta_moon2-temp_theta) < 1*PI/180) {
-    //  ar += amp_rule_52* 1/pow(abs(r_moon2-r), 2); //(r_moon-r)
-    //}
+    float temp_theta_moon2 = theta_moon2 % (2 *PI);
     //float temp_theta_moon3 = theta_moon3 % (2 *PI);
+
+    if ( abs(temp_theta_moon1-temp_theta) < 1*PI/180) {
+      ar += amp_rule_51* (r_moon1-r)/pow(abs(r_moon1-r), 3); //(r_moon1-r)
+    }
+    if ( abs(temp_theta_moon2-temp_theta) < 1*PI/180) {
+      ar += amp_rule_52* (r_moon2-r)/pow(abs(r_moon2-r), 3); //(r_moon2-r)
+    }
     //if ( abs(temp_theta_moon3-temp_theta) < 1*PI/180) {
-    //  ar += amp_rule_53* 1/pow(abs(r_moon3-r), 2); //(r_moon-r)
+    //  ar += amp_rule_53* (r_moon3-r)/pow(abs(r_moon3-r), 3); //(r_moon3-r)
     //}
+
 
     // Update velocities and positons
     vr += ar*h_stepsize;
