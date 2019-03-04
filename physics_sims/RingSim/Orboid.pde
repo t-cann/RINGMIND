@@ -28,7 +28,7 @@ float s_res_c = 0.5;
 
 // Spiral Density Wave effect
 // white line
-float amp_rule_51 = 1e-3;
+float amp_rule_51 = 1e-1;
 float Q1 = 2.0;
 float r_gap1 = 2.33;
 float r_moon1 = r_gap1*(pow(Q1, 2.0/3.0));
@@ -36,7 +36,7 @@ float theta_moon1 = 0;
 float vtheta_moon1 = sqrt(1/pow(r_moon1, 3));
 
 // green line
-float amp_rule_52 = 1e-3;
+float amp_rule_52 = 1e-1;
 float Q2=2.0;
 float r_gap2=2.33;
 float r_moon2= r_gap2*pow(Q2, 2.0/3.0);
@@ -155,10 +155,10 @@ class Orboid {
     float temp_theta_moon2 = theta_moon2 % (2 *PI);
     //float temp_theta_moon3 = theta_moon3 % (2 *PI);
 
-    if ( abs(temp_theta_moon1-temp_theta) < 1*PI/180) {
+    if ( abs(temp_theta_moon1-temp_theta) < 10*PI/180) {
       ar += amp_rule_51* (r_moon1-r)/pow(abs(r_moon1-r), 3); //(r_moon1-r)
     }
-    if ( abs(temp_theta_moon2-temp_theta) < 1*PI/180) {
+    if ( abs(temp_theta_moon2-temp_theta) < 10*PI/180) {
       ar += amp_rule_52* (r_moon2-r)/pow(abs(r_moon2-r), 3); //(r_moon2-r)
     }
     //if ( abs(temp_theta_moon3-temp_theta) < 1*PI/180) {

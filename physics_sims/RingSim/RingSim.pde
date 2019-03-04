@@ -47,9 +47,9 @@ void draw () {
 
   background(0); 
   time+= h_stepsize;
-  //println(time+ " ");
+  println(time+ " ");
 
-  if(time<50) {
+  if(time<100) {
     update();
   }
   else {
