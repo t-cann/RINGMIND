@@ -60,6 +60,7 @@ class ShearingBox {
       
     }
     /** Take a step using the Velocity Verlet (Leapfrog) ODE integration algorithm.
+    *   TODO: Check Algorithm is correct.
     */
     void step_verlet() {
       
