@@ -13,6 +13,7 @@ void setup () {
 } 
 
 void draw () { //<>//
+  push();
   translate(width/2, height/2);
   background (255);
   println("Simulation Time: "+ time);
@@ -24,5 +25,12 @@ void draw () { //<>//
   //  orboids.add(new Orboid(mouseX,mouseY));
   } 
   
-  time += dt;
+  time += 2*dt;
+  
+  pop();
+  
+  fill(0);
+  rect(0,height-20,width,20);
+  fill(255);
+  text("Framerate: " + int(frameRate),10,height-6);
 }

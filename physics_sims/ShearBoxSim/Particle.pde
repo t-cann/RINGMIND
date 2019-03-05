@@ -18,6 +18,7 @@ class Particle {
     //ShearParticle Properties
     float radius;
     float GM;
+    float m;
     
     /**CONSTUCTOR Particle
     */
@@ -40,8 +41,10 @@ class Particle {
     //
     this.radius = - log((particle_C-random(1))/particle_D)/particle_lambda;
     this.GM = G* (4*PI/3)*pow(radius,3)*particle_rho;
+    m= PI*pow(radius,3)*4.0/3.0;
     }
     
+   
     /**Method to Display Particle
     */
     void display(){
@@ -50,12 +53,13 @@ class Particle {
     ellipseMode(CENTER);  // Set ellipseMode to CENTER
     //ellipse(-y*width/Ly,-x*height/Lx,20, 20); //Debugging
     //println(radius);
-    float scale =1; //Makes Particles Visible
+    float scale =10; //Makes Particles Visible
     ellipse(-y*width/Ly,-x*height/Lx,2*scale*radius*width/Ly, 2*scale*radius*height/Lx);
     }
     /**Method to Update Particle
     */
     void update(){
+    update_acceleration();
     //Updates postions
     x += vx*dt+ 0.5 *ax*pow(dt,2);
     y += vy*dt+ 0.5 *ay*pow(dt,2);
@@ -90,8 +94,18 @@ class Particle {
     */
     void update_acceleration(){
       float moonlet_GMr3 = moonlet_GM/pow(sqrt(pow(x,2)+pow(y,2)),3);
-      ax=2*Omega0*S0*x+2*Omega0*vy-moonlet_GMr3*x;
-      ay=-2*Omega0*vx-moonlet_GMr3*y;
+      ax+=2*Omega0*S0*x+2*Omega0*vy-moonlet_GMr3*x;
+      ay+=-2*Omega0*vx-moonlet_GMr3*y;
+    }
+    /** Method to update the acceleration on this particle due to Moonlet (TODO Extend Particle into Moonlet and ShearParticle)
+    */
+    void update_acceleration(Particle other){
+     PVector distanceVect = PVector.sub(new PVector(x,y),new PVector(other.x,other.y));
+     // Calculate magnitude of the vector separating the balls
+     float distanceVectMag = distanceVect.mag();
+     distanceVect = distanceVect.mult(other.GM /pow(distanceVectMag,3));
+      ax+= distanceVect.x ;
+      ay+=-distanceVect.y;
     }
 }
 
