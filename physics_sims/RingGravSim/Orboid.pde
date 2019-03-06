@@ -10,6 +10,7 @@ class Orboid {
   float vy_orboid;
   float v_orboid;
   
+  Orboid() {
   // Initialise our Orboids.
   r_orboid = (random(n_orboids)*(r_max-r_min) + r_min)*Rp;
   phi_orboid = random(n_orboids)*2.0*np.pi;
