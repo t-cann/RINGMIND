@@ -11,7 +11,7 @@ float r_max = 3.0;
 // length scale (1 Saturn radius) and gravitational parameter (Saturn)
 float Rp = 60268e3;
 float GM = 3.7931187e16;
-float h_stepsize = 5*60; // seconds
+float h_stepsize = 2*60; // seconds
 float scale = 100/Rp;
 
 // Basic parameters
@@ -30,6 +30,7 @@ void setup() {
 }
 
 void draw() {
+  push();
   translate(width/2, height/2);
   background(0);
   stroke(0, 255, 0);
@@ -37,16 +38,22 @@ void draw() {
   circle(0, 0, 6.0*scale*Rp);
   circle(0, 0, 2.0*scale*Rp);
   circle(0, 0, scale*Rp);
-  float tempEtot = 0;
+  //float tempEtot = 0;
   for (Orboid x : orboids) {
     x.update();
-    tempEtot+= x.Etot_orboid();
+    //tempEtot+= x.Etot_orboid();
   }
-  println(tempEtot+" ");
+  //println(tempEtot+" ");
 
   if (mousePressed) {
     orboids.add(new Orboid(mouseX, mouseY));
   }
+  pop();
+  
+  fill(0);
+  rect(0,height-20,width,20);
+  fill(255);
+  text("Framerate: " + int(frameRate),10,height-6);
 }
 
 // Check energy conservation

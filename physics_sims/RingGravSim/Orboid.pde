@@ -58,8 +58,12 @@ class Orboid {
     // leapfrog integration
     x1_orboid = x_orboid + vx_orboid*h_stepsize + 0.5*ax_grav*h_stepsize*h_stepsize;
     y1_orboid = y_orboid + vy_orboid*h_stepsize + 0.5*ay_grav*h_stepsize*h_stepsize;
-    vx_orboid = vx_orboid + 0.5*(ax_grav+ax_grav)*h_stepsize;
-    vy_orboid = vy_orboid + 0.5*(ay_grav+ay_grav)*h_stepsize;
+    
+    float ax_grav1 = (-GM*x1_orboid/pow(sqrt(sq(x1_orboid) + sq(y1_orboid)), 3.0))*1.0;
+    float ay_grav1 = (-GM*y1_orboid/pow(sqrt(sq(x1_orboid) + sq(y1_orboid)), 3.0))*1.0;
+    
+    vx_orboid = vx_orboid + 0.5*(ax_grav+ax_grav1)*h_stepsize;
+    vy_orboid = vy_orboid + 0.5*(ay_grav+ay_grav1)*h_stepsize;
     x_orboid = x1_orboid;
     y_orboid = y1_orboid;
     v_orboid = sqrt(sq(vx_orboid)+sq(vy_orboid));
