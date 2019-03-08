@@ -10,7 +10,7 @@ float r_max = 3.0;
 
 // length scale (1 Saturn radius) and gravitational parameter (Saturn)
 float Rp = 60268e3;
-float GM = 3.7931187e16;
+float GMp = 3.7931187e16;
 float h_stepsize = 2*60; // seconds
 float scale = 100/Rp;
 
@@ -19,11 +19,13 @@ float n_orboids = 2000;
 //vis_freq = 50;        // how of ten is a frame drawn
 
 ArrayList<Orboid> orboids;
+ArrayList<Moon> moons;
 
 void setup() {
   size (1000, 720);
   orboids = new ArrayList<Orboid>();
-
+  moons = new ArrayList<Moon>();
+  moons.add(new Moon());
   for (int i = 0; i < n_orboids; i++) {
     orboids.add(new Orboid());
   }
@@ -42,6 +44,9 @@ void draw() {
   for (Orboid x : orboids) {
     x.update();
     //tempEtot+= x.Etot_orboid();
+  }
+  for (Moon m : moons){
+    m.update();
   }
   //println(tempEtot+" ");
 
