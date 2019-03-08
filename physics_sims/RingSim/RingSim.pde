@@ -14,6 +14,10 @@ float time = 0 ;
 float h_stepsize = 0.1;
 float n_orboids = 10000;
 
+//Dynamic Scaling of Time Step
+//float startTime, endTime;
+float FPS =30;
+
 // A boolean to track whether we are recording are not
 boolean recording = false;
 
@@ -26,6 +30,7 @@ ArrayList<Orboid> orboids;
  *  Adds all Orboid objects orboids arraylist.
  */
 void setup () {
+  frameRate(FPS+30);
   size (900, 900);
 
   orboids = new ArrayList<Orboid>();
@@ -48,7 +53,7 @@ void draw () {
   update();
 
   time+= h_stepsize;
-  println(time+ " ");
+  
 
   if (mousePressed) {
     orboids.add(new Orboid(mouseX, mouseY));
@@ -61,6 +66,13 @@ void draw () {
   rect(0,height-20,width,20);
   fill(255);
   text("Framerate: " + int(frameRate),10,height-6);
+
+  if( frameRate <FPS){
+   orboids.remove(orboids.size()-1);
+   //h_stepsize *= 1.01;
+  }
+  
+  println("Time: "+time+ " Stepsize: " + h_stepsize + " Number: " + orboids.size()  );
 }
 
 /**
