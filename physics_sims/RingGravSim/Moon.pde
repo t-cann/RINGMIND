@@ -1,28 +1,24 @@
 // Moon class
 
 class Moon extends Particle {
-
-  float GM_Mima = 2.529477495e9;
-  float radius_Mima = 200e3;
-  float radius = 185.52e6;
-
+  float GM;
+  float radius;
 
   Moon() {
-    super(185.52e6, 0);
-    //r_orboid = radius;
-    //phi_orboid = random(1)*2.0*PI;
-    //x_orboid = r_orboid*cos(phi_orboid);
-    //y_orboid = r_orboid*sin(phi_orboid);
-    //vx_orboid = sqrt(GM/(r_orboid))*sin(phi_orboid);
-    //vy_orboid = -sqrt(GM/(r_orboid))*cos(phi_orboid);
-    //v_orboid = sqrt(sq(vx_orboid)+sq(vy_orboid));
-}
-  
-  
+    //Mima
+    this(2.529477495e12, 400e3, 185.52e6);  
+  }
+
+  Moon(float Gm, float radius, float orb_radius) {
+    super(orb_radius, random(2*PI));
+    this.GM=Gm;
+    this.radius=radius;
+  }
+
   void display() {
     ellipseMode(CENTER);
-    fill(255);
-    stroke(255);
-    circle(scale*x1, scale*x2, 2*radius_Mima*scale);
+    fill(255, 0, 0);
+    stroke(255, 0, 0);
+    circle(scale*x1, scale*x2, 2*radius*scale);
   }
 }

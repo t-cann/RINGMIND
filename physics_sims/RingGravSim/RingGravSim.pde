@@ -5,17 +5,17 @@
 //.. moduleauthor:: Chris Arridge <c.arridge@lancaster.ac.uk>
 
 // What are the minimum and maximum extents in r for initialisation
-float r_min = 1.0;
-float r_max = 3.0;
+float r_min = 1.5;
+float r_max = 2.5;
 
 // length scale (1 Saturn radius) and gravitational parameter (Saturn)
 float Rp = 60268e3;
 float GMp = 3.7931187e16;
-float h_stepsize = 2*60; // seconds
+float h_stepsize = 10*60; // seconds
 float scale = 100/Rp;
 
 // Basic parameters
-float n_orboids = 2000;
+float n_orboids = 10000;
 //vis_freq = 50;        // how of ten is a frame drawn
 
 ArrayList<Orboid> orboids;
@@ -37,12 +37,13 @@ void draw() {
   background(0);
   stroke(0, 255, 0);
   fill(0);
-  circle(0, 0, 6.0*scale*Rp);
+  circle(0, 0, 5.0*scale*Rp);
+  circle(0, 0, 3.0*scale*Rp);
+  stroke(0, 255, 255);
   circle(0, 0, 2.0*scale*Rp);
-  circle(0, 0, scale*Rp);
   //float tempEtot = 0;
   for (Orboid x : orboids) {
-    x.update();
+    x.update(moons.get(0));
     //tempEtot+= x.Etot_orboid();
   }
   for (Moon m : moons){
