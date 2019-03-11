@@ -5,7 +5,7 @@
 class GOL {
 
   float r = 20;
-  float theta =90;
+  int theta =90;
   int columns, rows;
   
   // Game of life board
@@ -24,7 +24,7 @@ class GOL {
     
     for (int i = 0; i < columns; i++) {
       for (int j = 0; j < rows; j++) {
-         board[i][j] = new Cell();
+         board[i][j] = new Cell(j*r,i*2*PI/columns,r,2*PI /theta);
       }
     }
   }
