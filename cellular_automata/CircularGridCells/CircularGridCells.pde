@@ -6,15 +6,17 @@
 // This is just a grid of hexagons right now
 
 GOL gol;
-
+Cell N;
 
 void setup() {
   size(600, 600);
+//  N = new Cell(200,0,20,90);
   gol = new GOL();
 }
 
 void draw() {
   background(255);
+ // N.display();
   gol.display();
 }
 
