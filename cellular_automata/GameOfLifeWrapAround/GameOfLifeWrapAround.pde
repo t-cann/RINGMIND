@@ -18,6 +18,13 @@ void draw() {
 
   gol.generate();
   gol.display();
+  
+  push();
+  fill(0);
+  rect(0,height-20,width,20);
+  fill(255);
+  text("Framerate: " + int(frameRate),10,height-6);
+  pop();
 }
 
 // reset board when mouse is pressed
