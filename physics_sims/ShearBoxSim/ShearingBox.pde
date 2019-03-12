@@ -60,10 +60,13 @@ class ShearingBox {
   /** 
    */
   void display() {
+    push();
+    translate(width/2,height/2);
     for (Particle x : particles) {
       // Zero acceleration to start
       x.display();
     }
+    pop();
   }
 
   /** Method to update position
@@ -251,7 +254,7 @@ class ShearingBox {
     // Integrate to get approximation for new position and velocity
     for (Particle x : p) {
       // Zero acceleration to start
-      x.update();
+      x.update_position();
     }
 
     //Calculate Second Approximation to the acceleration.
@@ -273,25 +276,24 @@ class ShearingBox {
       }
     }
     
-            for (Particle x : particles) {
-          // Against every other Particle in the grid
-          for (Particle other : particles) {
-            // As long as its not the same one
-            if (other != x) {
-        //Adding Self Gravity
-              x.update_acceleration(other);
-            }
-          }
-        }
+  
     
   }
 
   /** Computes self-gravity terms and adds them to an existing acceleration vector.
    */
-  void calculate_self_grav() {
-    for (int i = 0; i < particles.size(); i++) {
-      //Compute relative positon of particle i from the others
-    }
+  void calculate_self_grav() {   
+    
+    for (Particle x : particles) {
+          // Against every other Particle in the grid
+          for (Particle other : particles) {
+            // As long as its not the same one
+            if (other != x) {
+            //Adding Self Gravity
+              x.update_acceleration(other);
+            }
+          }
+        }
   }
   /** Method to boolean if Particle is out of ShearingBox.
    *@param x  A Particle to inject.
