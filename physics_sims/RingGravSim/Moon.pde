@@ -6,7 +6,7 @@ class Moon extends Particle {
 
   Moon() {
     //Mima
-    this(2.529477495e12, 400e3, 185.52e6);  
+    this(2.529477495e13, 400e3, 185.52e6);  
   }
 
   Moon(float Gm, float radius, float orb_radius) {

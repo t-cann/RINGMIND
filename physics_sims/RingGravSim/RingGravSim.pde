@@ -52,7 +52,8 @@ void draw() {
   //println(tempEtot+" ");
 
   if (mousePressed) {
-    orboids.add(new Orboid(mouseX, mouseY));
+    //orboids.add(new Orboid(mouseX, mouseY));
+    println(sqrt(sq(mouseX-width/2)+sq(mouseY-height/2)) + " ");
   }
   pop();
   
