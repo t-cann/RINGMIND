@@ -1,4 +1,9 @@
-//class Orboid
+/**Class Orboid
+ *
+ * @author Thomas Cann
+ * @author Sim Hinson
+ * @version 1.0
+ */
 
 class Orboid extends Particle {
 
@@ -6,37 +11,17 @@ class Orboid extends Particle {
   float phi_orboid;
   float v_orboid;
 
+  /**
+   *  Class Constuctor - Initialises an Orboid object with a random position in the ring with correct orbital velocity. 
+   */
   Orboid() {
     // Initialise our Orboids.
     super((random(1)*(r_max-r_min) + r_min)*Rp, random(1)*2.0*PI);
-    //r_orboid = (random(1)*(r_max-r_min) + r_min)*Rp;
-    //phi_orboid = random(1)*2.0*PI;
-    //x1=r_orboid*cos(phi_orboid);
-    //x2=r_orboid*sin(phi_orboid);
-    //v1=sqrt(GMp/(r_orboid))*sin(phi_orboid);
-    //v2=-sqrt(GMp/(r_orboid))*cos(phi_orboid);
-
-
-    //r_orboid = (random(1)*(r_max-r_min) + r_min)*Rp;
-    //phi_orboid = random(1)*2.0*PI;
-    //x1 = r_orboid*cos(phi_orboid);
-    //x2 = r_orboid*sin(phi_orboid);
-    //v1 = sqrt(GMp/(r_orboid))*sin(phi_orboid);
-    //v2 = -sqrt(GMp/(r_orboid))*cos(phi_orboid);
-    //v_orboid = sqrt(sq(v1)+sq(v2));
   }
 
-  //Constructor so we can add orboids with mouse
-  Orboid(int MouseX, int MouseY) {
-    //Initialise our Orboids.
-    float radius = sqrt(sq(MouseX -(width/2)) + sq(MouseY-(height/2)));
-    float angle = atan2(float(MouseY-height/2), float(MouseX-width/2));
-    r_orboid = radius;
-    phi_orboid = angle;
-    //vr = random(1)*vr_maxinitial;
-    //vtheta = random(1)*vtheta_maxinitial;
-  }
-
+  /**
+   *  Display Method - Renders this object to screen displaying its position and colour.
+   */
   void display() {
     //translate(width/2, height/2);
     fill(255);
@@ -44,13 +29,9 @@ class Orboid extends Particle {
     point(scale*position.x, scale*position.y);
   }
 
-  float Etot_orboid() {
-    float PE_orboid = 1*GMp/r_orboid;
-    float KE_orboid = 1*(pow(v_orboid, 2))/2;
-    return PE_orboid + KE_orboid;
-  }
-
-  //update method
+  /**
+   *  Updates object for one time step of simulation taking into account the position of one moon.
+   */
   void update(Moon m) {
 
     // acceleration functions
@@ -73,7 +54,15 @@ class Orboid extends Particle {
     position.y = x2_orboid;
     v_orboid = sqrt(sq(velocity.x)+sq(velocity.y));
 
-    //print(v_orboid+" ");
     display();
+  }
+
+  /**
+   *  Outputs total energy of orboid. Can be used to check energy conservation.
+   */
+  float Etot_orboid() {
+    float PE_orboid = 1*GMp/r_orboid;
+    float KE_orboid = 1*(pow(v_orboid, 2))/2;
+    return PE_orboid + KE_orboid;
   }
 }
