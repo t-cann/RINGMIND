@@ -5,7 +5,6 @@ class Particle {
   PVector position; // Position float x1, x2, x3; 
   PVector velocity; // Velocity float v1, v2, v3;
   
-  
 
   Particle(float x1_, float x2_, float x3_, float v1_, float v2_, float v3_) {
     //default position
