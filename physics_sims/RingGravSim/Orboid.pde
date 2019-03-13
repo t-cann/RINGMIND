@@ -23,10 +23,12 @@ class Orboid extends Particle {
    *  Display Method - Renders this object to screen displaying its position and colour.
    */
   void display() {
-    //translate(width/2, height/2);
+    push();
+    translate(width/2, height/2);
     fill(255);
     stroke(255);
     point(scale*position.x, scale*position.y);
+    pop();
   }
 
   /**
