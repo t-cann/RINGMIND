@@ -8,7 +8,7 @@
 float r_min = 1.5;
 float r_max = 3;
 
-final float G = 6.67408E-7; // Gravitational Constant[m^3 kg^-1 s^-2]
+final float G = 6.67408E-11; // Gravitational Constant[m^3 kg^-1 s^-2]
 
 // length scale (1 Saturn radius) and gravitational parameter (Saturn)
 float Rp = 60268e3;
@@ -17,7 +17,7 @@ float h_stepsize;
 float scale = 150/Rp;
 
 // Basic parameters
-float n_orboids = 20000;
+float n_orboids = 10000;
 //vis_freq = 50;        // how of ten is a frame drawn
 
 //Dynamic Timestep variables
@@ -32,18 +32,22 @@ ArrayList<Moon> moons;
 void setup() {
   size (1920, 1000, P2D);
   frameRate(30);
+  noSmooth();
+  randomSeed(0);
   
-  //noSmooth();
   orboids = new ArrayList<Orboid>();
   moons = new ArrayList<Moon>();
 
+  // Adding Specific Moons ( e.g. Mima, Enceladus, Tethys, ... )
+  
   addMoon(7, moons);
   addMoon(8, moons);
   addMoon(9, moons);
   addMoon(12, moons);
   addMoon(14, moons);
 
-
+  //Adding All Moons
+  
   //for (int i = 0; i < 18; i++) {
   //  addMoon(i,moons);
   //}
@@ -58,8 +62,8 @@ void draw() {
   // calculate simulation time step for this frame
   h_stepsize= simToRealTimeRatio/frameRate;
   
-  // Update and Render Frame
-  //*******************************
+  //*************Update and Render Frame******************
+  
   guidelines();
   
   //float tempEtot = 0;
@@ -68,12 +72,13 @@ void draw() {
     //tempEtot+= x.Etot_orboid();
   }
   for (Moon m : moons) {
-    m.update(moons);
+      m.update(moons);
   }
   //println(tempEtot+" ");
 
   fps();
-  //*******************************
+  
+  //******************************************************
   
   totalSimTime +=h_stepsize;
 

@@ -42,6 +42,16 @@ class Particle {
   }
 
   /**
+   *  Clone Method - Return New Object with same properties.
+   */
+  Particle clone() {
+    Particle p = new Particle();
+    p.position= this.position.copy();
+    p.velocity = this.velocity.copy();
+    return p;
+  }
+
+  /**
    *  Updates object for one time step of simulation.
    */
   void update() {

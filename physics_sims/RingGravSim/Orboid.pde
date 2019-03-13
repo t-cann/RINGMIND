@@ -7,9 +7,9 @@
 
 class Orboid extends Particle {
 
-  float r_orboid;
-  float phi_orboid;
-  float v_orboid;
+  //float r_orboid;
+  //float phi_orboid;
+  //float v_orboid;
 
   /**
    *  Class Constuctor - Initialises an Orboid object with a random position in the ring with correct orbital velocity. 
@@ -18,7 +18,7 @@ class Orboid extends Particle {
     // Initialise our Orboids.
     super((random(1)*(r_max-r_min) + r_min)*Rp, random(1)*2.0*PI);
   }
-    /**
+  /**
    *  Class Constuctor - Initialises an Orboid object with a random position in the ring with correct orbital velocity. 
    */
   Orboid(float radius) {
@@ -44,11 +44,13 @@ class Orboid extends Particle {
   void update(ArrayList<Moon> moons) {
 
     // acceleration functions
-     float ax_grav = (-GMp*position.x/pow(sqrt(sq(position.x) + sq(position.y)), 3.0));
-     float ay_grav = (-GMp*position.y/pow(sqrt(sq(position.x) + sq(position.y)), 3.0));
+    float ax_grav = (-GMp*position.x/pow(sqrt(sq(position.x) + sq(position.y)), 3.0));
+    float ay_grav = (-GMp*position.y/pow(sqrt(sq(position.x) + sq(position.y)), 3.0));
     for (Moon m : moons) {
-      ax_grav += (m.GM*(m.position.x-position.x)/pow(sqrt(sq(m.position.x-position.x) + sq(m.position.y-position.y)), 3.0));
-      ay_grav += (m.GM*(m.position.y-position.y)/pow(sqrt(sq(m.position.x-position.x) + sq(m.position.y-position.y)), 3.0));
+      if (m != this) {
+        ax_grav += (m.GM*(m.position.x-position.x)/pow(sqrt(sq(m.position.x-position.x) + sq(m.position.y-position.y)), 3.0));
+        ay_grav += (m.GM*(m.position.y-position.y)/pow(sqrt(sq(m.position.x-position.x) + sq(m.position.y-position.y)), 3.0));
+      }
     }
     // temp x and y positions
     float x1_orboid;
@@ -61,17 +63,19 @@ class Orboid extends Particle {
 
     float ax_grav1 = (-GMp*x1_orboid/pow(sqrt(sq(x1_orboid) + sq(x2_orboid)), 3.0)); 
     float ay_grav1 = (-GMp*x2_orboid/pow(sqrt(sq(x1_orboid) + sq(x2_orboid)), 3.0));
-    
+
     for (Moon m : moons) {
-    ax_grav1 += (m.GM*(m.position.x-x1_orboid)/pow(sqrt(sq(m.position.x-x1_orboid) + sq(m.position.y-x2_orboid)), 3.0));
-    ax_grav1 +=(m.GM*(m.position.y-x2_orboid)/pow(sqrt(sq(m.position.x-x1_orboid) + sq(m.position.y-x2_orboid)), 3.0));
+      if (m != this) {
+        ax_grav1 += (m.GM*(m.position.x-x1_orboid)/pow(sqrt(sq(m.position.x-x1_orboid) + sq(m.position.y-x2_orboid)), 3.0));
+        ax_grav1 +=(m.GM*(m.position.y-x2_orboid)/pow(sqrt(sq(m.position.x-x1_orboid) + sq(m.position.y-x2_orboid)), 3.0));
+      }
     }
-    
+
     velocity.x = velocity.x + 0.5*(ax_grav+ax_grav1)*h_stepsize;
     velocity.y = velocity.y + 0.5*(ay_grav+ay_grav1)*h_stepsize;
     position.x = x1_orboid;
     position.y = x2_orboid;
-    v_orboid = sqrt(sq(velocity.x)+sq(velocity.y));
+    //v_orboid = sqrt(sq(velocity.x)+sq(velocity.y));
 
     display();
   }
@@ -79,9 +83,9 @@ class Orboid extends Particle {
   /**
    *  Outputs total energy of orboid. Can be used to check energy conservation.
    */
-  float Etot_orboid() {
-    float PE_orboid = 1*GMp/r_orboid;
-    float KE_orboid = 1*(pow(v_orboid, 2))/2;
-    return PE_orboid + KE_orboid;
-  }
+  //float Etot_orboid() {
+  //  float PE_orboid = 1*GMp/r_orboid;
+  //  float KE_orboid = 1*(pow(v_orboid, 2))/2;
+  //  return PE_orboid + KE_orboid;
+  //}
 }
