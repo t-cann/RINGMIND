@@ -6,14 +6,14 @@
 
 // What are the minimum and maximum extents in r for initialisation
 float r_min = 1.5;
-float r_max = 2.5;
+float r_max = 3;
 
 final float G = 6.67408E-7; // Gravitational Constant[m^3 kg^-1 s^-2]
 
 // length scale (1 Saturn radius) and gravitational parameter (Saturn)
 float Rp = 60268e3;
 float GMp = 3.7931187e16;
-float h_stepsize = 2*60; // seconds
+float h_stepsize;
 float scale = 150/Rp;
 
 // Basic parameters
@@ -21,7 +21,7 @@ float n_orboids = 20000;
 //vis_freq = 50;        // how of ten is a frame drawn
 
 //Dynamic Timestep variables
-float simToRealTimeRatio =3600.0/1.0;  //1hour/second
+float simToRealTimeRatio =0.1*3600.0/1.0;  //1hour/second
 //initialise for frame counting
 float estimatedFps = 60.0;
 float timeFrames =0.0;
@@ -107,8 +107,8 @@ void guidelines(){
   background(0);
   stroke(0, 255, 0);
   noFill();
-  circle(0, 0, 5.0*scale*Rp);
-  circle(0, 0, 3.0*scale*Rp);
+  circle(0, 0, 2*r_max*scale*Rp);
+  circle(0, 0, 2*r_min*scale*Rp);
   stroke(255, 165, 0);
   fill(255, 165, 0);
   circle(0, 0, 2.0*scale*Rp);
