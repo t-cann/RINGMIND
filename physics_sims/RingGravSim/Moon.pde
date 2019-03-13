@@ -19,6 +19,6 @@ class Moon extends Particle {
     ellipseMode(CENTER);
     fill(255, 0, 0);
     stroke(255, 0, 0);
-    circle(scale*x1, scale*x2, 2*radius*scale);
+    circle(scale*position.x, scale*position.y, 2*radius*scale);
   }
 }

@@ -41,7 +41,7 @@ class Orboid extends Particle {
     //translate(width/2, height/2);
     fill(255);
     stroke(255);
-    point(scale*x1, scale*x2);
+    point(scale*position.x, scale*position.y);
   }
 
   float Etot_orboid() {
@@ -54,24 +54,24 @@ class Orboid extends Particle {
   void update(Moon m) {
 
     // acceleration functions
-    float ax_grav = (-GMp*x1/pow(sqrt(sq(x1) + sq(x2)), 3.0)) + (m.GM*(m.x1-x1)/pow(sqrt(sq(m.x1-x1) + sq(m.x2-x2)), 3.0));
-    float ay_grav = (-GMp*x2/pow(sqrt(sq(x1) + sq(x2)), 3.0)) + (m.GM*(m.x2-x2)/pow(sqrt(sq(m.x1-x1) + sq(m.x2-x2)), 3.0));
+    float ax_grav = (-GMp*position.x/pow(sqrt(sq(position.x) + sq(position.y)), 3.0)) + (m.GM*(m.position.x-position.x)/pow(sqrt(sq(m.position.x-position.x) + sq(m.position.y-position.y)), 3.0));
+    float ay_grav = (-GMp*position.y/pow(sqrt(sq(position.x) + sq(position.y)), 3.0)) + (m.GM*(m.position.y-position.y)/pow(sqrt(sq(m.position.x-position.x) + sq(m.position.y-position.y)), 3.0));
     // temp x and y positions
     float x1_orboid;
     float x2_orboid;
 
     // leapfrog integration
-    x1_orboid = x1 + v1*h_stepsize + 0.5*ax_grav*h_stepsize*h_stepsize;
-    x2_orboid = x2 + v2*h_stepsize + 0.5*ay_grav*h_stepsize*h_stepsize;
+    x1_orboid = position.x + velocity.x*h_stepsize + 0.5*ax_grav*h_stepsize*h_stepsize;
+    x2_orboid = position.y + velocity.y*h_stepsize + 0.5*ay_grav*h_stepsize*h_stepsize;
 
-    float ax_grav1 = (-GMp*x1_orboid/pow(sqrt(sq(x1_orboid) + sq(x2_orboid)), 3.0)) + (m.GM*(m.x1-x1_orboid)/pow(sqrt(sq(m.x1-x1_orboid) + sq(m.x2-x2_orboid)), 3.0));
-    float ay_grav1 = (-GMp*x2_orboid/pow(sqrt(sq(x1_orboid) + sq(x2_orboid)), 3.0)) + (m.GM*(m.x2-x2_orboid)/pow(sqrt(sq(m.x1-x1_orboid) + sq(m.x2-x2_orboid)), 3.0));
+    float ax_grav1 = (-GMp*x1_orboid/pow(sqrt(sq(x1_orboid) + sq(x2_orboid)), 3.0)) + (m.GM*(m.position.x-x1_orboid)/pow(sqrt(sq(m.position.x-x1_orboid) + sq(m.position.y-x2_orboid)), 3.0));
+    float ay_grav1 = (-GMp*x2_orboid/pow(sqrt(sq(x1_orboid) + sq(x2_orboid)), 3.0)) + (m.GM*(m.position.y-x2_orboid)/pow(sqrt(sq(m.position.x-x1_orboid) + sq(m.position.y-x2_orboid)), 3.0));
 
-    v1 = v1 + 0.5*(ax_grav+ax_grav1)*h_stepsize;
-    v2 = v2 + 0.5*(ay_grav+ay_grav1)*h_stepsize;
-    x1 = x1_orboid;
-    x2 = x2_orboid;
-    v_orboid = sqrt(sq(v1)+sq(v2));
+    velocity.x = velocity.x + 0.5*(ax_grav+ax_grav1)*h_stepsize;
+    velocity.y = velocity.y + 0.5*(ay_grav+ay_grav1)*h_stepsize;
+    position.x = x1_orboid;
+    position.y = x2_orboid;
+    v_orboid = sqrt(sq(velocity.x)+sq(velocity.y));
 
     //print(v_orboid+" ");
     display();
