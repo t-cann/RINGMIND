@@ -13,7 +13,11 @@ class Moon extends Particle {
    *  Class Constuctor - Default Moon object with properties of Mima (loosely). 
    */
   Moon() {
-    //Mima
+    //Mima (Source: Nasa Saturn Factsheet)
+    //GM - 2.529477495E9 [m^3 s^-2]
+    //Radius - 2E5 [m]
+    //Obital Radius - 185.52E6 [m]
+
     this(2.529477495e13, 400e3, 185.52e6);
   }
   /**
