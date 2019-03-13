@@ -21,10 +21,11 @@ float n_orboids = 20000;
 //vis_freq = 50;        // how of ten is a frame drawn
 
 //Dynamic Timestep variables
-float simToRealTimeRatio =0.1*3600.0/1.0;  //1hour/second
+float simToRealTimeRatio =3600.0/1.0;  //1hour/second
 //initialise for frame counting
-float estimatedFps = 60.0;
+float estimatedFps = 15.0;
 float timeFrames =0.0;
+float totalSimTime =0.0;
 float startTime, endTime, stepSize;
 
 
@@ -34,6 +35,8 @@ ArrayList<Moon> moons;
 void setup() {
   size (1920, 1000, P2D);
   frameRate(30);
+  h_stepsize= simToRealTimeRatio/estimatedFps;
+  //noSmooth();
   orboids = new ArrayList<Orboid>();
   moons = new ArrayList<Moon>();
 
@@ -57,7 +60,7 @@ void draw() {
   
   startTime =millis();
   // calculate simulation time step for this frame
-  h_stepsize= simToRealTimeRatio/estimatedFps;
+  
   
   // Update and Render Frame
   //*******************************
@@ -80,11 +83,13 @@ void draw() {
 
   // add the real delta time to the time taken and increment the frame counter
   timeFrames += (endTime-startTime);
+  totalSimTime +=h_stepsize;
   
   // estimate the fps if we've averaged over enough frames – this is in case we don’t get the
   // frame rate  we asked for
-  if (frameCount %120 == 0) {
+  if (frameCount %60 == 0) {
     estimatedFps = timeFrames/120.0;
+    h_stepsize= simToRealTimeRatio/estimatedFps;
     timeFrames = 0.0;
   }
    
@@ -97,7 +102,7 @@ void fps(){
   fill(0);
   rect(0, height-20, width, 20);
   fill(255);
-  text("Framerate: " + int(frameRate), 10, height-6);
+  text("Framerate: " + int(frameRate) + "     Time Elapsed[Seconds]: " + int(millis()/1000.0) + "     Simulation Time Elapsed[hours]: " + int(totalSimTime/3600.0) , 10, height-6);
   pop();
 }
 
