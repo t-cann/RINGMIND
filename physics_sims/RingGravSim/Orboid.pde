@@ -18,6 +18,13 @@ class Orboid extends Particle {
     // Initialise our Orboids.
     super((random(1)*(r_max-r_min) + r_min)*Rp, random(1)*2.0*PI);
   }
+    /**
+   *  Class Constuctor - Initialises an Orboid object with a random position in the ring with correct orbital velocity. 
+   */
+  Orboid(float radius) {
+    // Initialise our Orboids.
+    super(radius, random(1)*2.0*PI);
+  }
 
   /**
    *  Display Method - Renders this object to screen displaying its position and colour.

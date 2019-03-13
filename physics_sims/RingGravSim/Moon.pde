@@ -5,7 +5,7 @@
  * @version 1.0
  */
 
-class Moon extends Particle {
+class Moon extends Orboid {
   float GM;
   float radius;
 
@@ -24,7 +24,7 @@ class Moon extends Particle {
    *  Class Constuctor - General Moon object with random angle. 
    */
   Moon(float Gm, float radius, float orb_radius) {
-    super(orb_radius, random(2*PI));
+    super(orb_radius);
     this.GM=Gm;
     this.radius=radius;
   }

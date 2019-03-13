@@ -68,7 +68,7 @@ void draw() {
     //tempEtot+= x.Etot_orboid();
   }
   for (Moon m : moons) {
-    m.update();
+    m.update(moons);
   }
   //println(tempEtot+" ");
 
