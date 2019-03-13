@@ -22,7 +22,7 @@ ArrayList<Orboid> orboids;
 ArrayList<Moon> moons;
 
 void setup() {
-  size (1000, 720);
+  size (700, 700, P2D);
   orboids = new ArrayList<Orboid>();
   moons = new ArrayList<Moon>();
   moons.add(new Moon());
