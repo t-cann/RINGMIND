@@ -2,29 +2,25 @@
  * A gravitational simulation in a Cartesian coordinate system.
  * @author Thomas Cann
  * @author Sim Hinson
- * @version 1.0
+ * @version 1.1
  */
+
+
+// Basic parameters
+float n_orboids = 10000;
+final float G = 6.67408E-11;       // Gravitational Constant[m^3 kg^-1 s^-2]
+final float Rp = 60268e3;          // Length scale (1 Saturn radius)
+final float scale = 150/Rp;        // 
+final float GMp = 3.7931187e16;    // Gravitational parameter (Saturn)
+float h_stepsize;
 
 // What are the minimum and maximum extents in r for initialisation
 float r_min = 1.5;
 float r_max = 3;
 
-final float G = 6.67408E-11; // Gravitational Constant[m^3 kg^-1 s^-2]
-float Rp = 60268e3;          // Length scale (1 Saturn radius)
-float scale = 150/Rp;        // 
-float GMp = 3.7931187e16;    // Gravitational parameter (Saturn)
-float h_stepsize;
-
-
-// Basic parameters
-float n_orboids = 10000;
-//vis_freq = 50;        // how of ten is a frame drawn
-
 //Dynamic Timestep variables
-float simToRealTimeRatio =3600.0/1.0;  //1hour/second
-//initialise for frame counting
-float totalSimTime =0.0;
-
+final float simToRealTimeRatio = 3600.0/1.0;   // 3600.0/1.0 --> 1hour/second
+float totalSimTime =0.0;                       // Tracks length of time simulation has be running
 
 ArrayList<Orboid> orboids;
 ArrayList<Moon> moons;
@@ -192,6 +188,8 @@ void addMoon(int i, ArrayList<Moon> m) {
 }
 
 //TO DELETE/ TIDY UP
+
+//vis_freq = 50;        // how of ten is a frame drawn
 
 //if (mousePressed) {
 //  //orboids.add(new Orboid(mouseX, mouseY));
