@@ -1,20 +1,20 @@
-// A package containing code for the Ringmind project
-//.. module:: orboid_xy
-//   :synopsis: Test code to try Boids in a Cartesian coordinate system.
-
-//.. moduleauthor:: Chris Arridge <c.arridge@lancaster.ac.uk>
+/**Class RingGravSim 
+ * A gravitational simulation in a Cartesian coordinate system.
+ * @author Thomas Cann
+ * @author Sim Hinson
+ * @version 1.0
+ */
 
 // What are the minimum and maximum extents in r for initialisation
 float r_min = 1.5;
 float r_max = 3;
 
 final float G = 6.67408E-11; // Gravitational Constant[m^3 kg^-1 s^-2]
-
-// length scale (1 Saturn radius) and gravitational parameter (Saturn)
-float Rp = 60268e3;
-float GMp = 3.7931187e16;
+float Rp = 60268e3;          // Length scale (1 Saturn radius)
+float scale = 150/Rp;        // 
+float GMp = 3.7931187e16;    // Gravitational parameter (Saturn)
 float h_stepsize;
-float scale = 150/Rp;
+
 
 // Basic parameters
 float n_orboids = 10000;
