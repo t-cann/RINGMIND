@@ -23,6 +23,7 @@ float totalSimTime =0.0;                       // Tracks length of time simulati
 
 ArrayList<Orboid> orboids;
 ArrayList<Moon> moons;
+RingSystem Saturn;
 
 void setup() {
   size (1920, 1000, P2D);
@@ -30,30 +31,32 @@ void setup() {
   noSmooth();
   randomSeed(0);
   
-  //***********Initialise Orboids******************* 
-  orboids = new ArrayList<Orboid>();
-  for (int i = 0; i < n_orboids; i++) {
-    orboids.add(new Orboid());
-  }
-  //************************************************
+  Saturn = new RingSystem();
   
-  //***********Initialise Moons*********************
-  moons = new ArrayList<Moon>();
+  ////***********Initialise Orboids******************* 
+  //orboids = new ArrayList<Orboid>();
+  //for (int i = 0; i < n_orboids; i++) {
+  //  orboids.add(new Orboid());
+  //}
+  ////************************************************
+  
+  ////***********Initialise Moons*********************
+  //moons = new ArrayList<Moon>();
 
-  // Adding Specific Moons ( e.g. Mima, Enceladus, Tethys, ... )
+  //// Adding Specific Moons ( e.g. Mima, Enceladus, Tethys, ... )
   
-  //addMoon(7, moons);
-  //addMoon(8, moons);
-  //addMoon(9, moons);
-  //addMoon(12, moons);
-  //addMoon(14, moons);
+  ////addMoon(7, moons);
+  ////addMoon(8, moons);
+  ////addMoon(9, moons);
+  ////addMoon(12, moons);
+  ////addMoon(14, moons);
 
-  //Adding All Moons
+  ////Adding All Moons
   
-  for (int i = 0; i < 18; i++) {
-    addMoon(i,moons);
-  }
-  //***********************************************
+  //for (int i = 0; i < 18; i++) {
+  //  addMoon(i,moons);
+  //}
+  ////***********************************************
 }
 
 void draw() {
@@ -64,23 +67,27 @@ void draw() {
   //*************Update and Render Frame******************
   
   //Updates properties of all objects.
-  for (Orboid x : orboids) {
-    x.update(moons);
-  }
-  for (Moon m : moons) {
-     m.update(moons);
-  }
+  
+  Saturn.update();
+  
+  //for (Orboid x : orboids) {
+  //  x.update(moons);
+  //}
+  //for (Moon m : moons) {
+  //   m.update(moons);
+  //}
   
   //Renders to screen based of new properties of objects.
   
   guidelines();
   
-  for (Orboid x : orboids) {
-    x.display();
-  }
-  for (Moon m : moons) {
-     m.display();
-  }
+  Saturn.display();
+  //for (Orboid x : orboids) {
+  //  x.display();
+  //}
+  //for (Moon m : moons) {
+  //   m.display();
+  //}
   
   fps();
   
