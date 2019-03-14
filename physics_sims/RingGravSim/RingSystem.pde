@@ -10,7 +10,7 @@
 class RingSystem {
 
   ArrayList<Ring> rings;
-  private float r_min, r_max, num_particles;
+  float r_min, r_max, num_particles;
 
   /**
    *  Class Constuctor - General need passing all the values. 
@@ -44,7 +44,7 @@ class RingSystem {
 class Ring {
 
   ArrayList<RingParticle> particles;
-  private float r_min, r_max, num_particles;
+  float r_inner, r_outer, num_particles;
   color c;
 
   /**
@@ -69,7 +69,7 @@ class RingParticle {
   }
 }
 
-/**  Class RingParticle
+/**  Class Moonlet 
  * @author Thomas Cann
  * @version 1.0
  */
