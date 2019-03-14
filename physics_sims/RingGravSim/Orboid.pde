@@ -77,7 +77,7 @@ class Orboid extends Particle {
     position.y = x2_orboid;
     //v_orboid = sqrt(sq(velocity.x)+sq(velocity.y));
 
-    display();
+
   }
 
   /**

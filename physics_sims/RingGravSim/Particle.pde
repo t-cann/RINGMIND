@@ -75,6 +75,6 @@ class Particle {
     position.x = x1_temp;
     position.y = y1_temp;
 
-    display();
+
   }
 }

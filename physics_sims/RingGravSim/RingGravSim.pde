@@ -2,13 +2,12 @@
  * A gravitational simulation in a Cartesian coordinate system.
  * @author Thomas Cann
  * @author Sim Hinson
- * @version 1.1
+ * @version 1.2
  */
 
-
 // Basic parameters
-float n_orboids = 10000;
-final float G = 6.67408E-11;       // Gravitational Constant[m^3 kg^-1 s^-2]
+float n_orboids = 30000;
+final float G = 6.67408E-9;       // Gravitational Constant 6.67408E-11[m^3 kg^-1 s^-2]
 final float Rp = 60268e3;          // Length scale (1 Saturn radius)
 final float scale = 150/Rp;        // 
 final float GMp = 3.7931187e16;    // Gravitational parameter (Saturn)
@@ -31,26 +30,30 @@ void setup() {
   noSmooth();
   randomSeed(0);
   
+  //***********Initialise Orboids******************* 
   orboids = new ArrayList<Orboid>();
+  for (int i = 0; i < n_orboids; i++) {
+    orboids.add(new Orboid());
+  }
+  //************************************************
+  
+  //***********Initialise Moons*********************
   moons = new ArrayList<Moon>();
 
   // Adding Specific Moons ( e.g. Mima, Enceladus, Tethys, ... )
   
-  addMoon(7, moons);
-  addMoon(8, moons);
-  addMoon(9, moons);
-  addMoon(12, moons);
-  addMoon(14, moons);
+  //addMoon(7, moons);
+  //addMoon(8, moons);
+  //addMoon(9, moons);
+  //addMoon(12, moons);
+  //addMoon(14, moons);
 
   //Adding All Moons
   
-  //for (int i = 0; i < 18; i++) {
-  //  addMoon(i,moons);
-  //}
-
-  for (int i = 0; i < n_orboids; i++) {
-    orboids.add(new Orboid());
+  for (int i = 0; i < 18; i++) {
+    addMoon(i,moons);
   }
+  //***********************************************
 }
 
 void draw() {
@@ -60,18 +63,25 @@ void draw() {
   
   //*************Update and Render Frame******************
   
-  guidelines();
-  
-  //float tempEtot = 0;
+  //Updates properties of all objects.
   for (Orboid x : orboids) {
     x.update(moons);
-    //tempEtot+= x.Etot_orboid();
   }
   for (Moon m : moons) {
-      m.update(moons);
+     m.update(moons);
   }
-  //println(tempEtot+" ");
-
+  
+  //Renders to screen based of new properties of objects.
+  
+  guidelines();
+  
+  for (Orboid x : orboids) {
+    x.display();
+  }
+  for (Moon m : moons) {
+     m.display();
+  }
+  
   fps();
   
   //******************************************************
