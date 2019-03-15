@@ -1,4 +1,4 @@
-  /**  Class Ring
+/**  Class Ring
  * @author Thomas Cann
  * @version 1.0
  */
@@ -25,6 +25,11 @@ class Ring {
   void display() {
     for (RingParticle p : particles) {
       p.display();
+    }
+  }
+  void render(PGraphics x) {
+    for (RingParticle p : particles) {
+      p.render(x);
     }
   }
 }

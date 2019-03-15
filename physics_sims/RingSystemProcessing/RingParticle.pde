@@ -11,7 +11,7 @@ class RingParticle extends Particle {
     // Initialise our Orboids.
     super((random(1)*(outer-inner) + inner)*Rp, random(1)*2.0*PI);
   }
-  
+
   /**
    *  Class Constuctor - Initialises an RingParticle object with a random position in the ring with correct orbital velocity. 
    */
@@ -31,7 +31,16 @@ class RingParticle extends Particle {
     point(scale*position.x, scale*position.y);
     pop();
   }
-  
+
+  void render(PGraphics x) {
+    x.push();
+    x.translate(width/2, height/2);
+    x.fill(255);
+    x.stroke(255);
+    x.point(scale*position.x, scale*position.y);
+    x.pop();
+  }
+
   /**
    *  Updates object for one time step of simulation taking into account the position of one moon.
    */
@@ -70,8 +79,6 @@ class RingParticle extends Particle {
     position.x = x1_orboid;
     position.y = x2_orboid;
     //v_orboid = sqrt(sq(velocity.x)+sq(velocity.y));
-
-
   }
 }
 

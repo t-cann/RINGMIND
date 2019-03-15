@@ -8,7 +8,7 @@
  * @version 1.0
  */
 
-final float G = 6.67408E-7;       // Gravitational Constant 6.67408E-11[m^3 kg^-1 s^-2]
+final float G = 6.67408E-11;       // Gravitational Constant 6.67408E-11[m^3 kg^-1 s^-2]
 final float Rp = 60268e3;          // Length scale (1 Saturn radius) [m]
 final float GMp = 3.7931187e16;    // Gravitational parameter (Saturn)
 final float scale = 100/Rp;        // Converts from [m] to [pixel] with planetary radius (in pixels) equal to the numerator. Size of a pixel represents approximately 600km.
@@ -30,7 +30,7 @@ class RingSystem {
     //***********Initialise Rings*********************
     rings = new ArrayList<Ring>();
 
-    switch(2) {
+    switch(0) {
     case 1:
       //Generic Disc of Particles
       rings.add(new Ring(r_min, r_max, n_particles));
@@ -67,17 +67,17 @@ class RingSystem {
 
     // Adding Specific Moons ( e.g. Mima, Enceladus, Tethys, ... )
 
-    //addMoon(7, moons);
-    //addMoon(8, moons);
+    addMoon(5, moons);
+    addMoon(6, moons);
     //addMoon(9, moons);
     //addMoon(12, moons);
     //addMoon(14, moons);
 
     //Adding All Moons
 
-    for (int i = 0; i < 18; i++) {
-      addMoon(i, moons);
-    }
+    //for (int i = 0; i < 18; i++) {
+    //  addMoon(i, moons);
+    //}
     //***********************************************
   }
 
@@ -99,6 +99,15 @@ class RingSystem {
     }
     for (Moon m : moons) {
       m.display();
+    }
+  }
+  
+  void render(PGraphics x) {
+    for (Ring r : rings) {
+      r.render(x);
+    }
+    for (Moon m : moons) {
+      m.render(x);
     }
   }
 
@@ -129,7 +138,7 @@ class RingSystem {
       break;
     case 5:
       // Epimetheus Mass 5.3e17 [kg] Radius 6.5e4 [m] Orbital Radius 151.422e6 [m]
-      m.add(new Moon(G*5.3e17, 6.5e4, 151.422e6));
+      m.add(new Moon(G*5.3e17, 6.5e4, 151.422e6,color(0,255,0)));
       break;
     case 6:
       // Janus Mass 1.9e18 [kg] Radius 1.02e5 [m] Orbital Radius 151.472e6 [m]

@@ -11,47 +11,93 @@ int n_particles = 10000;
 float h_stepsize;
 
 //Dynamic Timestep variables
-final float simToRealTimeRatio = 3600.0/1.0;   // 3600.0/1.0 --> 1hour/second
+final float simToRealTimeRatio = 10*3600.0/1.0;   // 3600.0/1.0 --> 1hour/second
+final float maxTimeStep = 20* simToRealTimeRatio / 30;
 float totalSimTime =0.0;                       // Tracks length of time simulation has be running
 
+PGraphics pg;
+PGraphics pg1;
+
 RingSystem Saturn;
+Renderer R;
 
 void setup() {
   size (1920, 1000, P2D);
   frameRate(30);
   smooth(); //noSmooth();
-  randomSeed(0);
-  
+  randomSeed(3);
+  pg = createGraphics(width/2,height);
+  pg1 = createGraphics(width/2,height);
   Saturn = new RingSystem();
   background(0);
 }
 
 void draw() {
-  
+
   // calculate simulation time step for this frame
+  if(simToRealTimeRatio/frameRate < maxTimeStep){
   h_stepsize= simToRealTimeRatio/frameRate;
-  
+  } else{
+  h_stepsize= maxTimeStep;
+  println("At Maximum Time Step");
+  }
+
   //*************Update and Render Frame******************
-  
+
   //Updates properties of all objects.
-  
+
   Saturn.update();
   
+  PVector diff = PVector.sub(Saturn.moons.get(0).position,Saturn.moons.get(1).position);
+
+  println(diff.mag());
+  
   //Renders to screen based of new properties of objects.
-  if(frameCount%50 ==0){
+  //if(frameCount%50 ==0){}
+
   background(0);
-  }  
+
   guidelines();
   
-  Saturn.display();
+  pg.beginDraw();
+  if(mousePressed){
+  pg.clear();
+  }
+  //pg.scale(1,-1);
+  //pg.translate(0,-height);
+  Saturn.render(pg);
   
-  fps();
+  pg.endDraw();
   
-  //******************************************************
+  pg1.beginDraw();
+  if(mousePressed){
+  pg1.clear();
+  }
+  pg1.translate(-width/2,0);
+  Saturn.render(pg1);
   
-  totalSimTime +=h_stepsize;
+  pg1.endDraw();
+  
+  
+  noTint();
+  image(pg,0,0);
+  noTint();
+  //tint(255,0,255,255);
+  image(pg1,width/2,0);
+  //Saturn.display();
+  //R.render(Saturn);
+  
+  //for(PGraphics x:R.buffer){
+  //image(x,0,0);
+  //}
 
+  fps();
+
+  //******************************************************
+
+  totalSimTime +=h_stepsize;
 }
+
 
 void fps(){
   push();
@@ -62,10 +108,10 @@ void fps(){
   pop();
 }
 
-void guidelines(){
+
+void guidelines() {
   push();
-    translate(width/2, height/2);
-  
+  translate(width/2, height/2);
   stroke(255, 165, 0);
   noFill();
   circle(0, 0, 2*r_max*scale*Rp);
