@@ -135,7 +135,7 @@ The methods for RingSystemProcessing class are:
 ```
 
 <a name="instructions"></a>
-## Instructions for QuadTree simulation (keyboard and mouse commands)
+## Instructions for simulation (keyboard and mouse commands)
 
 TODO once simulation is finshed
 
