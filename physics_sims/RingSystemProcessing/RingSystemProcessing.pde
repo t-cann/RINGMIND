@@ -11,7 +11,7 @@ int n_particles = 10000;
 float h_stepsize;
 
 //Dynamic Timestep variables
-final float simToRealTimeRatio = 10*3600.0/1.0;   // 3600.0/1.0 --> 1hour/second
+final float simToRealTimeRatio = 3600.0/1.0;   // 3600.0/1.0 --> 1hour/second
 final float maxTimeStep = 20* simToRealTimeRatio / 30;
 float totalSimTime =0.0;                       // Tracks length of time simulation has be running
 
@@ -26,8 +26,10 @@ void setup() {
   frameRate(30);
   smooth(); //noSmooth();
   randomSeed(3);
-  pg = createGraphics(width/2,height);
-  pg1 = createGraphics(width/2,height);
+  
+  pg = createGraphics(width/2,height,P2D);
+  pg1 = createGraphics(width/2,height,P2D);
+  
   Saturn = new RingSystem();
   background(0);
 }
@@ -48,9 +50,9 @@ void draw() {
 
   Saturn.update();
   
-  PVector diff = PVector.sub(Saturn.moons.get(0).position,Saturn.moons.get(1).position);
+  //PVector diff = PVector.sub(Saturn.moons.get(0).position,Saturn.moons.get(1).position);
 
-  println(diff.mag());
+  //println(diff.mag());
   
   //Renders to screen based of new properties of objects.
   //if(frameCount%50 ==0){}
