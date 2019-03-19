@@ -1,4 +1,4 @@
-/**  Class Ring
+/**Class Ring
  * @author Thomas Cann
  * @version 1.0
  */

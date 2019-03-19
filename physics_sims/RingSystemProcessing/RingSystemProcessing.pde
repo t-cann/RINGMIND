@@ -1,9 +1,9 @@
-/**Class RingGravSim 
+/**Class RingSystemProcessing 
  * A gravitational simulation in a Cartesian coordinate system.
  *
  * @author Thomas Cann
  * @author Sim Hinson
- * @version 1.2
+ * @version 2.0
  */
 
 // Basic parameters
@@ -15,21 +15,15 @@ final float simToRealTimeRatio = 3600.0/1.0;   // 3600.0/1.0 --> 1hour/second
 final float maxTimeStep = 20* simToRealTimeRatio / 30;
 float totalSimTime =0.0;                       // Tracks length of time simulation has be running
 
-PGraphics pg;
-PGraphics pg1;
-
+//Initialising Objects
 RingSystem Saturn;
-Renderer R;
+
 
 void setup() {
   size (1920, 1000, P2D);
   frameRate(30);
   smooth(); //noSmooth();
   randomSeed(3);
-  
-  pg = createGraphics(width/2,height,P2D);
-  pg1 = createGraphics(width/2,height,P2D);
-  
   Saturn = new RingSystem();
   background(0);
 }
@@ -48,51 +42,13 @@ void draw() {
 
   //Updates properties of all objects.
 
-  Saturn.update();
+  thread("update");
   
-  //PVector diff = PVector.sub(Saturn.moons.get(0).position,Saturn.moons.get(1).position);
-
-  //println(diff.mag());
+  //Display all of the objects to screen.
   
-  //Renders to screen based of new properties of objects.
-  //if(frameCount%50 ==0){}
-
   background(0);
-
   guidelines();
-  
-  pg.beginDraw();
-  if(mousePressed){
-  pg.clear();
-  }
-  //pg.scale(1,-1);
-  //pg.translate(0,-height);
-  Saturn.render(pg);
-  
-  pg.endDraw();
-  
-  pg1.beginDraw();
-  if(mousePressed){
-  pg1.clear();
-  }
-  pg1.translate(-width/2,0);
-  Saturn.render(pg1);
-  
-  pg1.endDraw();
-  
-  
-  noTint();
-  image(pg,0,0);
-  noTint();
-  //tint(255,0,255,255);
-  image(pg1,width/2,0);
-  //Saturn.display();
-  //R.render(Saturn);
-  
-  //for(PGraphics x:R.buffer){
-  //image(x,0,0);
-  //}
-
+  Saturn.display();
   fps();
 
   //******************************************************
@@ -100,7 +56,12 @@ void draw() {
   totalSimTime +=h_stepsize;
 }
 
+//Method to enable threading
+void update(){
+  Saturn.update();
+}
 
+//Display FrameRate and Time data to bar along bottom of screen
 void fps(){
   push();
   fill(0);
@@ -110,7 +71,7 @@ void fps(){
   pop();
 }
 
-
+//guidelines round edge of rings and planet.
 void guidelines() {
   push();
   translate(width/2, height/2);

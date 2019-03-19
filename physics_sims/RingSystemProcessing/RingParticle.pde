@@ -1,4 +1,4 @@
-/**  Class RingParticle
+/**Class RingParticle
  * @author Thomas Cann
  * @version 1.0
  */
