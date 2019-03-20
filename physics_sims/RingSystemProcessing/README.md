@@ -133,33 +133,3 @@ The methods for RingSystemProcessing class are:
   void guidelines() {...}
   
 ```
-
-
-# Work in Progress Ignore !!!
-
-<a name="instructions"></a>
-## Instructions for simulation (keyboard and mouse commands)
-
-TODO once simulation is finshed
-
-| Type          | Command             | Description                               |
-| ------------- | ------------------- | ----------------------------------------- |
-| `Keyboard`    | Press <kbd>C</kbd>  | Clear the simulation                      |
-| `Keyboard`    | Press <kbd>R</kbd>  | Generate random objects                   |
-| `Keyboard`    | Press <kbd>F2</kbd> | Show or hide (simulate) QuadTrees         |
-| `Mouse`       | `Left`-click        | Create an object at `(x, y)` mouse event  |
-
-<a name="all-examples"></a>
-## Examples
-<a name="examples-1"></a>
-### > 
-| example_1.png           | example_2.png           |
-| ------------------------ | ------------------------ |
-| ![](examples/quadtree_1.png) | ![](examples/quadtree_2.png) |
-
-<a name="examples-2"></a>
-### > Generating random objects for QuadTree simulation
-
-| example_3.png     |
-| ------------------------ |
-| ![](examples/quadtree-random_1.png) |
