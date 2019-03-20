@@ -9,7 +9,8 @@ class Moon extends RingParticle {
   float GM;
   float radius;
   color c ;
-
+  
+  
   /**
    *  Class Constuctor - General Moon object with random angle. 
    */
@@ -31,13 +32,20 @@ class Moon extends RingParticle {
   /**
    *  Class Constuctor - Default Moon object with properties of Mima (loosely). 
    */
-  Moon() {
+  Moon(PVector p, PVector v) {
     //Mima (Source: Nasa Saturn Factsheet)
     //GM - 2.529477495E9 [m^3 s^-2]
     //Radius - 2E5 [m]
     //Obital Radius - 185.52E6 [m]
 
     this(2.529477495e13, 400e3, 185.52e6);
+    this.position.x = p.x;
+    this.position.y = p.y;
+    this.position.z = p.z;
+    this.velocity.x = v.x;
+    this.velocity.y = v.y;
+    this.velocity.z = v.z;
+    
   }
 
 
