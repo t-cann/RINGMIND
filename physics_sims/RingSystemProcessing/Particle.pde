@@ -4,7 +4,7 @@
  * @author Sim Hinson
  * @version 1.0
  */
-class Particle {
+abstract class Particle {
 
   PVector position; // Position float x1, x2, x3; 
   PVector velocity; // Velocity float v1, v2, v3;
@@ -15,16 +15,19 @@ class Particle {
    */
   Particle(float x1_, float x2_, float x3_, float v1_, float v2_, float v3_) {
     //default position
-    position = new PVector(x1_, x2_, x3_);
+    this.position = new PVector(x1_, x2_, x3_);
     //default velocity
-    velocity = new PVector(v1_, v2_, v3_);
+    this.velocity = new PVector(v1_, v2_, v3_);
   }
 
   /**
-   *  Class Constuctor - Initialises an Particle object with zero position and velocity. 
+   *  Class Constuctor - General need passing all the values. 
    */
-  Particle() {
-    this(0, 0, 0, 0, 0, 0);
+  Particle(PVector position_, PVector velocity_) {
+    //default position
+    this.position = position_.copy();
+    //default velocity
+    this.velocity = velocity_.copy();
   }
 
   /**
@@ -34,6 +37,12 @@ class Particle {
     this(r*cos(phi), r*sin(phi), 0, sqrt(GMp/(r))*sin(phi), -sqrt(GMp/(r))*cos(phi), 0);
   }
 
+  /**
+   *  Class Constuctor - Initialises an Particle object with zero position and velocity. 
+   */
+  Particle() {
+    this(0, 0, 0, 0, 0, 0);
+  }
 
   /**
    *  Display Method - Renders this object to screen displaying its position and colour.
@@ -74,7 +83,5 @@ class Particle {
     velocity.y = velocity.y + 0.5*(ay_grav+ay_grav1)*h_stepsize;
     position.x = x1_temp;
     position.y = y1_temp;
-
-
   }
 }
