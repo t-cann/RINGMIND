@@ -47,7 +47,7 @@ abstract class Particle {
    *  Class Constuctor - Initialises an Orboid object with a random position in the ring with correct orbital velocity. 
    */
   Particle(float r, float phi) {
-    this(r*cos(phi), r*sin(phi), 0, sqrt(GMp/(r))*sin(phi), -sqrt(GMp/(r))*cos(phi), 0);
+    this(r*cos(phi), r*sin(phi), randomGaussian(), sqrt(GMp/(r))*sin(phi), -sqrt(GMp/(r))*cos(phi), 0);
   }
 
   /**
