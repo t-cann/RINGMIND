@@ -127,22 +127,33 @@ class Grid {
     }
   }
 
-  PVector dragAcceleration(Particle p) {
+  PVector gridAccleration(Particle p) {
+  
+    PVector a_grid = new PVector();
+    
+    a_grid.add(dragAcceleration(p));
+    a_grid.add(selfGravAcceleration(p));
+    
+    return a_grid;
+  }
+
+  PVector dragAcceleration(Particle p ) {
 
     //Find which cell the particle is in.
-    float n = rs.g.returnGridNorm(this);
+    int i = i(p);
+    int j = j(p);
 
     // Collisions - acceleration due drag (based on number of particles in grid cell).
     PVector a_drag;
-    float a, c;
-    c=1E-2;
 
-    a_drag = PVector.sub(rs.g.returnGridV(this).copy().normalize(), this.velocity.copy().normalize());
+    //a_drag = PVector.sub(gridV[i][j].copy().normalize(), p.velocity.copy().normalize());
+    a_drag = PVector.sub(gridV[i][j], p.velocity);
 
-    //a_drag = PVector.sub(rs.g.returnGridV(this), this.velocity);
-
-
-    a = a_drag.magSq();
+    float a, c, n;
+    a=1; //a = a_drag.magSq(); //a=1;
+    c= 1E-2;
+    n = gridNorm[i][j];
+    
     a_drag.normalize();
     a_drag.mult(a*c*n);
 
@@ -151,17 +162,26 @@ class Grid {
   }
 
   PVector selfGravAcceleration( Particle p ) {
+    
+    //Find which cell the particle is in.
+    int i = i(p);
+    int j = j(p);
+
 
     PVector a_selfgrav = new PVector();
-    //float d; // Strength of the attraction number of particles in the cell. 
-
-    //PVector dist = PVector.sub(rs.g.centreofCell(), position);
-    //PVector a = PVector.mult(dist, 1/pow(dist.mag(), 3));
-    //// Loop over nearest neighbours 
-    //{
-    //
-
+    
+    float d; // Strength of the attraction number of particles in the cell. 
+    
+    
+    //for ( all neighbours) { //// Loop over nearest neighbours 
+      float n = gridNorm[i][j];
+      PVector dist = PVector.sub(centreofCell(i,j), p.position);
+      PVector a = PVector.mult(dist, 1/pow(dist.mag(), 3));
+      a_selfgrav.add(a);
     //}
+ 
+
+
     return a_selfgrav;
   }
 
