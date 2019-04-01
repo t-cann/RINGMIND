@@ -7,6 +7,10 @@ class Grid {
 
   float dr= 0.1; //[Planetary Radi]  
   float dtheta = 1; // [Degrees]
+
+  int sizeTheta =int(360/dtheta);
+  int sizeR = int((r_max-r_min)/dr);
+
   int grid[][];
   float gridNorm[][];
   PVector gridV[][];
@@ -16,9 +20,10 @@ class Grid {
    */
   Grid() {
 
-    grid = new int[int(360/dtheta)][int((r_max-r_min)/dr)];
-    gridNorm = new float[int(360/dtheta)][int((r_max-r_min)/dr)];
-    gridV = new PVector[int(360/dtheta)][int((r_max-r_min)/dr)];
+
+    grid = new int[sizeTheta][sizeR];
+    gridNorm = new float[sizeTheta][sizeR];
+    gridV = new PVector[sizeTheta][sizeR];
 
     reset();
   }
@@ -35,9 +40,12 @@ class Grid {
       }
     }
   }
+
   /**
    * Returns the index of which angular bin a particle belongs to.
-   * @param p a particle with a position vector. 
+   *
+   * @param   p  a particle with a position vector. 
+   * @return     
    */
   int i(Particle p) {
     return floor((degrees(atan2(p.position.y, p.position.x))+180)/dtheta);
@@ -46,10 +54,29 @@ class Grid {
   /**
    * Returns the index of which radial bin a particle belongs to.
    *
-   * @param p a particle with a position vector. 
+   * @param p a particle with a position vector.
+   * @return
    */
   int j(Particle p) {
     return floor((p.position.mag()/Rp - r_min)/dr);
+  }
+
+  /**
+   * Check to see if the Particle is in the grid .
+   *
+   * @param p a particle with a position vector.
+   * @return
+   */
+  boolean validij(Particle p) {
+    boolean check = false;
+    int i = i(p);
+    int j = j(p);
+    if (i< sizeTheta && i>=0  ) {
+      if (j < int((r_max-r_min)/dr)  && j>=0) {
+        check = true;
+      }
+    }
+    return check;
   }
 
   /**
