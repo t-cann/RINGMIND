@@ -172,14 +172,12 @@ class Grid {
     int x = i(p);
     int y = j(p);
 
-
-
     PVector a_selfgrav = new PVector();
 
     float a, d; // Strength of the attraction number of particles in the cell. 
     d=1;
 
-    int size = 1; //Size of Neighbourhood
+    int size = 2; //Size of Neighbourhood
 
      // Loop over (nearest) neighbours. As defined by Size. 
 

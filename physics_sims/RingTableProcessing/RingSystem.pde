@@ -11,11 +11,11 @@ final float scale = 100/Rp;        // Converts from [m] to [pixel] with planetar
 
 // What are the minimum and maximum extents in r for initialisation
 float r_min = 1;
-float r_max = 5;
+float r_max = 3;
 
 class RingSystem {
 
-  ArrayList<RingParticle> totalParticles;
+  ArrayList<Particle> totalParticles;
   
   ArrayList<Ring> rings;
   ArrayList<Moon> moons;
@@ -27,7 +27,7 @@ class RingSystem {
   RingSystem() {
 
     g = new Grid();
-    totalParticles = new ArrayList<RingParticle>();
+    totalParticles = new ArrayList<Particle>();
 
     //***********Initialise Rings*********************
 
@@ -116,14 +116,14 @@ class RingSystem {
   void update() {
     
     g.update(this);
-    for(RingParticle p : totalParticles){
+    for(Particle p : totalParticles){
      p.set_getAcceleration(this);
     }
-    for(RingParticle p : totalParticles){
+    for(Particle p : totalParticles){
      p.updatePosition();
     }
     g.update(this);
-    for(RingParticle p : totalParticles){
+    for(Particle p : totalParticles){
      p.updateVelocity(p.getAcceleration(this));
     }
     
