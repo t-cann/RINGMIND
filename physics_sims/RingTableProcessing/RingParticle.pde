@@ -73,40 +73,15 @@ class RingParticle extends Particle {
       
     }else{
       
-    //Find which cell the particle is in.
-    float n = rs.g.returnGridNorm(this);
+    //Fluid Drag Forcee / Collisions - acceleration to align to particle the average velocity of the cell. 
     
-    // Collisions - acceleration due drag (based on number of particles in grid cell).
-    PVector a_drag;
-    float a, c;
-    c=1E-2;
+    //a_grav.add(rs.g.dragAccleration(this));
 
-    a_drag = PVector.sub(rs.g.returnGridV(this).copy().normalize(), this.velocity.copy().normalize());
-
-    //a_drag = PVector.sub(rs.g.returnGridV(this), this.velocity);
-
-
-    a = a_drag.magSq();
-    a_drag.normalize();
-    a_drag.mult(a*c*n);
+    // Self Gravity   
     
-    a_grav.add(a_drag);
-
-    // Self Gravity - acceleration to align to particle the average velocity of the cell.  
-    //PVector a_selfgrav = new PVector();
-    //float d; // Strength of the attraction number of particles in the cell. 
+    //a_grav.add(rs.g.selfGravAccleration(this));
     
-    //PVector dist = PVector.sub(rs.g.centreofCell(), position);
-    //PVector a = PVector.mult(dist, 1/pow(dist.mag(), 3));
-    //// Loop over nearest neighbours 
-    //{
-      //
-      
-    //}
     }
-  
-
-
   return a_grav;
 }
 

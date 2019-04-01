@@ -127,6 +127,43 @@ class Grid {
     }
   }
 
+  PVector dragAcceleration(Particle p) {
+
+    //Find which cell the particle is in.
+    float n = rs.g.returnGridNorm(this);
+
+    // Collisions - acceleration due drag (based on number of particles in grid cell).
+    PVector a_drag;
+    float a, c;
+    c=1E-2;
+
+    a_drag = PVector.sub(rs.g.returnGridV(this).copy().normalize(), this.velocity.copy().normalize());
+
+    //a_drag = PVector.sub(rs.g.returnGridV(this), this.velocity);
+
+
+    a = a_drag.magSq();
+    a_drag.normalize();
+    a_drag.mult(a*c*n);
+
+
+    return a_drag;
+  }
+
+  PVector selfGravAcceleration( Particle p ) {
+
+    PVector a_selfgrav = new PVector();
+    //float d; // Strength of the attraction number of particles in the cell. 
+
+    //PVector dist = PVector.sub(rs.g.centreofCell(), position);
+    //PVector a = PVector.mult(dist, 1/pow(dist.mag(), 3));
+    //// Loop over nearest neighbours 
+    //{
+    //
+
+    //}
+    return a_selfgrav;
+  }
 
   /**
    * Returns the normalise particle density relevant to specific particle.
