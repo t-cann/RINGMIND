@@ -150,22 +150,27 @@ class Grid {
     if ( r < random(1)) {    
 
       //Find which cell the particle is in.
-      int i = i(p);
-      int j = j(p);
+      int x = i(p);
+      int y = j(p);
+      int size = 2; //Size of Neighbourhood
 
+      for ( int i = x-size; i <= x+size; i++) {
+        for ( int j = y-size; j <= y+size; j++) {
+          if (validij(i, j)) {
 
+            //a_drag = PVector.sub(gridV[i][j].copy().normalize(), p.velocity.copy().normalize());
+            PVector drag = PVector.sub(gridV[i][j], p.velocity);
 
+            float c, a, n;
+            c= 1E-4;
+            a=1;  //a = a_drag.magSq(); //a=1;
+            n = gridNorm[i][j];
 
-      //a_drag = PVector.sub(gridV[i][j].copy().normalize(), p.velocity.copy().normalize());
-      a_drag = PVector.sub(gridV[i][j], p.velocity);
-
-      float c, a, n;
-      c= 1E-4;
-      a=1;  //a = a_drag.magSq(); //a=1;
-      n = gridNorm[i][j];
-
-      a_drag.normalize();
-      a_drag.mult(a*c*n);      
+            drag.normalize();
+            a_drag.add(drag.mult(a*c*n));
+          }
+        }
+      }
     }
     return a_drag;
   }
@@ -195,9 +200,6 @@ class Grid {
         }
       }
     }
-
-
-
     return a_selfgrav;
   }
 
