@@ -20,18 +20,18 @@ class Ring {
     }
   }
   void update(ArrayList<Moon> m) {
-    for (RingParticle p : particles) {
-      p.update(m);
+    for (Particle p : particles) {
+      p.update();
     }
   }
   void display() {
     
-    for (RingParticle p : particles) {
+    for (Particle p : particles) {
       p.display();
     }
   }
   void render(PGraphics x) {
-    for (RingParticle p : particles) {
+    for (Particle p : particles) {
       p.render(x);
     }
   }

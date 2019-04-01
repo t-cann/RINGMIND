@@ -5,7 +5,7 @@
  * @version 1.0
  */
 
-class Moon extends RingParticle {
+class Moon extends Particle {
   float GM;
   float radius;
   color c ;
@@ -70,18 +70,25 @@ class Moon extends RingParticle {
     x.circle(scale*position.x, scale*position.y, 2*radius*scale);
     x.pop();
   }
+  
+  /**
+   *  Calculates the acceleration on this particle (based on its current position) (Does not override value of acceleration of particle)
+   */
+  PVector getAcceleration(RingSystem rs) {
+
+    // acceleration due planet in centre of the ring. 
+    PVector a_grav = PVector.mult(position.copy().normalize(), -GMp/position.copy().magSq());
+
+    // acceleration due the moons on this particle.
+    for (Moon m : rs.moons) {
+      if (m != this) {
+
+        PVector dist = PVector.sub(m.position, position);
+        PVector a = PVector.mult(dist, m.GM/pow(dist.mag(), 3));
+        a_grav.add(a);
+      }
+    }
+    
+  return a_grav;
 }
-
-///**
-//   *  Calculates the acceleration on this particle (based on its current position) (Does not override value of acceleration of particle)
-//   */
-//  PVector getAcceleration(RingSystem rs) {
-
-//    // acceleration due planet in centre of the ring. 
-//    PVector a_grav = PVector.mult(position.copy().normalize(), -GMp/position.copy().magSq());
-
-
-
-
-//  return a_grav;
-//}
+}

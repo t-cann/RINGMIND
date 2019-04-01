@@ -18,7 +18,7 @@ abstract class Particle {
     this.position = new PVector(x1_, x2_, x3_);
     //default velocity
     this.velocity = new PVector(v1_, v2_, v3_);
-    this.acceleration = new PVector(a1_,a2_,a3_);
+    this.acceleration = new PVector(a1_, a2_, a3_);
   }
 
   /**
@@ -40,8 +40,8 @@ abstract class Particle {
     this.position = position_.copy();
     //default velocity
     this.velocity = velocity_.copy();
-    
   }
+
 
   /**
    *  Class Constuctor - Initialises an Orboid object with a random position in the ring with correct orbital velocity. 
@@ -49,6 +49,15 @@ abstract class Particle {
   Particle(float r, float phi) {
     this(r*cos(phi), r*sin(phi), randomGaussian(), sqrt(GMp/(r))*sin(phi), -sqrt(GMp/(r))*cos(phi), 0);
   }
+  
+  /**
+   *  Class Constuctor - Initialises an RingParticle object with a random position in the ring with correct orbital velocity. 
+   */
+  Particle(float radius) {
+    // Initialise ourRingParticle.
+    this(radius, random(1)*2.0*PI);
+  }
+
 
   /**
    *  Class Constuctor - Initialises an Particle object with zero position and velocity. 
@@ -62,6 +71,12 @@ abstract class Particle {
    */
   void display() {
   }
+  
+    /**
+   *
+   */
+  void render(PGraphics x) {
+  }
 
   ///**
   // *  Clone Method - Return New Object with same properties.
@@ -74,19 +89,54 @@ abstract class Particle {
   //}
 
   /**
+   *  Calculates the acceleration on this particle (based on its current position) (Does not override value of acceleration of particle)
+   */
+  PVector getAcceleration(RingSystem rs) {
+
+    // acceleration due planet in centre of the ring. 
+    PVector a_grav = PVector.mult(position.copy().normalize(), -GMp/position.copy().magSq());
+
+    //Acceleration from the Grid Object
+    a_grav.add(rs.g.gridAcceleration(this));
+
+
+    return a_grav;
+  }
+
+  /**
+   *
+   */
+  void set_getAcceleration(RingSystem rs) {
+    acceleration = getAcceleration(rs);
+  }
+
+  /**
+   *
+   */
+  void updatePosition() {
+    position.add(velocity.copy().mult(h_stepsize)).add(acceleration.copy().mult(0.5*sq(h_stepsize)));
+  }
+
+  /**
+   *    Updates the velocity of this Ring Particle (Based on Velocity Verlet) using 2 accelerations.  
+   */
+  void updateVelocity(PVector a) {
+    this.velocity.add(PVector.add(acceleration.copy(), a).mult(0.5 *h_stepsize));
+  }
+
+  /**
    *  Updates object for one time step of simulation.
    */
   void update() {
     // acceleration functions
-   
-    PVector a_grav = PVector.mult(position.copy().normalize(),-GMp/position.copy().magSq());
-    
-    PVector tempPosition = PVector.add(position.copy(),velocity.copy().mult(h_stepsize)).add(a_grav.copy().mult(0.5*sq(h_stepsize)));
-    
-    PVector a_grav1 = PVector.mult(tempPosition.copy().normalize(),-GMp/tempPosition.copy().magSq());
-    
-    this.velocity.add(PVector.add(a_grav,a_grav1).mult(0.5 *h_stepsize));
-    this.position = tempPosition;
 
+    PVector a_grav = PVector.mult(position.copy().normalize(), -GMp/position.copy().magSq());
+
+    PVector tempPosition = PVector.add(position.copy(), velocity.copy().mult(h_stepsize)).add(a_grav.copy().mult(0.5*sq(h_stepsize)));
+
+    PVector a_grav1 = PVector.mult(tempPosition.copy().normalize(), -GMp/tempPosition.copy().magSq());
+
+    this.velocity.add(PVector.add(a_grav, a_grav1).mult(0.5 *h_stepsize));
+    this.position = tempPosition;
   }
 }
