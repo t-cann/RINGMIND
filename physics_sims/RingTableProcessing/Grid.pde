@@ -127,13 +127,18 @@ class Grid {
     }
   }
 
-  PVector gridAccleration(Particle p) {
+  PVector gridAcceleration(Particle p) {
+    
+    
   
     PVector a_grid = new PVector();
-    
+    if(validij(p)){
+    //Fluid Drag Force / Collisions - acceleration to align to particle the average velocity of the cell. 
     a_grid.add(dragAcceleration(p));
-    a_grid.add(selfGravAcceleration(p));
     
+    // Self Gravity   
+    a_grid.add(selfGravAcceleration(p));
+    }
     return a_grid;
   }
 
@@ -161,7 +166,7 @@ class Grid {
     return a_drag;
   }
 
-  PVector selfGravAcceleration( Particle p ) {
+  PVector selfGravAcceleration(Particle p ) {
     
     //Find which cell the particle is in.
     int i = i(p);
@@ -170,14 +175,14 @@ class Grid {
 
     PVector a_selfgrav = new PVector();
     
-    float d; // Strength of the attraction number of particles in the cell. 
-    
+    float a,d; // Strength of the attraction number of particles in the cell. 
+    d=1;
     
     //for ( all neighbours) { //// Loop over nearest neighbours 
       float n = gridNorm[i][j];
       PVector dist = PVector.sub(centreofCell(i,j), p.position);
-      PVector a = PVector.mult(dist, 1/pow(dist.mag(), 3));
-      a_selfgrav.add(a);
+      a = dist.magSq();
+      a_selfgrav.add(PVector.mult(dist.normalize(), n*d/a));
     //}
  
 

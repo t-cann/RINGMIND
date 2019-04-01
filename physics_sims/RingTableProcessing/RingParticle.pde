@@ -73,14 +73,9 @@ class RingParticle extends Particle {
       
     }else{
       
-    //Fluid Drag Forcee / Collisions - acceleration to align to particle the average velocity of the cell. 
-    
-    //a_grav.add(rs.g.dragAccleration(this));
-
-    // Self Gravity   
-    
-    //a_grav.add(rs.g.selfGravAccleration(this));
-    
+    //Acceleration from the Grid Object
+    a_grav.add(rs.g.gridAcceleration(this));
+     
     }
   return a_grav;
 }
