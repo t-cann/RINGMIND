@@ -129,8 +129,6 @@ class Grid {
 
   PVector gridAcceleration(Particle p) {
     
-    
-  
     PVector a_grid = new PVector();
     if(validij(p)){
     //Fluid Drag Force / Collisions - acceleration to align to particle the average velocity of the cell. 
