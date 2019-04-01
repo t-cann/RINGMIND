@@ -87,11 +87,11 @@ class RingSystem {
 
     // Adding Specific Moons ( e.g. Mima, Enceladus, Tethys, ... )
 
-    addMoon(5, moons);
+    //addMoon(5, moons);
     addMoon(7, moons);
-    addMoon(9, moons);
-    addMoon(12, moons);
-    addMoon(14, moons);
+    //addMoon(9, moons);
+    //addMoon(12, moons);
+    //addMoon(14, moons);
 
     //Adding All Moons
 
