@@ -103,12 +103,11 @@ class Grid {
     //Loop through all the particles trying to add them to the grid.
     for (Ring x : rs.rings) {
       for (RingParticle r : x.particles) {
-        try {
-          grid[i(r)][j(r)] +=1;
-          gridV[i(r)][j(r)].add(r.velocity);
-        }
-        catch(Exception e) {
-          //println("particle out of bounds");
+        int i = i(r);
+        int j = j(r);
+        if (validij(i,j)){
+          grid[i][j] +=1;
+          gridV[i][j].add(r.velocity);
         }
       }
     }
@@ -134,7 +133,7 @@ class Grid {
     PVector a_grid = new PVector();
     if (validij(p)) {
       //Fluid Drag Force / Collisions - acceleration to align to particle the average velocity of the cell. 
-      a_grid.add(dragAcceleration(p));
+      //a_grid.add(dragAcceleration(p));
 
       // Self Gravity   
       a_grid.add(selfGravAcceleration(p));
