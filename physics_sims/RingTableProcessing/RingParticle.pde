@@ -72,6 +72,7 @@ class RingParticle extends Particle {
     if( this instanceof Moon){
       
     }else{
+      
     //Find which cell the particle is in.
     float n = rs.g.returnGridNorm(this);
     
