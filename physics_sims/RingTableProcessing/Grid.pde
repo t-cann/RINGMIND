@@ -68,9 +68,11 @@ class Grid {
    * @return
    */
   boolean validij(Particle p) {
+    return validij(i(p), j(p));
+  }
+
+  boolean validij(int i, int j ) {
     boolean check = false;
-    int i = i(p);
-    int j = j(p);
     if (i< sizeTheta && i>=0  ) {
       if (j < int((r_max-r_min)/dr)  && j>=0) {
         check = true;
@@ -128,14 +130,14 @@ class Grid {
   }
 
   PVector gridAcceleration(Particle p) {
-    
+
     PVector a_grid = new PVector();
-    if(validij(p)){
-    //Fluid Drag Force / Collisions - acceleration to align to particle the average velocity of the cell. 
-    a_grid.add(dragAcceleration(p));
-    
-    // Self Gravity   
-    a_grid.add(selfGravAcceleration(p));
+    if (validij(p)) {
+      //Fluid Drag Force / Collisions - acceleration to align to particle the average velocity of the cell. 
+      a_grid.add(dragAcceleration(p));
+
+      // Self Gravity   
+      a_grid.add(selfGravAcceleration(p));
     }
     return a_grid;
   }
@@ -156,7 +158,7 @@ class Grid {
     a=1; //a = a_drag.magSq(); //a=1;
     c= 1E-2;
     n = gridNorm[i][j];
-    
+
     a_drag.normalize();
     a_drag.mult(a*c*n);
 
@@ -165,24 +167,33 @@ class Grid {
   }
 
   PVector selfGravAcceleration(Particle p ) {
-    
+
     //Find which cell the particle is in.
-    int i = i(p);
-    int j = j(p);
+    int x = i(p);
+    int y = j(p);
+
 
 
     PVector a_selfgrav = new PVector();
-    
-    float a,d; // Strength of the attraction number of particles in the cell. 
+
+    float a, d; // Strength of the attraction number of particles in the cell. 
     d=1;
-    
-    //for ( all neighbours) { //// Loop over nearest neighbours 
-      float n = gridNorm[i][j];
-      PVector dist = PVector.sub(centreofCell(i,j), p.position);
-      a = dist.magSq();
-      a_selfgrav.add(PVector.mult(dist.normalize(), n*d/a));
-    //}
- 
+
+    int size = 1; //Size of Neighbourhood
+
+     // Loop over (nearest) neighbours. As defined by Size. 
+
+    for ( int i = x-size; i <= x+size; i++) {
+      for ( int j = y-size; j <= y+size; j++) {
+        if(validij(i,j)){
+        float n = gridNorm[i][j];
+        PVector dist = PVector.sub(centreofCell(i, j), p.position);
+        a = dist.magSq();
+        a_selfgrav.add(PVector.mult(dist.normalize(), n*d/a));
+        }
+      }
+    }
+
 
 
     return a_selfgrav;
