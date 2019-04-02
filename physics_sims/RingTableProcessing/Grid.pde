@@ -85,9 +85,23 @@ class Grid {
    * Returns a vector from the centre of RingSystem to the centre of a specific angular and radial bin. TODO Switch to Particle?
    */
   PVector centreofCell(int i, int j ) {
-    float r =  Rp*(r_min + dr*(j+0.5));
-    float angle = radians(dtheta*(i+0.5) -180);
+    float r = radiusCell(j);  
+    float angle = angleCell(i);
     return new PVector(r*cos(angle), r*sin(angle), 0);
+  }
+
+  PVector keplerianVelocityCell(int i, int j) {
+    float r = radiusCell(j);  
+    float angle = angleCell(i);
+    return new PVector(sqrt(GMp/(r))*sin(angle), -sqrt(GMp/(r))*cos(angle), 0);
+  }
+
+  float radiusCell(int j) {
+    return Rp*(r_min + dr*(j+0.5));
+  }
+
+  float angleCell(int i) {
+    return radians(dtheta*(i+0.5) -180);
   }
 
   /**
@@ -112,12 +126,31 @@ class Grid {
       }
     }
 
+    // Improve the calculate of gridV 
+
+    //As cannot simulate every particle, add constant or multiple number of particles with keplerian velocity to help maintain correct averages.
+
+    //float actualtosimratio = 2; // actual number of particles to simulated 
+
+    //for (int i = 0; i < int(360/dtheta); i++) {
+    //  for (int j = 0; j < int((r_max-r_min)/dr); j++) {
+
+    //    gridV[i][j].add(keplerianVelocityCell(i, j));
+    //    gridV[i][j].add(keplerianVelocityCell(i, j));
+    //    for (int k = 0; k<grid[i][j]; k ++) {
+    //      gridV[i][j].add(keplerianVelocityCell(i, j));
+    //    }
+    //    gridV[i][j].div(actualtosimratio*(grid[i][j]+1));
+    //  }
+    //}
+
 
     //Looping through all the grid cell combining properties to calculate normalised values and average values from total values.
     for (int i = 0; i < int(360/dtheta); i++) {
       for (int j = 0; j < int((r_max-r_min)/dr); j++) {
         //total +=grid[i][j] ;
         gridNorm[i][j] = grid[i][j]/((r_min+j*dr+dr/2)*dr*radians(dtheta));
+
 
         if (grid[i][j] !=0) {
           gridV[i][j].div(grid[i][j]);
@@ -152,10 +185,11 @@ class Grid {
       //Find which cell the particle is in.
       int x = i(p);
       int y = j(p);
-      int size = 2; //Size of Neighbourhood
+      int sizeR = 1; //Size of Neighbourhood
+      int sizeTheta = 1;
 
-      for ( int i = x-size; i <= x+size; i++) {
-        for ( int j = y-size; j <= y+size; j++) {
+      for ( int i = x-sizeTheta; i <= x+sizeTheta; i++) {
+        for ( int j = y-sizeR; j <= y+sizeR; j++) {
           if (validij(i, j)) {
 
             //a_drag = PVector.sub(gridV[i][j].copy().normalize(), p.velocity.copy().normalize());
