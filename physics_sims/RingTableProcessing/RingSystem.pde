@@ -10,7 +10,7 @@ final float GMp = 3.7931187e16;    // Gravitational parameter (Saturn)
 final float scale = 100/Rp;        // Converts from [m] to [pixel] with planetary radius (in pixels) equal to the numerator. Size of a pixel represents approximately 600km.
 
 // What are the minimum and maximum extents in r for initialisation
-float r_min = 1;
+float r_min = 2.4;
 float r_max = 3;
 
 class RingSystem {
@@ -33,7 +33,7 @@ class RingSystem {
 
     rings = new ArrayList<Ring>();
 
-    switch(3) {
+    switch(1) {
     case 1:
       //Generic Disc of Particles
       rings.add(new Ring(1.1, 2.9, n_particles));
@@ -133,7 +133,7 @@ class RingSystem {
     //  //Oversimpified Expand into more steps to make easier!!!
     //  r.update(moons);
     //  g.update(this);
-    //  saveTable(g.gridToTable(g.grid), "input.csv");
+     saveTable(g.gridToTable(g.grid), "output.csv");
     //}
 
     //for (Moon m : moons) {

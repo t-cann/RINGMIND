@@ -15,6 +15,8 @@ class Grid {
   float gridNorm[][];
   PVector gridV[][];
 
+  float minSize = 4*(sq(r_min *radians(dtheta)/2)+sq(dr)); //Based on the minimum grid size.
+
   /**
    *  Class Constuctor - General need passing all the values. 
    */
@@ -134,7 +136,7 @@ class Grid {
 
     //for (int i = 0; i < int(360/dtheta); i++) {
     //  for (int j = 0; j < int((r_max-r_min)/dr); j++) {
-
+    //      gridNorm[i][j] = grid[i][j]/((r_min+j*dr+dr/2)*dr*radians(dtheta));
     //    gridV[i][j].add(keplerianVelocityCell(i, j));
     //    gridV[i][j].add(keplerianVelocityCell(i, j));
     //    for (int k = 0; k<grid[i][j]; k ++) {
@@ -179,7 +181,7 @@ class Grid {
     // Collisions - acceleration due drag (based on number of particles in grid cell).
     PVector a_drag = new PVector();
 
-    float r = 0.5;
+    float r = 0.1;
     if ( r < random(1)) {    
 
       //Find which cell the particle is in.
@@ -188,6 +190,10 @@ class Grid {
       int sizeR = 1; //Size of Neighbourhood
       int sizeTheta = 1;
 
+      float c, a, n;
+      c= 1E-4;
+      a=1;  
+
       for ( int i = x-sizeTheta; i <= x+sizeTheta; i++) {
         for ( int j = y-sizeR; j <= y+sizeR; j++) {
           if (validij(i, j)) {
@@ -195,9 +201,7 @@ class Grid {
             //a_drag = PVector.sub(gridV[i][j].copy().normalize(), p.velocity.copy().normalize());
             PVector drag = PVector.sub(gridV[i][j], p.velocity);
 
-            float c, a, n;
-            c= 1E-4;
-            a=1;  //a = a_drag.magSq(); //a=1;
+           //a = a_drag.magSq(); //a=1;
             n = gridNorm[i][j];
 
             drag.normalize();
@@ -217,20 +221,28 @@ class Grid {
 
     PVector a_selfgrav = new PVector();
 
-    float a, d; // Strength of the attraction number of particles in the cell. 
-    d=1;
+    float r = 0;
+    if ( r < random(1)) {
 
-    int size = 2; //Size of Neighbourhood
+      float a, d; // Strength of the attraction number of particles in the cell. 
+      d=1E5;
 
-    // Loop over (nearest) neighbours. As defined by Size. 
+      int size = 2; //Size of Neighbourhood
 
-    for ( int i = x-size; i <= x+size; i++) {
-      for ( int j = y-size; j <= y+size; j++) {
-        if (validij(i, j)) {
-          float n = gridNorm[i][j];
-          PVector dist = PVector.sub(centreofCell(i, j), p.position);
-          a = dist.magSq();
-          a_selfgrav.add(PVector.mult(dist.normalize(), n*d/a));
+      // Loop over (nearest) neighbours. As defined by Size. 
+
+      for ( int i = x-size; i <= x+size; i++) {
+        for ( int j = y-size; j <= y+size; j++) {
+          if (validij(i, j)) {
+            float n = gridNorm[i][j];
+            PVector dist = PVector.sub(centreofCell(i, j), p.position);
+            a = dist.magSq();
+            if (a< minSize) {
+              a_selfgrav.add(PVector.mult(dist.normalize(), n*d/minSize));
+            } else {
+              a_selfgrav.add(PVector.mult(dist.normalize(), n*d/a));
+            }
+          }
         }
       }
     }
