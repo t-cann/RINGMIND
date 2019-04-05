@@ -57,7 +57,7 @@ abstract class Particle {
     // Initialise ourRingParticle.
     this(radius, random(1)*2.0*PI);
   }
-
+  
 
   /**
    *  Class Constuctor - Initialises an Particle object with zero position and velocity. 
