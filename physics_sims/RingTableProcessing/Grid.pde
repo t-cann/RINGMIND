@@ -109,7 +109,21 @@ class Grid {
    * Returns angle of the centre of the cell (from horizontal, upward, clockwise)
    */
   float angleCell(int i) {
-    return radians(dtheta*(i+0.5) -180);
+    return radians(dtheta*(i+0.5) +180);
+  }
+
+  // Calculates the difference in radius between a particle and the centre of its cell
+  float radialDiff(Particle p) {
+    return radiusCell(j(p))-p.position.mag();
+  }
+
+  float radialScaling(Particle p) {
+    return sqrt(radiusCell(j(p))/p.position.mag());
+  }
+
+  // Calculates the difference in angle between a particle and the centre of its cell
+  float angleDiff(Particle p) {
+    return (angleCell(i(p))-((atan2(p.position.y, p.position.x))));
   }
   
 
@@ -210,25 +224,32 @@ class Grid {
       //Find which cell the particle is in.
       int x = i(p);
       int y = j(p);
-      int sizeR = 2; //Size of Neighbourhood
-      int sizeTheta = 2;
 
-      float c, a, n;
-      c= 1E-4;
-      a=1;  
+      int sizeR = 0; //Size of Neighbourhood
+      int sizeTheta = 0;
+
+      float c, a, nn;
+      c= 1E-9;
+      //a=1;  
 
       for ( int i = x-sizeTheta; i <= x+sizeTheta; i++) {
         for ( int j = y-sizeR; j <= y+sizeR; j++) {
           if (validij(i, j)) {
 
             //a_drag = PVector.sub(gridV[i][j].copy().normalize(), p.velocity.copy().normalize());
-            PVector drag = PVector.sub(gridV[i][j], p.velocity);
+            //gridV[i][j].copy().rotate(angleDiff(p)).mult(radialScaling(p));
+            //gridV[i][j].mult(radialScaling(p));
 
             //a = a_drag.magSq(); //a=1;
-            n = gridNorm[i][j];
+            //n = gridNorm[i][j];
 
-            drag.normalize();
-            a_drag.add(drag.mult(a*c*n));
+            a_drag = PVector.sub(gridV[i][j].copy().rotate(angleDiff(p)).mult(radialScaling(p)), p.velocity);
+
+
+            a = a_drag.magSq(); //a=1;
+            nn = gridNorm[i][j];
+            a_drag.normalize();
+            a_drag.mult(c*a*nn);
           }
         }
       }

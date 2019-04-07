@@ -4,7 +4,7 @@
  * @version 1.0
  */
 
-final float G = 6.67408E-7;       // Gravitational Constant 6.67408E-11[m^3 kg^-1 s^-2]
+final float G = 6.67408E-5;       // Gravitational Constant 6.67408E-11[m^3 kg^-1 s^-2]
 final float Rp = 60268e3;          // Length scale (1 Saturn radius) [m]
 final float GMp = 3.7931187e16;    // Gravitational parameter (Saturn)
 final float scale = 100/Rp;        // Converts from [m] to [pixel] with planetary radius (in pixels) equal to the numerator. Size of a pixel represents approximately 600km.
