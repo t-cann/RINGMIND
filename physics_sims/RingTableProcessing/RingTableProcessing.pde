@@ -11,7 +11,7 @@ int n_particles = 10000;
 float h_stepsize;
 
 //Dynamic Timestep variables
-final float simToRealTimeRatio = 3600.0/1.0;   // 3600.0/1.0 --> 1hour/second
+final float simToRealTimeRatio = 100.0/1.0;   // 3600.0/1.0 --> 1hour/second
 final float maxTimeStep = 20* simToRealTimeRatio / 30;
 float totalSimTime =0.0;                       // Tracks length of time simulation has be running
 
