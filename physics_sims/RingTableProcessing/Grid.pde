@@ -50,7 +50,7 @@ class Grid {
    * @return     
    */
   int i(Particle p) {
-    return floor((degrees(atan2(p.position.y, p.position.x))+180)/dtheta);
+    return floor((degrees((atan2(p.position.y, p.position.x)+2*PI)%(2*PI)))/dtheta);
   }
 
   /**
@@ -109,7 +109,7 @@ class Grid {
    * Returns angle of the centre of the cell (from horizontal, upward, clockwise)
    */
   float angleCell(int i) {
-    return radians(dtheta*(i+0.5) +180);
+    return radians(dtheta*(i+0.5));
   }
 
   // Calculates the difference in radius between a particle and the centre of its cell
@@ -194,7 +194,7 @@ class Grid {
     PVector a_grid = new PVector();
     if (validij(p)) {
       //Fluid Drag Force / Collisions - acceleration to align to particle the average velocity of the cell. 
-      a_grid.add(dragAcceleration(p));
+      //a_grid.add(dragAcceleration(p));
 
       // Self Gravity   
       //a_grid.add(selfGravAcceleration(p));
