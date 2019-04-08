@@ -8,12 +8,12 @@ class Grid {
   float dr= 0.1; //[Planetary Radi]  
   float dtheta = 1; // [Degrees]
 
-  int sizeTheta =int(360/dtheta);
-  int sizeR = int((r_max-r_min)/dr);
+  int sizeTheta =int(360/dtheta); //Size of 1st Dimension of Grid Arrays
+  int sizeR = int((r_max-r_min)/dr); //Size of 2nd Dimension of Grid Arrays
 
-  int grid[][];
-  float gridNorm[][];
-  PVector gridV[][];
+  int grid[][];          //Grid to hold the number of particle in each cell
+  float gridNorm[][];    //Grid to hold Normalised Number Density of Particles in Cell (by Area and Total number).
+  PVector gridV[][];     //Grid to hold the average velocity of cell ( TODO correct to cell position) 
 
   float minSize = 4*(sq(r_min *radians(dtheta)/2)+sq(dr)); //Based on the minimum grid size.
 
@@ -44,23 +44,53 @@ class Grid {
   }
 
   /**
-   * Returns the index of which angular bin a particle belongs to.
+   * Returns the angle of the particle between 0 and 2PI measured from horizontal right from clockwise.
    *
    * @param   p  a particle with a position vector. 
-   * @return     
+   * @return  angle  
+   */
+  float angle(Particle p) {
+    return (atan2(p.position.y, p.position.x)+TAU)%(TAU);
+  }
+
+  /**
+   * Returns the index of which angular bin a particle belongs to. 
+   *
+   * @param   p  a particle with a position vector. 
+   * @return  i index of grid [between 0 and 360/dr]   
    */
   int i(Particle p) {
-    return floor((degrees((atan2(p.position.y, p.position.x)+2*PI)%(2*PI)))/dtheta);
+    return i(angle(p));
+  }
+
+  /**
+   * Returns the index of which angular bin a particle belongs to. 
+   *
+   * @param   angle between 0 and 2PI measured from horizontal right from clockwise . 
+   * @return  i index of grid [between 0 and 360/dr]  
+   */
+  int i(float angle) {
+    return floor(degrees(angle)/dtheta);
   }
 
   /**
    * Returns the index of which radial bin a particle belongs to.
    *
    * @param p a particle with a position vector.
-   * @return
+   * @return j index of grid[between 0 and ring thickness / dr]
    */
   int j(Particle p) {
-    return floor((p.position.mag()/Rp - r_min)/dr);
+    return j(p.position.mag());
+  }
+
+  /**
+   * Returns the index of which radial bin a particle belongs to.
+   *
+   * @param radius 
+   * @return j index of grid[between 0 and ring thickness / dr]
+   */
+  int j(float radius) {
+    return floor((radius/Rp - r_min)/dr);
   }
 
   /**
@@ -118,19 +148,13 @@ class Grid {
   }
 
   float radialScaling(Particle p) {
-    return sqrt(radiusCell(j(p))/p.position.mag());
+    return sqrt(radialDiff(p));
   }
 
   // Calculates the difference in angle between a particle and the centre of its cell
   float angleDiff(Particle p) {
-    return (angleCell(i(p))-((atan2(p.position.y, p.position.x))));
+    return angleCell(i(p))- angle(p);
   }
-  
-
-  
-
-
-  
 
   /**
    * Loops through all the particles adding relevant properties to  grids. Will allow generalised rules to be applied to particles.
@@ -194,7 +218,7 @@ class Grid {
     PVector a_grid = new PVector();
     if (validij(p)) {
       //Fluid Drag Force / Collisions - acceleration to align to particle the average velocity of the cell. 
-      //a_grid.add(dragAcceleration(p));
+      a_grid.add(dragAcceleration(p));
 
       // Self Gravity   
       //a_grid.add(selfGravAcceleration(p));
@@ -202,24 +226,13 @@ class Grid {
     return a_grid;
   }
 
-  
-  PVector position2D(Particle p){
-    return new PVector(p.position.x,p.position.y);
-  }
-  
-  //PVector angularTransformation(Particle p,PVector twod){
-  
-  //return twod.rotate(angleCell(i - angleparticle );
-  //}
-  
-  
-  PVector dragAcceleration(Particle p ) {
+  PVector dragAccelerationC(Particle p) {
 
     // Collisions - acceleration due drag (based on number of particles in grid cell).
     PVector a_drag = new PVector();
 
     float r = 0.5;
-    if ( r < random(1)) {    
+    if ( r > random(1)) {    
 
       //Find which cell the particle is in.
       int x = i(p);
@@ -228,32 +241,27 @@ class Grid {
       int sizeR = 0; //Size of Neighbourhood
       int sizeTheta = 0;
 
-      float c, a, nn;
+      float c, a, n;
       c= 1E-9;
-      //a=1;  
+
 
       for ( int i = x-sizeTheta; i <= x+sizeTheta; i++) {
         for ( int j = y-sizeR; j <= y+sizeR; j++) {
           if (validij(i, j)) {
 
-            //a_drag = PVector.sub(gridV[i][j].copy().normalize(), p.velocity.copy().normalize());
-            //gridV[i][j].copy().rotate(angleDiff(p)).mult(radialScaling(p));
-            //gridV[i][j].mult(radialScaling(p));
+            PVector drag = PVector.sub(gridV[i][j].copy().normalize(), p.velocity.copy().normalize());
 
-            //a = a_drag.magSq(); //a=1;
-            //n = gridNorm[i][j];
-
-            a_drag = PVector.sub(gridV[i][j].copy().rotate(angleDiff(p)).mult(radialScaling(p)), p.velocity);
-
-
-            a = a_drag.magSq(); //a=1;
-            nn = gridNorm[i][j];
-            a_drag.normalize();
-            a_drag.mult(c*a*nn);
+            a =1;// drag.magSq(); //a=1; 
+            drag.normalize();
+            n = gridNorm[x][y];
+            drag.mult(c*a*n);
+            a_drag.add(drag);
           }
         }
       }
     }
+
+
     return a_drag;
   }
 
@@ -291,6 +299,30 @@ class Grid {
       }
     }
     return a_selfgrav;
+  }
+
+  PVector dragAcceleration(Particle p) {
+
+    // Collisions - acceleration due drag (based on number of particles in grid cell).
+    PVector a_drag = new PVector();
+
+    float r = 0.1;
+    if ( r > random(1)) {    
+
+      //Find which cell the particle is in.
+      int i = i(p);
+      int j = j(p);
+
+      if (validij(i, j)) {
+        float c, a, nn;
+        a_drag = PVector.sub(gridV[i][j].copy().rotate(angleDiff(p)).mult(radialScaling(p)), p.velocity);
+        c= 1E-9;
+        a = a_drag.magSq(); //a=1; 
+        nn = gridNorm[i][j];
+        a_drag.mult(c*a*nn);
+      }
+    }
+    return a_drag;
   }
 
   /**
@@ -389,30 +421,89 @@ class Grid {
     return tempTable;
   }
 
-  /** 
-   * Redudent Method - Returns array holding the two indices for a specific particle.  
-   *
-   * @param p a particle with a position vector.
-   */
-  int[] findIndices(Particle p) {
-    int[] temp = new int[2];
-    temp[0]=i(p);
-    //if (floor((p.position.mag()/Rp - r_min)/dr) < int((r_max-r_min)/dr)) {
-    //  if (floor((p.position.mag()/Rp - r_min)/dr) > 0) {
-    temp[1]=j(p);
-    //  }else{}
 
+
+  void display() {
+
+    if (mousePressed) {
+      float r = sqrt(sq(mouseX-width/2)+ sq(mouseY-height/2))/scale;
+      float angle = (atan2((mouseY-height/2), mouseX-width/2)+TAU)%(TAU);
+
+      //println(i(angle) +"   " + j(r));
+
+      int i= i(angle);
+      int j = j(r);
+      if (validij(i, j)) {
+
+        displaycell(i, j );
+        String output = "\t Normalised Number Density: " +gridNorm[i][j] + "\n\t Average Velocity: " + gridV[i][j].mag() ;
+        text(output, 0.0, 10.0);
+
+        displayVector(i, j, gridV[i][j]);
+
+        //println("r : "+r +" angle: "+ angle);
+        //println("X: "+(mouseX-width/2) +" Y: "+ -(mouseY-height/2));
+        //println("MouseX: "+mouseX +"MouseY: "+ mouseY);
+      }
+    }
+
+    //for (RingParticle p : particles) {
+    //  p.display();
     //}
-
-    return temp;
   }
 
-  //void display() {
+  void displayVector(int i, int j, PVector v) {
+    push();
+    translate(width/2, height/2);
+    stroke(255);
+    //scale(1,-1);
+    strokeWeight(1);
+    PVector cofc = centreofCell(i, j);
+    cofc.mult(scale);
+    PVector temp = v.copy().mult(5E-3);
+    //println(cofc.x);
+    line(cofc.x, cofc.y, cofc.x + temp.x, cofc.y + temp.y);
+    pop();
+  }
 
-  //  for (RingParticle p : particles) {
-  //    p.display();
-  //  }
-  //}
+  void displaycell(int i, int j) {
+    push();
+    translate(width/2, height/2);
+    //scale(1, -1);
+    noFill();
+    stroke(255);
+    strokeWeight(1);
+
+
+
+    float r = scale*Rp*(r_min + dr *j);
+    float R = scale*Rp*(r_min + dr *(j+1));
+    float theta = radians(dtheta *i);
+
+    //println(r+ " :: " + R+ " ::: "+ theta);
+    float N =10;
+
+    beginShape();
+    // Outer circle
+
+    //vertex(100,100);
+    //vertex(-100,100);
+    //vertex(-100,-100);
+    //vertex(100,-100);
+    for (int x = 0; x<=N; x++) {
+      vertex(R*cos(x*radians(dtheta)/N + theta), R*sin(x*radians(dtheta)/N +theta));
+    }
+
+    // Inner circle
+    //beginContour();
+    for (int x = 0; x<=N; x++) {
+      vertex(r*cos((theta+radians(dtheta))-x*radians(dtheta)/N), r*sin((theta+radians(dtheta))-x*radians(dtheta)/N));
+    }
+    //endContour();
+
+    endShape(CLOSE);
+    pop();
+  }
   //void render(PGraphics x) {
   //  for (RingParticle p : particles) {
   //    p.render(x);
@@ -426,3 +517,30 @@ class Grid {
 //saveTable(gridToTable(grid), "new.csv");
 //println(total);
 //println(grid[0]);
+///** 
+// * Redudent Method - Returns array holding the two indices for a specific particle.  
+// *
+// * @param p a particle with a position vector.
+// */
+//int[] findIndices(Particle p) {
+//  int[] temp = new int[2];
+//  temp[0]=i(p);
+//  //if (floor((p.position.mag()/Rp - r_min)/dr) < int((r_max-r_min)/dr)) {
+//  //  if (floor((p.position.mag()/Rp - r_min)/dr) > 0) {
+//  temp[1]=j(p);
+//  //  }else{}
+
+//  //}
+
+//  return temp;
+//}
+
+
+//PVector position2D(Particle p) {
+//  return new PVector(p.position.x, p.position.y);
+//}
+
+//PVector angularTransformation(Particle p,PVector twod){
+
+//return twod.rotate(angleCell(i - angleparticle );
+//}
