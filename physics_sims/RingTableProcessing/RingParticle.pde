@@ -28,6 +28,25 @@ class RingParticle extends Particle {
   }
 
   /**
+   *  Calculates the acceleration on this particle (based on its current position) (Does not override value of acceleration of particle)
+   */
+  PVector getAcceleration(RingSystem rs) {
+
+    // acceleration due planet in centre of the ring. 
+    PVector a_grav = PVector.mult(position.copy().normalize(), -GMp/position.copy().magSq());
+
+    //Acceleration from the Grid Object
+    a_grav.add(rs.g.gridAcceleration(this));
+
+    //for (Moon m : rs.moons) {
+    //   PVector dist = PVector.sub(m.position, position);
+    //    PVector a = PVector.mult(dist, m.GM/pow(dist.mag(), 3));
+    //    a_grav.add(a);
+    //  }
+    return a_grav;
+  }
+
+  /**
    *  Display Method - Renders this object to screen displaying its position and colour.
    */
   void display() {
@@ -50,5 +69,4 @@ class RingParticle extends Particle {
     x.point(scale*position.x, scale*position.y);
     x.pop();
   }
-
 }
