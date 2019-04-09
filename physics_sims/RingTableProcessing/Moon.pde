@@ -9,6 +9,7 @@ class Moon extends Particle {
   float GM;
   float radius;
   color c ;
+  final float moonSizeScale= 2;
   
   
   /**
@@ -67,7 +68,7 @@ class Moon extends Particle {
     x.ellipseMode(CENTER);
     x.fill(c);
     x.stroke(c);
-    x.circle(scale*position.x, scale*position.y, 2*radius*scale);
+    x.circle(scale*position.x, scale*position.y, 2*moonSizeScale*radius*scale);
     x.pop();
   }
   

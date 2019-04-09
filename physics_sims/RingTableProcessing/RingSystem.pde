@@ -4,14 +4,14 @@
  * @version 1.0
  */
 
-final float G = 6.67408E-9;       // Gravitational Constant 6.67408E-11[m^3 kg^-1 s^-2]
+final float G = 6.67408E-8;       // Gravitational Constant 6.67408E-11[m^3 kg^-1 s^-2]
 final float Rp = 60268e3;          // Length scale (1 Saturn radius) [m]
 final float GMp = 3.7931187e16;    // Gravitational parameter (Saturn)
 final float scale = 100/Rp;        // Converts from [m] to [pixel] with planetary radius (in pixels) equal to the numerator. Size of a pixel represents approximately 600km.
 
 // What are the minimum and maximum extents in r for initialisation
 float r_min = 1;
-float r_max = 4;
+float r_max = 5;
 
 class RingSystem {
 
@@ -33,10 +33,11 @@ class RingSystem {
 
     rings = new ArrayList<Ring>();
 
-    switch(1) {
+    switch(2 ) {
     case 1:
       //Generic Disc of Particles
-      rings.add(new Ring(1.1, 2.9, n_particles));
+      rings.add(new Ring(1.1, 2.9, n_particles/2));
+      rings.add(new Ring(4.5, 4.7, n_particles/2));
       break;
     case 2:
       //Saturn Ring Data (Source: Nasa Saturn Factsheet) [in Saturn radii]
@@ -78,7 +79,11 @@ class RingSystem {
         }
       }
       rings.get(0).particles=tempParticles;
-
+      break;
+    case 4:
+      rings.add(new Ring(1, 3, 0));
+      rings.get(0).particles.add(new RingParticle(2,0,0,0));
+   
     default:
     }
 
@@ -88,7 +93,7 @@ class RingSystem {
     // Adding Specific Moons ( e.g. Mima, Enceladus, Tethys, ... )
 
     //addMoon(5, moons);
-    //addMoon(7, moons);
+    addMoon(7, moons);
     //addMoon(9, moons);
     //addMoon(12, moons);
     //addMoon(14, moons);

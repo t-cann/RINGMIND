@@ -54,6 +54,7 @@ class RingParticle extends Particle {
     translate(width/2, height/2);
     fill(255);
     stroke(255);
+    strokeWeight(2);
     point(scale*position.x, scale*position.y);
     pop();
   }

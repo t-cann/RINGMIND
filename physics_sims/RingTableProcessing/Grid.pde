@@ -5,7 +5,7 @@
 class Grid {
 
 
-  float dr= 0.1; //[Planetary Radi]  
+  float dr= 0.05; //[Planetary Radi]  
   float dtheta = 1; // [Degrees]
 
   int sizeTheta =int(360/dtheta); //Size of 1st Dimension of Grid Arrays
@@ -163,7 +163,7 @@ class Grid {
       a_grid.add(dragAcceleration(p));
 
       // Self Gravity   
-      a_grid.add(selfGravAcceleration(p));
+      //a_grid.add(selfGravAcceleration(p));
     }
     return a_grid;
   }
@@ -173,23 +173,27 @@ class Grid {
     // Collisions - acceleration due drag (based on number of particles in grid cell).
     PVector a_drag = new PVector();
 
-    float r = 1;
-    if ( random(1)< r) {    
 
-      //Find which cell the particle is in.
-      int i = i(p);
-      int j = j(p);
 
-      if (validij(i, j)) {
-        float c, a, nn;
-        //println(degrees(angleDiff(p)));
-        a_drag = PVector.sub(gridV[i][j].copy().rotate(angleDiff(p)).mult(radialScaling(p)), p.velocity.copy()); // 
-        c= 1E-9;
-        a =  a_drag.magSq(); //a=1; 
-        nn = gridNorm[i][j];
-        a_drag.mult(c*a*nn);
-      }
-    }
+    //Find which cell the particle is in.
+    int i = i(p);
+    int j = j(p);
+
+
+    float r = 1-exp(-(gridNorm[i][j]*1E4)/h_stepsize);
+    if ( random(1)< r) {
+   
+      float c, a, nn;
+      //println(degrees(angleDiff(p)));
+      a_drag = PVector.sub(gridV[i][j].copy().rotate(angleDiff(p)).mult(radialScaling(p)), p.velocity.copy()); // 
+      c= 1E-7;
+      //println( p.position.mag()+ "\t::" +a_drag.mag());
+      a =  a_drag.magSq(); //a=1; 
+      a_drag.normalize();
+      nn = gridNorm[i][j];
+      a_drag.mult(c*a*nn);
+      
+   }
     return a_drag;
   }
 
@@ -319,7 +323,8 @@ class Grid {
       if (validij(i, j)) {
 
         displaycell(i, j );
-        String output = "\t Normalised Number Density: " +gridNorm[i][j] + "\n\t Average Velocity: " + gridV[i][j].mag() ;
+         float a = 1-exp(-(gridNorm[i][j]*1E4)/h_stepsize);
+        String output = "\t Normalised Number Density: " +gridNorm[i][j] + "\n\t Average Velocity: " + gridV[i][j].mag()+ "\n\t Probability Threshold: " + a ;
         text(output, 0.0, 10.0);
 
         displayVector(i, j, gridV[i][j]);
@@ -418,9 +423,9 @@ class Grid {
       for (int j = 0; j < int((r_max-r_min)/dr); j++) {
         total += grid[i][j];
         if (grid[i][j] !=0) {
-        gridCofM[i][j].div(grid[i][j]);
-        }else{
-        gridCofM[i][j].set(0.0, 0.0, 0.0);
+          gridCofM[i][j].div(grid[i][j]);
+        } else {
+          gridCofM[i][j].set(0.0, 0.0, 0.0);
         }
       }
     }
@@ -428,36 +433,36 @@ class Grid {
 
     //As cannot simulate every particle, add constant or multiple number of particles with keplerian velocity to help maintain correct averages.
 
-    float actualtosimratio = 2; // actual number of particles to simulated 
+    //float actualtosimratio = 2; // actual number of particles to simulated 
 
-    for (int i = 0; i < int(360/dtheta); i++) {
-      for (int j = 0; j < int((r_max-r_min)/dr); j++) {
-        gridNorm[i][j] = grid[i][j]/((r_min+j*dr+dr/2)*dr*radians(dtheta)*total);
-        gridV[i][j].add(keplerianVelocityCell(i, j));
-        gridV[i][j].add(keplerianVelocityCell(i, j));
-        for (int k = 0; k<grid[i][j]; k ++) {
-          gridV[i][j].add(keplerianVelocityCell(i, j));
-        }
-        gridV[i][j].div(actualtosimratio*(grid[i][j]+1));
-      }
-    }
+    //for (int i = 0; i < int(360/dtheta); i++) {
+    //  for (int j = 0; j < int((r_max-r_min)/dr); j++) {
+    //    gridNorm[i][j] = grid[i][j]/((r_min+j*dr+dr/2)*dr*radians(dtheta)*total);
+    //    gridV[i][j].add(keplerianVelocityCell(i, j));
+    //    gridV[i][j].add(keplerianVelocityCell(i, j));
+    //    for (int k = 0; k<grid[i][j]; k ++) {
+    //      gridV[i][j].add(keplerianVelocityCell(i, j));
+    //    }
+    //    gridV[i][j].div(actualtosimratio*(grid[i][j]+1));
+    //  }
+    //}
 
 
 
     ////  //Looping through all the grid cell combining properties to calculate normalised values and average values from total values.
-    //for (int i = 0; i < int(360/dtheta); i++) {
-    //  for (int j = 0; j < int((r_max-r_min)/dr); j++) {
+    for (int i = 0; i < int(360/dtheta); i++) {
+      for (int j = 0; j < int((r_max-r_min)/dr); j++) {
 
-    //    gridNorm[i][j] = grid[i][j]/((r_min+j*dr+dr/2)*dr*radians(dtheta)*total);
+        gridNorm[i][j] = grid[i][j]/((r_min+j*dr+dr/2)*dr*radians(dtheta)*total);
 
 
-    //    if (grid[i][j] !=0) {
-    //      gridV[i][j].div(grid[i][j]);
-    //    } else {
-    //      gridV[i][j].set(0.0, 0.0, 0.0);
-    //    }
-    //  }
-    //}
+        if (grid[i][j] !=0) {
+          gridV[i][j].div(grid[i][j]);
+        } else {
+          gridV[i][j].set(0.0, 0.0, 0.0);
+        }
+      }
+    }
   }
 
   /**
