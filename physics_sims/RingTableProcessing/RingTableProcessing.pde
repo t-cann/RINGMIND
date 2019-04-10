@@ -53,7 +53,7 @@ void draw() {
   if(Display){
   display();
   }
-fps();
+  fps();
   //******************************************************
 
   totalSimTime +=h_stepsize;
