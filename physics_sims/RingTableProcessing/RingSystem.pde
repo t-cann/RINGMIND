@@ -4,19 +4,18 @@
  * @version 1.0
  */
 
-int n_particles = 10000; 
+int N_PARTICLES = 10000; 
 float G = 6.67408E-8;       // Gravitational Constant 6.67408E-11[m^3 kg^-1 s^-2]
 float GMp = 3.7931187e16;    // Gravitational parameter (Saturn)
-
-int RING_INDEX =1;
-int MOON_INDEX =1;
-
-final float Rp = 60268e3;          // Length scale (1 Saturn radius) [m]
-final float scale = 100/Rp;        // Converts from [m] to [pixel] with planetary radius (in pixels) equal to the numerator. Size of a pixel represents approximately 600km.
 
 // What are the minimum and maximum extents in r for initialisation
 float R_MIN = 1;
 float R_MAX = 5;
+int RING_INDEX =5;
+int MOON_INDEX =1;
+
+final float Rp = 60268e3;          // Length scale (1 Saturn radius) [m]
+final float SCALE = 100/Rp;        // Converts from [m] to [pixel] with planetary radius (in pixels) equal to the numerator. Size of a pixel represents approximately 600km.
 
 class RingSystem {
 
@@ -24,6 +23,7 @@ class RingSystem {
   ArrayList<Ring> rings;
   ArrayList<Moon> moons;
   Grid g;
+  float r_min, r_max;
 
   /**
    *  Class Constuctor - General need passing all the values. 
@@ -31,6 +31,8 @@ class RingSystem {
   RingSystem() {
 
     g = new Grid();
+    r_min= R_MIN;
+    r_max= R_MAX;
     totalParticles = new ArrayList<Particle>();
     rings = new ArrayList<Ring>();
     moons = new ArrayList<Moon>();
@@ -82,22 +84,22 @@ class RingSystem {
     switch(RING_INDEX) {
     case 1:
       //Generic Disc of Particles
-      rings.add(new Ring(1.1, 2.9, n_particles));
+      rings.add(new Ring(1.1, 2.9, N_PARTICLES));
       break;
     case 2:
       //Saturn Ring Data (Source: Nasa Saturn Factsheet) [in Saturn radii]
       // D Ring: Inner 1.110 Outer 1.236
-      rings.add(new Ring(1.110, 1.236, 1000));
+      rings.add(new Ring(1.110, 1.236, N_PARTICLES/10));
       // C Ring: Inner 1.239 Outer 1.527
-      rings.add(new Ring(1.239, 1.527, 1000));
+      rings.add(new Ring(1.239, 1.527, N_PARTICLES/10));
       // B Ring: Inner 1.527 Outer 1.951
-      rings.add(new Ring(1.527, 1.951, 1000));
+      rings.add(new Ring(1.527, 1.951, N_PARTICLES/10));
       // A Ring: Inner 2.027 Outer 2.269
-      rings.add(new Ring(2.027, 2.269, 5000));
+      rings.add(new Ring(2.027, 2.269, N_PARTICLES/2));
       // F Ring: Inner 2.320 Outer *
-      rings.add(new Ring(2.320, 2.321, 1000));
+      rings.add(new Ring(2.320, 2.321, N_PARTICLES/10));
       // G Ring: Inner 2.754 Outer 2.874
-      rings.add(new Ring(2.754, 2.874, 1000));
+      rings.add(new Ring(2.754, 2.874, N_PARTICLES/10));
       // E Ring: Inner 2.987 Outer 7.964
       //rings.add(new Ring(2.987, 7.964, 1000));
 
@@ -131,8 +133,8 @@ class RingSystem {
       break;
     case 5:
       //2 Discs of Particles
-      rings.add(new Ring(1.1, 2.9, n_particles/2));
-      rings.add(new Ring(4.5, 4.7, n_particles/2));
+      rings.add(new Ring(1.1, 2.9, N_PARTICLES/2));
+      rings.add(new Ring(4.5, 4.7, N_PARTICLES/2));
       break;
     default:
     }
@@ -158,33 +160,45 @@ class RingSystem {
 
 
 
-    //for (Ring r : rings) {
-    //  //Oversimpified Expand into more steps to make easier!!!
-    //  r.update(moons);
-    //  g.update(this);
-    saveTable(g.gridToTable(g.grid), "output.csv");
-    //}
-
-    //for (Moon m : moons) {
-    //  m.update(moons);
-    //}
+    //Output TABLE 
+    //saveTable(g.gridToTable(g.grid), "output.csv");
   }
 
   /**
    *
    */
   void display() {
+    push();
+    translate(width/2, height/2);
+    fill(255);
+    stroke(255);
+    strokeWeight(2);
 
-    for (Particle p : totalParticles) {
-      p.display();
+    for (Ring r : rings) {
+      for (RingParticle p : r.particles) {
+        point(SCALE*p.position.x, SCALE*p.position.y);
+      }
     }
+    pop();
+    for (Moon m : moons) {
+      m.display();
+    }
+    guidelines();
     g.display();
-    //for (Ring r : rings) {
-    //  r.display();
-    //}
-    //for (Moon m : moons) {
-    //  m.display();
-    //}
+  }
+
+  //guidelines round edge of rings and planet.
+  void guidelines() {
+    push();
+    translate(width/2, height/2);
+    stroke(255, 165, 0);
+    noFill();
+    circle(0, 0, 2*R_MAX*SCALE*Rp);
+    circle(0, 0, 2*R_MIN*SCALE*Rp);
+    stroke(255, 165, 0);
+    fill(255, 165, 0);
+    circle(0, 0, 2.0*SCALE*Rp);
+    pop();
   }
 
   /**

@@ -13,7 +13,7 @@ float GRID_DRAG_PROBABILITY = 1E4 ;
 class Grid {
 
 
-  protected float dr, dtheta; 
+  protected float dr, dtheta, r_min, r_max; 
   protected int sizeTheta, sizeR;
   protected float drag_c, drag_p;  //Constants for Drag Rule.
 
@@ -32,6 +32,8 @@ class Grid {
 
     dr = GRID_DELTA_R;
     dtheta = GRID_DELTA_THETA;
+    r_min = R_MIN;
+    r_max = R_MAX;
     sizeTheta =int(360/dtheta); //Size of 1st Dimension of Grid Arrays
     sizeR = int((r_max-r_min)/dr); //Size of 2nd Dimension of Grid Arrays
     grid = new int[sizeTheta][sizeR];
@@ -322,7 +324,7 @@ class Grid {
   void display() {
 
     if (mousePressed) {
-      float r = sqrt(sq(mouseX-width/2)+ sq(mouseY-height/2))/scale;
+      float r = sqrt(sq(mouseX-width/2)+ sq(mouseY-height/2))/SCALE;
       float angle = (atan2((mouseY-height/2), mouseX-width/2)+TAU)%(TAU);
 
       //println(i(angle) +"   " + j(r));
@@ -356,7 +358,7 @@ class Grid {
     //scale(1,-1);
     strokeWeight(1);
     PVector cofc = centreofCell(i, j);
-    cofc.mult(scale);
+    cofc.mult(SCALE);
     PVector temp = v.copy().mult(5E-3);
     //println(cofc.x);
     line(cofc.x, cofc.y, cofc.x + temp.x, cofc.y + temp.y);
@@ -373,8 +375,8 @@ class Grid {
 
 
 
-    float r = scale*Rp*(r_min + dr *j);
-    float R = scale*Rp*(r_min + dr *(j+1));
+    float r = SCALE*Rp*(r_min + dr *j);
+    float R = SCALE*Rp*(r_min + dr *(j+1));
     float theta = radians(dtheta *i);
 
     //println(r+ " :: " + R+ " ::: "+ theta);

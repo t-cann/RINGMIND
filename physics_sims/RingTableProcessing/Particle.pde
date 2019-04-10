@@ -5,7 +5,7 @@
  * @version 1.0
  */
 abstract class Particle {
-
+  float scale;
   PVector position; // Position float x1, x2, x3; 
   PVector velocity; // Velocity float v1, v2, v3;
   PVector acceleration;  //Update all constructors!
@@ -19,6 +19,7 @@ abstract class Particle {
     //default velocity
     this.velocity = new PVector(v1_, v2_, v3_);
     this.acceleration = new PVector(a1_, a2_, a3_);
+    scale= SCALE;
   }
 
   /**

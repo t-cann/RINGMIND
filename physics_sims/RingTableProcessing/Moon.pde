@@ -9,6 +9,8 @@ class Moon extends Particle {
   float GM;
   float radius;
   color c ;
+  
+  
   final float moonSizeScale= 2;
   
   
@@ -20,6 +22,8 @@ class Moon extends Particle {
     this.GM=Gm;
     this.radius=radius;
     this.c= c;
+    
+        
   }
   /**
    *  Class Constuctor - General Moon object with random angle. 
