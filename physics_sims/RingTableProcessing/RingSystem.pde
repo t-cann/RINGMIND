@@ -4,19 +4,23 @@
  * @version 1.0
  */
 
-final float G = 6.67408E-8;       // Gravitational Constant 6.67408E-11[m^3 kg^-1 s^-2]
+int n_particles = 10000; 
+float G = 6.67408E-8;       // Gravitational Constant 6.67408E-11[m^3 kg^-1 s^-2]
+float GMp = 3.7931187e16;    // Gravitational parameter (Saturn)
+
+int RING_INDEX =1;
+int MOON_INDEX =1;
+
 final float Rp = 60268e3;          // Length scale (1 Saturn radius) [m]
-final float GMp = 3.7931187e16;    // Gravitational parameter (Saturn)
 final float scale = 100/Rp;        // Converts from [m] to [pixel] with planetary radius (in pixels) equal to the numerator. Size of a pixel represents approximately 600km.
 
 // What are the minimum and maximum extents in r for initialisation
-float r_min = 1;
-float r_max = 5;
+float R_MIN = 1;
+float R_MAX = 5;
 
 class RingSystem {
 
   ArrayList<Particle> totalParticles;
-  
   ArrayList<Ring> rings;
   ArrayList<Moon> moons;
   Grid g;
@@ -28,16 +32,57 @@ class RingSystem {
 
     g = new Grid();
     totalParticles = new ArrayList<Particle>();
-
-    //***********Initialise Rings*********************
-
     rings = new ArrayList<Ring>();
+    moons = new ArrayList<Moon>();
+    initialise();
 
-    switch(2 ) {
+
+
+    //***********************************************
+  }
+
+  void initialise() {
+    initialiseMoons();
+    initialiseRings();
+    totalParticles.clear();
+    for (Ring r : rings) {
+      for (RingParticle p : r.particles) {
+        totalParticles.add(p);
+      }
+    }
+    for (Moon m : moons) {
+      totalParticles.add(m);
+    }
+  }
+
+  void initialiseMoons() {
+    //***********Initialise Moons*********************
+    moons.clear();
+    switch(MOON_INDEX) {
+      case(1):
+      // Adding Specific Moons ( e.g. Mima, Enceladus, Tethys, ... )
+      //addMoon(5, moons);
+      addMoon(7, moons);
+      //addMoon(9, moons);
+      //addMoon(12, moons);
+      //addMoon(14, moons);
+      break;
+      case(2):
+      //Adding All Moons
+      for (int i = 0; i < 18; i++) {
+        addMoon(i, moons);
+      }
+    default:
+    }
+  }
+
+  void initialiseRings() {
+    //***********Initialise Rings********************* 
+    rings.clear();
+    switch(RING_INDEX) {
     case 1:
       //Generic Disc of Particles
-      rings.add(new Ring(1.1, 2.9, n_particles/2));
-      rings.add(new Ring(4.5, 4.7, n_particles/2));
+      rings.add(new Ring(1.1, 2.9, n_particles));
       break;
     case 2:
       //Saturn Ring Data (Source: Nasa Saturn Factsheet) [in Saturn radii]
@@ -82,64 +127,42 @@ class RingSystem {
       break;
     case 4:
       rings.add(new Ring(1, 3, 0));
-      rings.get(0).particles.add(new RingParticle(2,0,0,0));
-   
+      rings.get(0).particles.add(new RingParticle(2, 0, 0, 0));
+      break;
+    case 5:
+      //2 Discs of Particles
+      rings.add(new Ring(1.1, 2.9, n_particles/2));
+      rings.add(new Ring(4.5, 4.7, n_particles/2));
+      break;
     default:
     }
-
-    //***********Initialise Moons*********************
-    moons = new ArrayList<Moon>();
-
-    // Adding Specific Moons ( e.g. Mima, Enceladus, Tethys, ... )
-
-    //addMoon(5, moons);
-    addMoon(7, moons);
-    //addMoon(9, moons);
-    //addMoon(12, moons);
-    //addMoon(14, moons);
-
-    //Adding All Moons
-
-    //for (int i = 0; i < 18; i++) {
-    //  addMoon(i, moons);
-    //}
-    
-    for (Ring r : rings) {
-      for (RingParticle p : r.particles) {
-        totalParticles.add(p);
-      }
-    }
-    for (Moon m : moons) {
-      totalParticles.add(m);
-    }
-    //***********************************************
   }
-  
+
 
   /**
    *  Updates object for one time step of simulation taking into account the position of one moon.
    */
   void update() {
-    
+
     g.update(this);
-    for(Particle p : totalParticles){
-     p.set_getAcceleration(this);
+    for (Particle p : totalParticles) {
+      p.set_getAcceleration(this);
     }
-    for(Particle p : totalParticles){
-     p.updatePosition();
+    for (Particle p : totalParticles) {
+      p.updatePosition();
     }
     g.update(this);
-    for(Particle p : totalParticles){
-     p.updateVelocity(p.getAcceleration(this));
+    for (Particle p : totalParticles) {
+      p.updateVelocity(p.getAcceleration(this));
     }
-    
+
 
 
     //for (Ring r : rings) {
     //  //Oversimpified Expand into more steps to make easier!!!
     //  r.update(moons);
     //  g.update(this);
-     saveTable(g.gridToTable(g.grid), "output.csv");
+    saveTable(g.gridToTable(g.grid), "output.csv");
     //}
 
     //for (Moon m : moons) {
