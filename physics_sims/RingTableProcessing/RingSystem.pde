@@ -157,9 +157,6 @@ class RingSystem {
     for (Particle p : totalParticles) {
       p.updateVelocity(p.getAcceleration(this));
     }
-
-
-
     //Output TABLE 
     //saveTable(g.gridToTable(g.grid), "output.csv");
   }
@@ -170,35 +167,48 @@ class RingSystem {
   void display() {
     push();
     translate(width/2, height/2);
-    fill(255);
-    stroke(255);
     strokeWeight(2);
-
+    stroke(255);
     for (Ring r : rings) {
       for (RingParticle p : r.particles) {
+
         point(SCALE*p.position.x, SCALE*p.position.y);
       }
     }
-    pop();
+    strokeWeight(4);
+    stroke(255, 0, 0);
     for (Moon m : moons) {
-      m.display();
+      point(SCALE*m.position.x, SCALE*m.position.y);
     }
     guidelines();
+
+    //for (Particle p : totalParticles) {
+    //  if (p instanceof RingParticle) {
+    //    strokeWeight(2);
+    //    stroke(255);
+    //    point(SCALE*p.position.x, SCALE*p.position.y);
+    //  } else if ( p instanceof Moon) {
+    //    strokeWeight(4);
+    //    stroke(255, 0, 0);
+    //    point(SCALE*p.position.x, SCALE*p.position.y);
+    //  }
+    //}
+    pop();
+
+    
     g.display();
   }
 
   //guidelines round edge of rings and planet.
   void guidelines() {
-    push();
-    translate(width/2, height/2);
+    strokeWeight(1);
     stroke(255, 165, 0);
     noFill();
     circle(0, 0, 2*R_MAX*SCALE*Rp);
     circle(0, 0, 2*R_MIN*SCALE*Rp);
-    stroke(255, 165, 0);
     fill(255, 165, 0);
     circle(0, 0, 2.0*SCALE*Rp);
-    pop();
+   
   }
 
   /**
@@ -206,7 +216,7 @@ class RingSystem {
    */
   void render(PGraphics x) {
     for (Ring r : rings) {
-      r.render(x);
+      //r.render(x);
     }
     for (Moon m : moons) {
       m.render(x);
