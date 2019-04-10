@@ -7,7 +7,7 @@
  */
 
 // Basic parameters
-int n_particles = 10000;   
+  
 float h_stepsize;
 
 //Dynamic Timestep variables
