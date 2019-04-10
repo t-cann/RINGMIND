@@ -2,24 +2,17 @@
  * A gravitational simulation in a Cartesian coordinate system.
  *
  * @author Thomas Cann
- * @author Sam Hinson
  * @version 2.0
  */
 
-// Basic parameters
-  
-float h_stepsize;
-
-//Dynamic Timestep variables
-final float simToRealTimeRatio = 3600.0/1.0;   // 3600.0/1.0 --> 1hour/second
-final float maxTimeStep = 20* simToRealTimeRatio / 30;
-float totalSimTime =0.0;                       // Tracks length of time simulation has be running
-
-Boolean Running = true;
-Boolean Display = true; 
-
 //Initialising Objects
-RingSystem Saturn;
+Simulation S;
+
+float time; 
+
+int count = 0; 
+int countI = 0; 
+float Interval = 180; //000;
 
 
 void setup() {
@@ -33,62 +26,33 @@ void setup() {
 }
 
 void draw() {
+  time = millis() - Interval * count ;
+  
+  if (time > Interval) {
 
-  // calculate simulation time step for this frame
-  if (simToRealTimeRatio/frameRate < maxTimeStep) {
-    h_stepsize= simToRealTimeRatio/frameRate;
-  } else {
-    h_stepsize= maxTimeStep;
-    println("At Maximum Time Step");
+    output();
+    
+    count ++;
+
+    if ( count % 4 == 0 ) {
+      reinitialise();
+    }
   }
 
-  //*************Update and Render Frame******************
-
-  //Updates properties of all objects.
-
-  if (Running) {
-    update();
-  }
-  //Display all of the objects to screen.
-  if(Display){
-  display();
-  }
-  fps();
-  //******************************************************
-
-  totalSimTime +=h_stepsize;
+  update();
 }
 
+void output() {
+  S.display();
+  saveFrame("data/frame-####.png");
+}
 
 void update() {
-  Saturn.update();
+  S.update();
 }
 
-void display(){
-  background(0);
-  Saturn.display();
+void reinitialise() {
   
-}
-
-//Display FrameRate and Time data to bar along bottom of screen
-void fps() {
-  surface.setTitle("Framerate: " + int(frameRate) + "     Time Elapsed[Seconds]: " + int(millis()/1000.0) + "     Simulation Time Elapsed[hours]: " + int(totalSimTime/3600.0)); //Set the frame title to the frame rate
-}
-
-
-
-void keyPressed() {
-  if (key ==' ') {
-    if (Running) {
-      Running =false;
-    } else {
-      Running = true;
-    }
-  }else if (key =='h') {
-    if (Display) {
-      Display =false;
-    } else {
-      Display = true;
-    }
-  }
+  countI ++;
+  
 }
