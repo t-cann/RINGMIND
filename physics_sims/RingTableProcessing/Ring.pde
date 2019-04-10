@@ -19,20 +19,20 @@ class Ring {
       particles.add(new RingParticle(Inner, Outer));
     }
   }
-  void update(ArrayList<Moon> m) {
-    for (Particle p : particles) {
-      p.update();
-    }
-  }
-  void display() {
+  //void update(ArrayList<Moon> m) {
+  //  for (Particle p : particles) {
+  //    p.update();
+  //  }
+  //}
+  //void display() {
     
-    for (Particle p : particles) {
-      p.display();
-    }
-  }
-  void render(PGraphics x) {
-    for (Particle p : particles) {
-      p.render(x);
-    }
-  }
+  //  for (Particle p : particles) {
+  //    p.display();
+  //  }
+  //}
+  //void render(PGraphics x) {
+  //  for (Particle p : particles) {
+  //    p.render(x);
+  //  }
+  //}
 }
