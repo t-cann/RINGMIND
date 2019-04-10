@@ -49,25 +49,25 @@ class RingParticle extends Particle {
   /**
    *  Display Method - Renders this object to screen displaying its position and colour.
    */
-  void display() {
-    push();
-    translate(width/2, height/2);
-    fill(255);
-    stroke(255);
-    strokeWeight(2);
-    point(scale*position.x, scale*position.y);
-    pop();
-  }
+  //void display() {
+  //  push();
+  //  translate(width/2, height/2);
+  //  fill(255);
+  //  stroke(255);
+  //  strokeWeight(2);
+  //  point(scale*position.x, scale*position.y);
+  //  pop();
+  //}
 
   /**
    *
    */
-  void render(PGraphics x) {
-    x.push();
-    x.translate(width/2, height/2);
-    x.fill(255);
-    x.stroke(255);
-    x.point(scale*position.x, scale*position.y);
-    x.pop();
-  }
+  //void render(PGraphics x) {
+  //  x.push();
+  //  x.translate(width/2, height/2);
+  //  x.fill(255);
+  //  x.stroke(255);
+  //  x.point(scale*position.x, scale*position.y);
+  //  x.pop();
+  //}
 }
