@@ -21,9 +21,7 @@ class Moon extends Particle {
     super(orb_radius);
     this.GM=Gm;
     this.radius=radius;
-    this.c= c;
-    
-        
+    this.c= c; 
   }
   /**
    *  Class Constuctor - General Moon object with random angle. 
@@ -63,18 +61,18 @@ class Moon extends Particle {
     ellipseMode(CENTER);
     fill(c);
     stroke(c);
-    circle(scale*position.x, scale*position.y, 2*radius*scale);
+    circle(SCALE*position.x, SCALE*position.y, 2*moonSizeScale*radius*SCALE);
     pop();
   }
-    void render(PGraphics x) {
-    x.push();
-    x.translate(width/2, height/2);
-    x.ellipseMode(CENTER);
-    x.fill(c);
-    x.stroke(c);
-    x.circle(scale*position.x, scale*position.y, 2*moonSizeScale*radius*scale);
-    x.pop();
-  }
+  //  void render(PGraphics x) {
+  //  x.push();
+  //  x.translate(width/2, height/2);
+  //  x.ellipseMode(CENTER);
+  //  x.fill(c);
+  //  x.stroke(c);
+  //  x.circle(scale*position.x, scale*position.y, 2*moonSizeScale*radius*scale);
+  //  x.pop();
+  //}
   
   /**
    *  Calculates the acceleration on this particle (based on its current position) (Does not override value of acceleration of particle)
