@@ -6,12 +6,16 @@
 //Global Variables 
 float GRID_DELTA_R = 0.05; //[Planetary Radi]  
 float GRID_DELTA_THETA = 1; // [Degrees]
+float GRID_DRAG_CONSTANT = 1E-7;
+float GRID_DRAG_PROBABILITY = 1E4 ;
+
 
 class Grid {
 
 
   protected float dr, dtheta; 
-  protected int sizeTheta, sizeR; 
+  protected int sizeTheta, sizeR;
+  protected float drag_c, drag_p;  //Constants for Drag Rule.
 
   protected int grid[][];          //Grid to hold the number of particle in each cell
   protected float gridNorm[][];    //Grid to hold Normalised Number Density of Particles in Cell (by Area and Total number).
@@ -34,6 +38,9 @@ class Grid {
     gridNorm = new float[sizeTheta][sizeR];
     gridV = new PVector[sizeTheta][sizeR];
     gridCofM = new PVector[sizeTheta][sizeR];
+
+    drag_c= GRID_DRAG_CONSTANT; 
+    drag_p= GRID_DRAG_PROBABILITY; 
     reset();
   }
 
@@ -179,25 +186,22 @@ class Grid {
     // Collisions - acceleration due drag (based on number of particles in grid cell).
     PVector a_drag = new PVector();
 
-
-
     //Find which cell the particle is in.
     int i = i(p);
     int j = j(p);
 
-
-    float r = 1-exp(-(gridNorm[i][j]*1E4)/h_stepsize);
+    float r = 1-exp(-(gridNorm[i][j]*drag_p)/h_stepsize);
     if ( random(1)< r) {
 
-      float c, a, nn;
+      float a, nn;
       //println(degrees(angleDiff(p)));
       a_drag = PVector.sub(gridV[i][j].copy().rotate(angleDiff(p)).mult(radialScaling(p)), p.velocity.copy()); // 
-      c= 1E-7;
+
       //println( p.position.mag()+ "\t::" +a_drag.mag());
       a =  a_drag.magSq(); //a=1; 
       a_drag.normalize();
       nn = gridNorm[i][j];
-      a_drag.mult(c*a*nn);
+      a_drag.mult(drag_c*a*nn);
     }
     return a_drag;
   }
@@ -242,45 +246,45 @@ class Grid {
 
 
 
-  PVector dragAccelerationC(Particle p) {
+  //  PVector dragAccelerationC(Particle p) {
 
-    // Collisions - acceleration due drag (based on number of particles in grid cell).
-    PVector a_drag = new PVector();
+  //    // Collisions - acceleration due drag (based on number of particles in grid cell).
+  //    PVector a_drag = new PVector();
 
-    float r = 0.9;
-    if ( r > random(1)) {    
+  //    float r = 0.9;
+  //    if ( r > random(1)) {    
 
-      //Find which cell the particle is in.
-      int x = i(p);
-      int y = j(p);
+  //      //Find which cell the particle is in.
+  //      int x = i(p);
+  //      int y = j(p);
 
-      int sizeR = 2; //Size of Neighbourhood
-      int sizeTheta = 2;
+  //      int sizeR = 2; //Size of Neighbourhood
+  //      int sizeTheta = 2;
 
-      float c, a, n;
-      c= 1E-5;
-
-
-      for ( int i = x-sizeTheta; i <= x+sizeTheta; i++) {
-        for ( int j = y-sizeR; j <= y+sizeR; j++) {
-          if (validij(i, j)) {
-
-            //PVector drag = PVector.sub(gridV[i][j].copy().normalize(), p.velocity.copy().normalize());
-            PVector drag = PVector.sub(gridV[i][j].copy(), p.velocity.copy());
-
-            a =1;// drag.magSq(); //a=1; 
-            drag.normalize();
-            n = gridNorm[x][y];
-            drag.mult(c*a*n);
-            a_drag.add(drag);
-          }
-        }
-      }
-    }
+  //      float c, a, n;
+  //      c= 1E-5;
 
 
-    return a_drag;
-  }
+  //      for ( int i = x-sizeTheta; i <= x+sizeTheta; i++) {
+  //        for ( int j = y-sizeR; j <= y+sizeR; j++) {
+  //          if (validij(i, j)) {
+
+  //            //PVector drag = PVector.sub(gridV[i][j].copy().normalize(), p.velocity.copy().normalize());
+  //            PVector drag = PVector.sub(gridV[i][j].copy(), p.velocity.copy());
+
+  //            a =1;// drag.magSq(); //a=1; 
+  //            drag.normalize();
+  //            n = gridNorm[x][y];
+  //            drag.mult(c*a*n);
+  //            a_drag.add(drag);
+  //          }
+  //        }
+  //      }
+  //    }
+
+
+  //  return a_drag;
+  //}
 
   /**
    * Returns the normalise particle density relevant to specific particle.
