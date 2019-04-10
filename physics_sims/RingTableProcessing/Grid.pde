@@ -2,28 +2,34 @@
  * @author Thomas Cann
  * @version 1.0
  */
+
+//Global Variables 
+float GRID_DELTA_R = 0.05; //[Planetary Radi]  
+float GRID_DELTA_THETA = 1; // [Degrees]
+
 class Grid {
 
 
-  float dr= 0.05; //[Planetary Radi]  
-  float dtheta = 1; // [Degrees]
+  protected float dr, dtheta; 
+  protected int sizeTheta, sizeR; 
 
-  int sizeTheta =int(360/dtheta); //Size of 1st Dimension of Grid Arrays
-  int sizeR = int((r_max-r_min)/dr); //Size of 2nd Dimension of Grid Arrays
+  protected int grid[][];          //Grid to hold the number of particle in each cell
+  protected float gridNorm[][];    //Grid to hold Normalised Number Density of Particles in Cell (by Area and Total number).
+  protected PVector gridV[][];     //Grid to hold the average velocity of cell. 
+  protected PVector gridCofM[][];  //Grid to hold centroid value for cell.
 
-  int grid[][];          //Grid to hold the number of particle in each cell
-  float gridNorm[][];    //Grid to hold Normalised Number Density of Particles in Cell (by Area and Total number).
-  PVector gridV[][];     //Grid to hold the average velocity of cell ( TODO correct to cell position) 
-  PVector gridCofM[][];
-
-  float minSize = 4*(sq(r_min *radians(dtheta)/2)+sq(dr)); //Based on the minimum grid size.
+  //Optimisation Variables
+  private float minSize = 4*(sq(r_min *radians(dtheta)/2)+sq(dr)); //Based on the minimum grid size.
 
   /**
    *  Class Constuctor - General need passing all the values. 
    */
   Grid() {
 
-
+    dr = GRID_DELTA_R;
+    dtheta = GRID_DELTA_THETA;
+    sizeTheta =int(360/dtheta); //Size of 1st Dimension of Grid Arrays
+    sizeR = int((r_max-r_min)/dr); //Size of 2nd Dimension of Grid Arrays
     grid = new int[sizeTheta][sizeR];
     gridNorm = new float[sizeTheta][sizeR];
     gridV = new PVector[sizeTheta][sizeR];
@@ -182,7 +188,7 @@ class Grid {
 
     float r = 1-exp(-(gridNorm[i][j]*1E4)/h_stepsize);
     if ( random(1)< r) {
-   
+
       float c, a, nn;
       //println(degrees(angleDiff(p)));
       a_drag = PVector.sub(gridV[i][j].copy().rotate(angleDiff(p)).mult(radialScaling(p)), p.velocity.copy()); // 
@@ -192,8 +198,7 @@ class Grid {
       a_drag.normalize();
       nn = gridNorm[i][j];
       a_drag.mult(c*a*nn);
-      
-   }
+    }
     return a_drag;
   }
 
@@ -323,7 +328,7 @@ class Grid {
       if (validij(i, j)) {
 
         displaycell(i, j );
-         float a = 1-exp(-(gridNorm[i][j]*1E4)/h_stepsize);
+        float a = 1-exp(-(gridNorm[i][j]*1E4)/h_stepsize);
         String output = "\t Normalised Number Density: " +gridNorm[i][j] + "\n\t Average Velocity: " + gridV[i][j].mag()+ "\n\t Probability Threshold: " + a ;
         text(output, 0.0, 10.0);
 
@@ -538,37 +543,3 @@ class Grid {
   //  }
   //}
 }
-
-//CODE Snippets
-
-//saveTable(gridToTable(grid), "output.csv");
-//saveTable(gridToTable(grid), "new.csv");
-//println(total);
-//println(grid[0]);
-///** 
-// * Redudent Method - Returns array holding the two indices for a specific particle.  
-// *
-// * @param p a particle with a position vector.
-// */
-//int[] findIndices(Particle p) {
-//  int[] temp = new int[2];
-//  temp[0]=i(p);
-//  //if (floor((p.position.mag()/Rp - r_min)/dr) < int((r_max-r_min)/dr)) {
-//  //  if (floor((p.position.mag()/Rp - r_min)/dr) > 0) {
-//  temp[1]=j(p);
-//  //  }else{}
-
-//  //}
-
-//  return temp;
-//}
-
-
-//PVector position2D(Particle p) {
-//  return new PVector(p.position.x, p.position.y);
-//}
-
-//PVector angularTransformation(Particle p,PVector twod){
-
-//return twod.rotate(angleCell(i - angleparticle );
-//}
