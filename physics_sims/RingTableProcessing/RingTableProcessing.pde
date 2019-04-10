@@ -23,7 +23,7 @@ RingSystem Saturn;
 
 void setup() {
   //size (1200, 700, P2D);
-  fullScreen(P2D,2);
+  fullScreen(P2D,1);
   frameRate(60);
   smooth(); //noSmooth();
   randomSeed(3);

@@ -114,6 +114,7 @@ class RingSystem {
     }
     //***********************************************
   }
+  
 
   /**
    *  Updates object for one time step of simulation taking into account the position of one moon.
