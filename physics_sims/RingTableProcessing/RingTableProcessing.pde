@@ -2,7 +2,7 @@
  * A gravitational simulation in a Cartesian coordinate system.
  *
  * @author Thomas Cann
- * @author Sim Hinson
+ * @author Sam Hinson
  * @version 2.0
  */
 

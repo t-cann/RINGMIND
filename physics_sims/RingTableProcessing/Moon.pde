@@ -1,7 +1,7 @@
 /**Class Moon
  *
  * @author Thomas Cann
- * @author Sim Hinson
+ * @author Sam Hinson
  * @version 1.0
  */
 
