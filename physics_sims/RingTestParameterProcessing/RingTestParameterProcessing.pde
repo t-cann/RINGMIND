@@ -68,16 +68,33 @@ void reinitialise(){
  case(0):
  G=1E-8;
  GRID_DRAG_CONSTANT = 1E-5;
- filename = G + GRID_DRAG_CONSTANT+ "Test";
+ filename = "G-8 Drag-5";
  break;
  case(1):
  G=1E-8;
- GRID_DRAG_CONSTANT = 1E-7;
- filename = G + GRID_DRAG_CONSTANT+ "Test";
+ GRID_DRAG_CONSTANT = 1E-6;
+ filename = "G-8 Drag-6";
+ break;
  case(2):
  G=1E-8;
+ GRID_DRAG_CONSTANT = 1E-7;
+ filename = "G-8 Drag-7";
+ break;
+ case(3):
+ G=1E-8;
+ GRID_DRAG_CONSTANT = 1E-8;
+ filename = "G-8 Drag-8";
+ break;
+ case(4):
+ G=1E-8;
  GRID_DRAG_CONSTANT = 1E-9;
- filename = G + GRID_DRAG_CONSTANT+ "Test";
+ filename ="G-8 Drag-9";
+ break;
+ case(5):
+ G=1E-8;
+ GRID_DRAG_CONSTANT = 1E-10;
+ filename = "G-8 Drag-10";
+ break;
  default:
  exit();
  }
