@@ -12,9 +12,12 @@ Simulation S;
 float time; 
 
 int count = 0; 
-int countI = 0;
-int countdr =0;
-float Interval = 180; //000;
+int count0 =0;
+int reinitialise;
+
+String filename= "Default";
+
+float Interval = 180000;
 ArrayList<ArrayList<Float>> options;
 
 void setup() {
@@ -23,24 +26,9 @@ void setup() {
   frameRate(60);
   smooth(); //noSmooth();
   randomSeed(3);
-  Saturn = new RingSystem();
+  S = new Simulation();
   background(0);
-  
-  ArrayList<ArrayList<Float>> options = new ArrayList<ArrayList<Float>>();
-  //
-  ArrayList<Float> dr = new ArrayList<Float>();
-  dr.add(1.0);
-  dr.add(2.0);
-  dr.add(3.0);
-  ArrayList<Float> G = new ArrayList<Float>();
-  G.add(1.0E-7);
-  G.add(2.0E-8);
-  G.add(3.0E-9);
-  
-  options.add(dr);
-  options.add(G);
-  
-  
+  reinitialise();
   
 }
 
@@ -53,8 +41,8 @@ void draw() {
     output();
     
     count ++;
-
-    if ( count % 4 == 0 ) {
+    reinitialise =count % 5; 
+    if ( reinitialise == 0 ) {
       reinitialise();
     }
   }
@@ -67,7 +55,7 @@ void draw() {
 
 void output() {
   S.display();
-  saveFrame("data/frame-####.png");
+  saveFrame("data/11_04_2019/"+filename+"/"+(reinitialise)+".png");
 }
 
 void update() {
@@ -75,5 +63,24 @@ void update() {
 }
 
 void reinitialise(){
-
+ 
+ switch(count0){
+ case(0):
+ G=1E-8;
+ GRID_DRAG_CONSTANT = 1E-5;
+ filename = G + GRID_DRAG_CONSTANT+ "Test";
+ break;
+ case(1):
+ G=1E-8;
+ GRID_DRAG_CONSTANT = 1E-7;
+ filename = G + GRID_DRAG_CONSTANT+ "Test";
+ case(2):
+ G=1E-8;
+ GRID_DRAG_CONSTANT = 1E-9;
+ filename = G + GRID_DRAG_CONSTANT+ "Test";
+ default:
+ exit();
+ }
+ count0 ++;
+ S.reinitialise();
 }

@@ -11,9 +11,16 @@
 
 
   
-class Simulation {
+class Simulation {//implements Runnable{
 
-
+ //void run(){
+   
+ //    Saturn = new RingSystem(); 
+     
+ //    do{
+       
+ //    } while ()
+ //}
 
  
   /**
@@ -21,8 +28,12 @@ class Simulation {
    */
   Simulation() {
     
-    Saturn = new RingSystem();
+    Saturn = new RingSystem(); 
     
+  }
+  
+  void reinitialise(){
+      Saturn = new RingSystem();   
   }
 
 
@@ -54,7 +65,6 @@ class Simulation {
   void display(){
   
     background(0);
-    guidelines();
     Saturn.display();
     fps();
 
@@ -66,20 +76,6 @@ class Simulation {
   //Display FrameRate and Time data to bar along bottom of screen
   void fps() {
     surface.setTitle("Framerate: " + int(frameRate) + "     Time Elapsed[Seconds]: " + int(millis()/1000.0) + "     Simulation Time Elapsed[hours]: " + int(totalSimTime/3600.0)); //Set the frame title to the frame rate
-  }
-
-  //guidelines round edge of rings and planet.
-  void guidelines() {
-    push();
-    translate(width/2, height/2);
-    stroke(255, 165, 0);
-    noFill();
-    circle(0, 0, 2*r_max*scale*Rp);
-    circle(0, 0, 2*r_min*scale*Rp);
-    stroke(255, 165, 0);
-    fill(255, 165, 0);
-    circle(0, 0, 2.0*scale*Rp);
-    pop();
   }
 
 
