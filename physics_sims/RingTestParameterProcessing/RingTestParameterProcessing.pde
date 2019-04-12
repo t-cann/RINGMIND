@@ -22,8 +22,8 @@ float Interval = 120000;
 ArrayList<ArrayList<Float>> options;
 
 void setup() {
-  //size (1200, 700, P2D);
-  fullScreen(P2D,1);
+  size (1900, 1000, P2D);
+  //fullScreen(P2D,1);
   frameRate(60);
   smooth(); //noSmooth();
   randomSeed(3);
@@ -56,7 +56,9 @@ void draw() {
 
 void output() {
   S.display();
-  saveFrame("data/12_04_2019/"+filename+"/"+((Interval*count)/60000)+"min "+(int(totalSimTime/3600.0))+"hrs.png");
+
+  saveFrame("data/2019_04_12/"+filename+"/"+((Interval*(reinitialise+1))/60000)+"min "+(int(totalSimTime/3600.0))+"hrs.png");
+
 }
 
 void update() {
