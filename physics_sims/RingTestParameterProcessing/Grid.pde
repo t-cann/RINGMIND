@@ -7,7 +7,7 @@
 float GRID_DELTA_R = 0.05; //[Planetary Radi]  
 float GRID_DELTA_THETA = 1; // [Degrees]
 float GRID_DRAG_CONSTANT = 1E-7;
-float GRID_DRAG_PROBABILITY = 1E4 ;
+float GRID_DRAG_PROBABILITY = 1E4;
 
 
 class Grid {
