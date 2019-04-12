@@ -18,7 +18,7 @@ int reinitialise;
 
 String filename= "Default";
 
-float Interval = 180000;
+float Interval = 120000;
 ArrayList<ArrayList<Float>> options;
 
 void setup() {
