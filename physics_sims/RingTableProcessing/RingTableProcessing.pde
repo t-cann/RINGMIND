@@ -23,9 +23,9 @@ RingSystem Saturn;
 
 
 void setup() {
-  size (1200, 700, P2D);
-  //fullScreen(P2D,1);
-  frameRate(60);
+  //size (1200, 700, P2D);
+  fullScreen(P2D,1);
+  frameRate(120);
   smooth(); //noSmooth();
   randomSeed(3);
   Saturn = new RingSystem();
