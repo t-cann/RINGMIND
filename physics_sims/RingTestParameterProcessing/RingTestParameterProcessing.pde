@@ -13,7 +13,7 @@ Simulation S;
 float time; 
 
 int count = 0; 
-int count0 =5;
+int count0 =0;
 int reinitialise;
 
 String filename= "Default";
@@ -66,6 +66,8 @@ void update() {
 }
 
 void reinitialise(){
+  
+  println(count0);
  
  switch(count0){
  case(0):
