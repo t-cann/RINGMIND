@@ -57,7 +57,7 @@ void draw() {
 void output() {
   S.display();
 
-  saveFrame("data/2019_04_12/"+filename+"/"+((Interval*(reinitialise+1))/60000)+"min "+(int(totalSimTime/3600.0))+"hrs.png");
+  saveFrame("data/2019_04_15/"+filename+"/"+((Interval*(reinitialise+1))/60000)+"min "+(int(totalSimTime/3600.0))+"hrs.png");
 
 }
 
