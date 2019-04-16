@@ -28,6 +28,47 @@ class Grid {
   /**
    *  Class Constuctor - General need passing all the values. 
    */
+  Grid(float r_min, float r_max, float drag_c, float drag_p) {
+
+    dr = GRID_DELTA_R;
+    dtheta = GRID_DELTA_THETA;
+    this.r_min = r_min;
+    this.r_max = r_max;
+    sizeTheta =int(360/dtheta); //Size of 1st Dimension of Grid Arrays
+    sizeR = int((r_max-r_min)/dr); //Size of 2nd Dimension of Grid Arrays
+    grid = new int[sizeTheta][sizeR];
+    gridNorm = new float[sizeTheta][sizeR];
+    gridV = new PVector[sizeTheta][sizeR];
+    gridCofM = new PVector[sizeTheta][sizeR];
+
+    this.drag_c= drag_c; 
+    this.drag_p= drag_p; 
+    reset();
+  }  
+
+  /**
+   *  Class Constuctor - General need passing all the values. 
+   */
+  Grid(float r_min, float r_max) {
+
+    dr = GRID_DELTA_R;
+    dtheta = GRID_DELTA_THETA;
+    this.r_min = r_min;
+    this.r_max = r_max;
+    sizeTheta =int(360/dtheta); //Size of 1st Dimension of Grid Arrays
+    sizeR = int((r_max-r_min)/dr); //Size of 2nd Dimension of Grid Arrays
+    grid = new int[sizeTheta][sizeR];
+    gridNorm = new float[sizeTheta][sizeR];
+    gridV = new PVector[sizeTheta][sizeR];
+    gridCofM = new PVector[sizeTheta][sizeR];
+
+    drag_c= GRID_DRAG_CONSTANT; 
+    drag_p= GRID_DRAG_PROBABILITY; 
+    reset();
+  }
+  /**
+   *  Class Constuctor - General need passing all the values. 
+   */
   Grid() {
 
     dr = GRID_DELTA_R;
@@ -280,9 +321,9 @@ class Grid {
 
 
 
-/**
-*    Displays Grid cell mouse is over and relevant informotion when mouse is pressed
-*/ 
+  /**
+   *    Displays Grid cell mouse is over and relevant informotion when mouse is pressed
+   */
   void display() {
 
     if (mousePressed) {
@@ -290,7 +331,7 @@ class Grid {
       float angle = (atan2((mouseY-height/2), mouseX-width/2)+TAU)%(TAU);
       int i= i(angle);
       int j = j(r);
-      
+
       if (validij(i, j)) {
         displaycell(i, j );
         float a = 1-exp(-(gridNorm[i][j]*drag_p)/h_stepsize);
@@ -299,6 +340,13 @@ class Grid {
         displayVector(i, j, gridV[i][j]);
       }
     }
+    //else {
+    //  for (int i = 0; i < int(360/dtheta); i++) {
+    //    for (int j = 0; j < int((r_max-r_min)/dr); j++) {
+    //      displaycell(i, j );
+    //    }
+    //  }
+    //}
   }
 
   /**
@@ -336,7 +384,7 @@ class Grid {
     float r = SCALE*Rp*(r_min + dr *j);
     float R = SCALE*Rp*(r_min + dr *(j+1));
     float theta = radians(dtheta *i);
-    float N =2*GRID_DELTA_THETA;
+    float N =GRID_DELTA_THETA;
     beginShape();
     // Outer circle
     for (int x = 0; x<=N; x++) {
@@ -355,14 +403,14 @@ class Grid {
    *
    * @param rs a collection of particles represent a planetary ring system. 
    */
-  void update(RingSystem rs) {
+  void update(RingSystem rs) { //<>//
 
     //Reset all the grid values.
     reset();
 
     //Loop through all the particles trying to add them to the grid.
     for (Ring x : rs.rings) {
-      for (RingParticle r : x.particles) { //<>//
+      for (RingParticle r : x.particles) {
         int i = i(r);
         int j = j(r);
         if (validij(i, j)) {
@@ -427,7 +475,7 @@ class Grid {
    *
    * @param grid a 2D array of values. 
    */
-  Table gridToTable(int grid[][]) {
+   Table gridToTable(int grid[][]) {
     Table tempTable = new Table();
 
     for (int j=0; j<grid.length; j++) {
