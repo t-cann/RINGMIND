@@ -11,8 +11,8 @@ float GMp = 3.7931187e16;    // Gravitational parameter (Saturn)
 // What are the minimum and maximum extents in r for initialisation
 float R_MIN = 1;
 float R_MAX = 5;
-int RING_INDEX =5;
-int MOON_INDEX =1;
+int RING_INDEX =3;
+int MOON_INDEX =0;
 
 final float Rp = 60268e3;          // Length scale (1 Saturn radius) [m]
 final float SCALE = 100/Rp;        // Converts from [m] to [pixel] with planetary radius (in pixels) equal to the numerator. Size of a pixel represents approximately 600km.
@@ -22,7 +22,7 @@ class RingSystem {
   ArrayList<Particle> totalParticles;
   ArrayList<Ring> rings;
   ArrayList<Moon> moons;
-  Grid g;
+  ArrayList<Grid> g;
   float r_min, r_max;
 
   /**
@@ -30,7 +30,8 @@ class RingSystem {
    */
   RingSystem() {
 
-    g = new Grid();
+    g = new ArrayList<Grid>();
+
     r_min= R_MIN;
     r_max= R_MAX;
     totalParticles = new ArrayList<Particle>();
@@ -44,6 +45,9 @@ class RingSystem {
   }
 
   void initialise() {
+
+    g.add( new Grid(1.0, 2.5, 1E-8, 1E4));
+    g.add( new Grid(2.5, 5.0, 1E-7, 1E3));
     initialiseMoons();
     initialiseRings();
     totalParticles.clear();
@@ -112,20 +116,7 @@ class RingSystem {
       break;
 
     case 3:
-      rings.add(new Ring(1, 3, 0));
-      Table table; 
-      table = loadTable("input.csv");//"input.csv"
-      //println(table.getRowCount()+" "+ table.getColumnCount());
-      ArrayList<RingParticle> tempParticles = new ArrayList<RingParticle>();
-      for (int i = 0; i < table.getRowCount(); i++) {
-        for (int j = 0; j < table.getColumnCount(); j++) {
-
-          for (int x=0; x<table.getInt(i, j); x++) {
-            tempParticles.add(new RingParticle(r_min+g.dr*i, g.dr, radians(g.dtheta*j-180), radians(g.dtheta)));
-          }
-        }
-      }
-      rings.get(0).particles=tempParticles;
+      importFromFile("input.csv");
       break;
     case 4:
       rings.add(new Ring(1, 3, 0));
@@ -140,25 +131,45 @@ class RingSystem {
     }
   }
 
+  void importFromFile(String filename) {
+    rings.add(new Ring(1, 3, 0));
+    Table table; 
+    table = loadTable(filename);//"input.csv"
+    //println(table.getRowCount()+" "+ table.getColumnCount());
+    ArrayList<RingParticle> tempParticles = new ArrayList<RingParticle>();
+    for (int i = 0; i < table.getRowCount(); i++) {
+      for (int j = 0; j < table.getColumnCount(); j++) {
+
+        for (int x=0; x<table.getInt(i, j); x++) {
+          tempParticles.add(new RingParticle(r_min+GRID_DELTA_R*i, GRID_DELTA_R, radians(GRID_DELTA_THETA*j-180), radians(GRID_DELTA_THETA)));
+        }
+      }
+    }
+    rings.get(0).particles=tempParticles;
+  }
 
   /**
    *  Updates object for one time step of simulation taking into account the position of one moon.
    */
   void update() {
 
-    g.update(this);
+
     for (Particle p : totalParticles) {
       p.set_getAcceleration(this);
     }
     for (Particle p : totalParticles) {
       p.updatePosition();
     }
-    g.update(this);
+    for (Grid x : g) {
+      x.update(this);
+    }
     for (Particle p : totalParticles) {
       p.updateVelocity(p.getAcceleration(this));
     }
     //Output TABLE 
-    //saveTable(g.gridToTable(g.grid), "output.csv");
+    if ((frameCount +100)%100 ==0) {
+      saveTable(g.get(0).gridToTable(g.get(0).grid), "output.csv");
+    }
   }
 
   /**
@@ -195,8 +206,9 @@ class RingSystem {
     //}
     pop();
 
-    
-    g.display();
+    for (Grid x : g) {
+      x.display();
+    }
   }
 
   //guidelines round edge of rings and planet.
@@ -208,7 +220,6 @@ class RingSystem {
     circle(0, 0, 2*R_MIN*SCALE*Rp);
     fill(255, 165, 0);
     circle(0, 0, 2.0*SCALE*Rp);
-   
   }
 
   /**

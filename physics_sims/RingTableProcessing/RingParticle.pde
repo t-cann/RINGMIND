@@ -36,13 +36,14 @@ class RingParticle extends Particle {
     PVector a_grav = PVector.mult(position.copy().normalize(), -GMp/position.copy().magSq());
 
     //Acceleration from the Grid Object
-    a_grav.add(rs.g.gridAcceleration(this));
-
+    for (Grid x : rs.g) {
+      a_grav.add(x.gridAcceleration(this));
+    }
     for (Moon m : rs.moons) {
-       PVector dist = PVector.sub(m.position, position);
-        PVector a = PVector.mult(dist, m.GM/pow(dist.mag(), 3));
-        a_grav.add(a);
-      }
+      PVector dist = PVector.sub(m.position, position);
+      PVector a = PVector.mult(dist, m.GM/pow(dist.mag(), 3));
+      a_grav.add(a);
+    }
     return a_grav;
   }
 

@@ -99,8 +99,9 @@ abstract class Particle {
     PVector a_grav = PVector.mult(position.copy().normalize(), -GMp/position.copy().magSq());
 
     //Acceleration from the Grid Object
-    a_grav.add(rs.g.gridAcceleration(this));
-
+    for(Grid x : rs.g){
+    a_grav.add(x.gridAcceleration(this));
+    }
 
     return a_grav;
   }
