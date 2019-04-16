@@ -48,8 +48,8 @@ class RingSystem {
 
   void initialise() {
 
-    g.add( new Grid(1.0, 2.5, 1E-8, 1E4));
-    g.add( new Grid(2.5, 5.0, 1E-7, 1E3));
+    g.add( new Grid(1.0, 3.0, 1E-8, 1E4));
+    //g.add( new Grid(2.5, 5.0, 1E-7, 1E3));
     initialiseMoons();
     initialiseRings();
     totalParticles.clear();
