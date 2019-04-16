@@ -12,7 +12,9 @@ float GMp = 3.7931187e16;    // Gravitational parameter (Saturn)
 float R_MIN = 1;
 float R_MAX = 5;
 int RING_INDEX =3;
+
 int MOON_INDEX =0;
+
 
 final float Rp = 60268e3;          // Length scale (1 Saturn radius) [m]
 final float SCALE = 100/Rp;        // Converts from [m] to [pixel] with planetary radius (in pixels) equal to the numerator. Size of a pixel represents approximately 600km.
@@ -68,7 +70,7 @@ class RingSystem {
       case(1):
       // Adding Specific Moons ( e.g. Mima, Enceladus, Tethys, ... )
       //addMoon(5, moons);
-      addMoon(7, moons);
+      //addMoon(7, moons);
       //addMoon(9, moons);
       //addMoon(12, moons);
       //addMoon(14, moons);
