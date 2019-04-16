@@ -94,6 +94,7 @@ void keyPressed() {
     if (Add) {
       Add =false;
     } else {
+      println("test");
       Add = true;
     } 
   }

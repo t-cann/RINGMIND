@@ -11,7 +11,7 @@ float GMp = 3.7931187e16;    // Gravitational parameter (Saturn)
 // What are the minimum and maximum extents in r for initialisation
 float R_MIN = 1;
 float R_MAX = 5;
-int RING_INDEX =1;
+int RING_INDEX =3;
 
 int MOON_INDEX =0;
 
