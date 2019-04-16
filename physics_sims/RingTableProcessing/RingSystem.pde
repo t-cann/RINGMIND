@@ -11,7 +11,7 @@ float GMp = 3.7931187e16;    // Gravitational parameter (Saturn)
 // What are the minimum and maximum extents in r for initialisation
 float R_MIN = 1;
 float R_MAX = 5;
-int RING_INDEX =3;
+int RING_INDEX =1;
 
 int MOON_INDEX =0;
 
@@ -48,7 +48,7 @@ class RingSystem {
 
   void initialise() {
 
-    g.add( new Grid(1.0, 3.0, 1E-8, 1E4));
+    g.add( new Grid(1.0, 5.0, 1E-8, 1E4));
     //g.add( new Grid(2.5, 5.0, 1E-7, 1E3));
     initialiseMoons();
     initialiseRings();
@@ -118,7 +118,7 @@ class RingSystem {
       break;
 
     case 3:
-      importFromFile("input.csv");
+      importFromFile("output.csv");
       break;
     case 4:
       rings.add(new Ring(1, 3, 0));
@@ -136,6 +136,8 @@ class RingSystem {
       break;  
 
     default:
+    rings.add(new Ring(1, 3, 0));
+    
     }
   }
 
@@ -149,7 +151,7 @@ class RingSystem {
       for (int j = 0; j < table.getColumnCount(); j++) {
 
         for (int x=0; x<table.getInt(i, j); x++) {
-          tempParticles.add(new RingParticle(r_min+GRID_DELTA_R*i, GRID_DELTA_R, radians(GRID_DELTA_THETA*j-180), radians(GRID_DELTA_THETA)));
+          tempParticles.add(new RingParticle(r_min+GRID_DELTA_R*i, GRID_DELTA_R, radians(GRID_DELTA_THETA*-j-180), radians(GRID_DELTA_THETA)));
         }
       }
     }
@@ -215,7 +217,7 @@ class RingSystem {
     pop();
 
     for (Grid x : g) {
-      x.display();
+      x.display(this);
     }
   }
 

@@ -7,7 +7,7 @@
  */
 
 // Basic parameters
-  
+
 float h_stepsize;
 
 //Dynamic Timestep variables
@@ -16,7 +16,8 @@ final float maxTimeStep = 20* simToRealTimeRatio / 30;
 float totalSimTime =0.0;                       // Tracks length of time simulation has be running
 
 Boolean Running = true;
-Boolean Display = true; 
+Boolean Display = true;
+Boolean Add = false;
 
 //Initialising Objects
 RingSystem Saturn;
@@ -24,7 +25,7 @@ RingSystem Saturn;
 
 void setup() {
   //size (1200, 700, P2D);
-  fullScreen(P2D,1);
+  fullScreen(P2D, 1);
   frameRate(120);
   smooth(); //noSmooth();
   randomSeed(3);
@@ -50,8 +51,8 @@ void draw() {
     update();
   }
   //Display all of the objects to screen.
-  if(Display){
-  display();
+  if (Display) {
+    display();
   }
   fps();
   //******************************************************
@@ -64,10 +65,9 @@ void update() {
   Saturn.update();
 }
 
-void display(){
+void display() {
   background(0);
   Saturn.display();
-  
 }
 
 //Display FrameRate and Time data to bar along bottom of screen
@@ -84,11 +84,17 @@ void keyPressed() {
     } else {
       Running = true;
     }
-  }else if (key =='h') {
+  } else if (key =='h') {
     if (Display) {
       Display =false;
     } else {
       Display = true;
     }
+  } else if (key =='a') {
+    if (Add) {
+      Add =false;
+    } else {
+      Add = true;
+    } 
   }
 }

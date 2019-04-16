@@ -324,13 +324,19 @@ class Grid {
   /**
    *    Displays Grid cell mouse is over and relevant informotion when mouse is pressed
    */
-  void display() {
+  void display(RingSystem rs) {
 
     if (mousePressed) {
       float r = sqrt(sq(mouseX-width/2)+ sq(mouseY-height/2))/SCALE;
       float angle = (atan2((mouseY-height/2), mouseX-width/2)+TAU)%(TAU);
       int i= i(angle);
       int j = j(r);
+      
+      if(Add){
+       for(int x=0; x<10; x++){ 
+       rs.rings.get(0).particles.add(new RingParticle(r_min+GRID_DELTA_R*i, GRID_DELTA_R, radians(GRID_DELTA_THETA*-j-180), radians(GRID_DELTA_THETA)));
+      }
+      }
 
       if (validij(i, j)) {
         displaycell(i, j );
