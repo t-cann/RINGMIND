@@ -339,6 +339,21 @@ class Grid {
           rs.totalParticles.add(a);
         }
       }
+      
+      if (clear) {
+        ArrayList<Particle> temp = new ArrayList<Particle>();
+        for (Particle p: rs.totalParticles) {
+          if (i(p) == i){
+            if (j(p)== j){
+             temp.add(p);
+            }
+          }
+        }
+        for (Particle p: temp) {
+          rs.totalParticles.remove(p);
+          rs.rings.get(0).particles.remove(p);
+        }
+      }
 
       if (validij(i, j)) {
         displaycell(i, j );

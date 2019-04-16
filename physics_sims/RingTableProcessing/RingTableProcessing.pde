@@ -18,6 +18,7 @@ float totalSimTime =0.0;                       // Tracks length of time simulati
 Boolean Running = true;
 Boolean Display = true;
 Boolean Add = false;
+Boolean clear = false;
 
 //Initialising Objects
 RingSystem Saturn;
@@ -97,5 +98,13 @@ void keyPressed() {
       println("test");
       Add = true;
     } 
+  }
+  else if (key=='c'){
+    if (clear){
+      clear=false;
+    }
+    else {
+      clear =true;
+    }
   }
 }
