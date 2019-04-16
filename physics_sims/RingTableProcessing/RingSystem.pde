@@ -129,6 +129,12 @@ class RingSystem {
       rings.add(new Ring(1.1, 2.9, N_PARTICLES/2));
       rings.add(new Ring(4.5, 4.7, N_PARTICLES/2));
       break;
+    case 6:
+      //Square
+      importFromFile("Square.csv");
+  
+      break;  
+
     default:
     }
   }
@@ -136,7 +142,7 @@ class RingSystem {
   void importFromFile(String filename) {
     rings.add(new Ring(1, 3, 0));
     Table table; 
-    table = loadTable(filename);//"input.csv"
+    table = loadTable("/files/" + filename);//"input.csv"
     //println(table.getRowCount()+" "+ table.getColumnCount());
     ArrayList<RingParticle> tempParticles = new ArrayList<RingParticle>();
     for (int i = 0; i < table.getRowCount(); i++) {
@@ -169,8 +175,8 @@ class RingSystem {
       p.updateVelocity(p.getAcceleration(this));
     }
     //Output TABLE 
-    if ((frameCount +100)%100 ==0) {
-      saveTable(g.get(0).gridToTable(g.get(0).grid), "output.csv");
+    if ((frameCount)%50 ==0) {
+      saveTable(g.get(0).gridToTable(g.get(0).grid), "/files/output.csv");
     }
   }
 
