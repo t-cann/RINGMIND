@@ -11,9 +11,9 @@ float GMp = 3.7931187e16;    // Gravitational parameter (Saturn)
 // What are the minimum and maximum extents in r for initialisation
 float R_MIN = 1;
 float R_MAX = 5;
-int RING_INDEX =3;
+int RING_INDEX =0;
 
-int MOON_INDEX =0;
+int MOON_INDEX =2;
 
 
 final float Rp = 60268e3;          // Length scale (1 Saturn radius) [m]
@@ -70,8 +70,8 @@ class RingSystem {
       case(1):
       // Adding Specific Moons ( e.g. Mima, Enceladus, Tethys, ... )
       //addMoon(5, moons);
-      //addMoon(7, moons);
-      //addMoon(9, moons);
+      addMoon(7, moons);
+      addMoon(9, moons);
       //addMoon(12, moons);
       //addMoon(14, moons);
       break;
@@ -132,12 +132,11 @@ class RingSystem {
     case 6:
       //Square
       importFromFile("Square.csv");
-  
+
       break;  
 
     default:
-    rings.add(new Ring(1, 3, 0));
-    
+      rings.add(new Ring(1, 3, 0));
     }
   }
 
@@ -170,6 +169,15 @@ class RingSystem {
     for (Particle p : totalParticles) {
       p.updatePosition();
     }
+
+    for (Moon m : moons) {
+      for (Moon other : moons) {
+        if (m != other) {
+          m.isAligned(other);
+        }
+      }
+    }
+
     for (Grid x : g) {
       x.update(this);
     }
@@ -197,8 +205,10 @@ class RingSystem {
       }
     }
     strokeWeight(4);
-    stroke(255, 0, 0);
+
     for (Moon m : moons) {
+      stroke(m.c);
+      m.c = color(255,0,0);
       point(SCALE*m.position.x, SCALE*m.position.y);
     }
     guidelines();

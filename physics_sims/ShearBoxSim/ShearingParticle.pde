@@ -3,7 +3,7 @@
  * @version 1.0
  */
 
-float scale =10.0; //Makes Particles Visible
+float scale =2.0; //Makes Particles Visible
 
 class Particle {
 

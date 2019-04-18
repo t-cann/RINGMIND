@@ -3,7 +3,7 @@
  * @version 1.0
  */
 
-float num_particles = 5000;
+float num_particles = 1000;
 
 //Simulation dimensions [m]
 int Lx = 1000;       //Extent of simulation box along planet-point line [m].
@@ -60,7 +60,7 @@ class ShearingBox {
     translate(width/2, height/2);
     fill(255);
     if (Moonlet) {
-      circle(0, 0, moonlet_r);
+      circle(0, 0, 2*moonlet_r* height/Lx);
     }
     
     if (Guides) {
