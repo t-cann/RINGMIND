@@ -5,30 +5,23 @@
  * @version 1.0
  */
 
-public interface Alignable {
-
-  public boolean isAligned(Alignable other);  //Alignment Threshold
-  //public float timeToAlignment(Alignable other); //What units? [s]
-}
-
-
-class Moon extends Particle implements Alignable {
+class Moon extends Particle {
   float GM;
   float radius;
   color c ;
-
-
-  final float moonSizeScale= 10;
-
-
+  
+  
+  final float moonSizeScale= 2;
+  
+  
   /**
    *  Class Constuctor - General Moon object with random angle. 
    */
-  Moon(float Gm, float radius, float orb_radius, color c) {
+  Moon(float Gm, float radius, float orb_radius,color c) {
     super(orb_radius);
     this.GM=Gm;
     this.radius=radius;
-    this.c= c;
+    this.c= c; 
   }
   /**
    *  Class Constuctor - General Moon object with random angle. 
@@ -37,7 +30,7 @@ class Moon extends Particle implements Alignable {
     super(orb_radius);
     this.GM=Gm;
     this.radius=radius;
-    c= color(255, 0, 0);
+    c= color(255,0,0);
   }
   /**
    *  Class Constuctor - Default Moon object with properties of Mima (loosely). 
@@ -55,28 +48,9 @@ class Moon extends Particle implements Alignable {
     this.velocity.x = v.x;
     this.velocity.y = v.y;
     this.velocity.z = v.z;
+    
   }
-  boolean isAligned(Alignable other) {
-    boolean temp =false;
-    Moon otherMoon = (Moon)other;
-    float dAngle = this.position.heading() - otherMoon.position.heading();
-     float angleThreshold = radians(2);
-    if ( abs(dAngle) < angleThreshold) {//% PI
-      temp=true;
-      if(dAngle >0){
-      float dOmega = sqrt(GMp/(pow(this.position.mag(), 3.0)))-sqrt(GMp/(pow(otherMoon.position.mag(), 3.0)));
-      println(timeToAlignment(dAngle,dOmega));
-      }
-      this.c= color(0, 0, 255);
-      //otherMoon.c= color(0, 0, 255);
-    } 
-    return temp;
-  }
-  
-  float timeToAlignment(float dAngle, float dOmega){
-  
-    return dAngle/dOmega;
-  }
+
 
   /**
    *  Display Method - Renders this object to screen displaying its position and colour.
@@ -99,7 +73,7 @@ class Moon extends Particle implements Alignable {
   //  x.circle(scale*position.x, scale*position.y, 2*moonSizeScale*radius*scale);
   //  x.pop();
   //}
-
+  
   /**
    *  Calculates the acceleration on this particle (based on its current position) (Does not override value of acceleration of particle)
    */
@@ -117,7 +91,7 @@ class Moon extends Particle implements Alignable {
         a_grav.add(a);
       }
     }
-
-    return a_grav;
-  }
+    
+  return a_grav;
+}
 }

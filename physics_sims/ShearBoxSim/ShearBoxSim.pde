@@ -27,7 +27,7 @@ Boolean Reset =false;
 ShearingBox s;
 
 void setup () {
-  size (2000, 1000);
+  size (1000, 500);
   s = new ShearingBox();
 } 
 
