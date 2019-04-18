@@ -83,14 +83,14 @@ class Moon extends Particle {
     PVector a_grav = PVector.mult(position.copy().normalize(), -GMp/position.copy().magSq());
 
     // acceleration due the moons on this particle.
-    for (Moon m : rs.moons) {
-      if (m != this) {
+    //for (Moon m : rs.moons) {
+    //  if (m != this) {
 
-        PVector dist = PVector.sub(m.position, position);
-        PVector a = PVector.mult(dist, m.GM/pow(dist.mag(), 3));
-        a_grav.add(a);
-      }
-    }
+    //    PVector dist = PVector.sub(m.position, position);
+    //    PVector a = PVector.mult(dist, m.GM/pow(dist.mag(), 3));
+    //    a_grav.add(a);
+    //  }
+    //}
     
   return a_grav;
 }
