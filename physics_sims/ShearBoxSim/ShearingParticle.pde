@@ -19,8 +19,8 @@ class Particle {
   float radius;
   float GM;
   float m;
-  
-  boolean highlight= false;
+
+  //boolean highlight= false;
 
 
 
@@ -55,34 +55,35 @@ class Particle {
    */
   void display() {
     push();
-    if(!highlight){
+    //if(!highlight){
     fill(255, 0, 0);
     stroke(255, 0, 0);
-    } else { 
-    fill( 0);
-    stroke(0);
-    }
+    //} 
+    //else { 
+    //fill( 0);
+    //stroke(0);
+    //}
     ellipseMode(CENTER);  // Set ellipseMode to CENTER
     //ellipse(-y*width/Ly,-x*height/Lx,20, 20); //Debugging
     //println(radius);
     //displayPosition(position,1,color(255,0,0));
-    if(Guides){
-    translate(-position.y*width/Ly,-position.x*height/Lx);
-    circle(0,0,2*scale*radius*width/Ly);
-    displayPVector(velocity,1000,color(0,255,0));
-    displayPVector(acceleration,1000000,color(0,0,255));}else{
-    ellipse(-position.y*width/Ly, -position.x*height/Lx, 2*scale*radius*width/Ly, 2*scale*radius*height/Lx);
-    }
-    pop();
     
+      translate(-position.y*width/Ly, -position.x*height/Lx);
+      circle(0, 0, 2*scale*radius*width/Ly);
+      displayPVector(velocity, 1000, color(0, 255, 0));
+      displayPVector(acceleration, 100000000, color(0, 0, 255));
+    
+      
+    
+    pop();
   }
-  void displayPosition(PVector v, float scale, color c){
+  void displayPosition(PVector v, float scale, color c) {
     stroke(c);
-    line(0,0,-v.y*scale*width/Ly,-v.x*scale*height/Lx);
+    line(0, 0, -v.y*scale*width/Ly, -v.x*scale*height/Lx);
   } 
-  void displayPVector(PVector v, float scale, color c){
+  void displayPVector(PVector v, float scale, color c) {
     stroke(c);
-    line(0,0,-v.y*scale,-v.x*scale);
+    line(0, 0, -v.y*scale, -v.x*scale);
   }
 
 
@@ -94,13 +95,13 @@ class Particle {
     // acceleration due planet in centre of the ring. 
     PVector a_grav = new PVector();
 
-    if(A1){
-    a_grav.x += 2.0*Omega0*S0*position.x;
-    }
-    if(A2){
-    a_grav.x += 2.0*Omega0*velocity.y;
-    a_grav.y += -2.0*Omega0*velocity.x;
-    }
+    //if (A1) {
+      a_grav.x += 2.0*Omega0*S0*position.x;
+    //}
+    //if (A2) {
+      a_grav.x += 2.0*Omega0*velocity.y;
+      a_grav.y += -2.0*Omega0*velocity.x;
+    //}
     if (Moonlet) {
       float moonlet_GMr3 = moonlet_GM/pow(position.mag(), 3.0);
       a_grav.x += -moonlet_GMr3*position.x;
@@ -111,13 +112,13 @@ class Particle {
       for (Particle p : sb.particles) {
         if (p!=this) {
           PVector distanceVect = PVector.sub(position.copy(), p.position.copy());
-          
+
           // Calculate magnitude of the vector separating the balls
           float distanceVectMag = distanceVect.mag();
-          if (distanceVectMag > radius+p.radius){
-          distanceVect = distanceVect.mult(p.GM /pow(distanceVectMag, 3));
-          a_grav.x+= -distanceVect.x ;
-          a_grav.y+=-distanceVect.y;
+          if (distanceVectMag > radius+p.radius) {
+            distanceVect = distanceVect.mult(p.GM /pow(distanceVectMag, 3));
+            a_grav.x+= -distanceVect.x ;
+            a_grav.y+= -distanceVect.y;
           }
         }
       }
@@ -148,52 +149,6 @@ class Particle {
     this.velocity.add(PVector.add(acceleration.copy(), a).mult(0.5 *dt));
   }
 
-  ///** Computes self-gravity terms and adds them to an existing acceleration vector.
-  // */
-  //void calculate_self_grav(ShearingBox sb) {   
-
-  //  for (Particle x : sb.particles) {
-  //        // Against every other Particle in the grid
-  //        for (Particle other : sb.particles) {
-  //          // As long as its not the same one
-  //          if (other != x) {
-  //          //Adding Self Gravity
-  //            //x.update_acceleration(other);
-  //          }
-  //        }
-  //      }
-  //}
-
-  ///**Method to Update Particle
-  // */
-  //void update_position() {
-  //  //Updates postions
-  //  position.x += velocity.x*dt+ 0.5 *acceleration.x*pow(dt, 2);
-  //  position.y += velocity.y*dt+ 0.5 *acceleration.y*pow(dt, 2);
-  //}
-  //void update_velocity() {
-  //  //Updates velocities
-  //  velocity.x += acceleration.x*dt;
-  //  velocity.y += acceleration.y*dt;
-  //}
-  ///** Method to update the acceleration on this particle due to Moonlet (TODO Extend Particle into Moonlet and ShearParticle)
-  // */
-  //void update_acceleration() {
-  //  float moonlet_GMr3 = moonlet_GM/pow(position.mag(), 3);
-  //  acceleration.x+=2*Omega0*S0*position.x+2*Omega0*velocity.y-moonlet_GMr3*position.x;
-  //  acceleration.y+=-2*Omega0*velocity.x-moonlet_GMr3*position.y;
-  //}
-  ///** Method to update the acceleration on this particle due to Moonlet (TODO Extend Particle into Moonlet and ShearParticle)
-  // */
-  //void update_acceleration(Particle other) {
-  //  PVector distanceVect = PVector.sub(position.copy(), other.position.copy());
-  //  // Calculate magnitude of the vector separating the balls
-  //  float distanceVectMag = distanceVect.mag();
-  //  distanceVect = distanceVect.mult(other.GM /pow(distanceVectMag, 3));
-  //  acceleration.x+= distanceVect.x ;
-  //  acceleration.y+=-distanceVect.y;
-  //}
-
   void Reset() {
     acceleration.x=0;
     acceleration.y=0;
@@ -216,37 +171,10 @@ class Particle {
   }
 }
 
-//TODO
-
-///**CONSTUCTOR Particle
-//* @param rho 
-//* @param a  Minimum size of a ring particle [m].
-//* @param b  Maximum size of a ring particle [m].
-//* @param lambda ower law index for the size distribution [dimensionless].
-//* @param D 
-//* @param C
-//*/
-//Particle(float rho, float a, float b, float lambda){
-//  //Initialise a Particle Object.
-//  this.rho =rho;
-//  this.a = a;
-//  this.b = b;
-//  this.lambda = lambda;
-//  this.D=1.0/( exp(-this.lambda*this.a) -exp(-this.lambda*this.b));
-//  this.C= this.D * exp(-this.lambda*this.a);  
-//}
-
-//    /**CONSTUCTOR Particle
-//*/
-//Particle(){
-//  //Initialise default Particle Object.
-//  this(1000.0,0.95,1.05,1e-6);
-
-//}
 
 class Moonlet extends Particle {
 
-  Moonlet(){
+  Moonlet() {
     position = new PVector();
     velocity = new PVector();
     acceleration = new PVector();
@@ -254,5 +182,4 @@ class Moonlet extends Particle {
     this.GM = moonlet_GM;
     m= PI*pow(radius, 3.0)*4.0/3.0;
   }
-
 }

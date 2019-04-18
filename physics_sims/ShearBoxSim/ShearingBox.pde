@@ -3,7 +3,7 @@
  * @version 1.0
  */
 
-float num_particles = 1000;
+float num_particles = 5000;
 
 //Simulation dimensions [m]
 int Lx = 1000;       //Extent of simulation box along planet-point line [m].
@@ -50,8 +50,6 @@ class ShearingBox {
         grid[i][j] = new ArrayList<Particle>();
       }
     }
-    println(Omega0+ " " + S0);
-
     random_start();
   }
 
@@ -64,10 +62,18 @@ class ShearingBox {
     if (Moonlet) {
       circle(0, 0, moonlet_r);
     }
-
-    for (Particle x : particles) {
-      // Zero acceleration to start
-      x.display();
+    
+    if (Guides) {
+      for (Particle x : particles) {
+        // Zero acceleration to start
+        x.display();
+      }
+    } else {
+      fill(255, 0, 0);
+      stroke(255,0,0);
+      for (Particle x : particles) {
+        ellipse(-x.position.y*width/Ly, -x.position.x*height/Lx, 2*scale*x.radius*width/Ly, 2*scale*x.radius*height/Lx);
+      }
     }
 
     if (Reset) {
@@ -103,48 +109,17 @@ class ShearingBox {
   /** Method to update position
    */
   void update() {
-    for (Particle p : particles) {
-      p.highlight = false;
-    }
+    //for (Particle p : particles) {
+    //  p.highlight = false;
+    //}
 
 
     step_verlet();
-    //if ( frameCount %100 == 0) {
-    //  saveTable(particlesToTable(), "/files/output.csv");
-    //}
-    //   if (Collisions) {
 
-    //  grid_update();
-    //}
-  }
-
-
-  Table particlesToTable() {
-    Table tempTable = new Table();
-
-    for (int j=0; j<9; j++) {
-      tempTable.addColumn();
+    if (Collisions) {
+      grid_update();
     }
-
-    for (Particle p : particles) {
-      TableRow newRow =tempTable.addRow();
-      newRow.setFloat(0, p.position.x);
-      newRow.setFloat(1, p.position.y);
-      newRow.setFloat(2, p.position.z);
-      newRow.setFloat(3, p.velocity.x);
-      newRow.setFloat(4, p.velocity.y);
-      newRow.setFloat(5, p.velocity.z);
-      newRow.setFloat(6, p.acceleration.x);
-      newRow.setFloat(7, p.acceleration.y);
-      newRow.setFloat(8, p.acceleration.z);
-    }
-
-
-
-    return tempTable;
   }
-
-
 
   /** Take a step using the Velocity Verlet (Leapfrog) ODE integration algorithm.
    *   TODO: Check Algorithm is correct.
@@ -423,3 +398,31 @@ class ShearingBox {
     }
   }
 }
+
+//  //if ( frameCount %100 == 0) {
+//  //  saveTable(particlesToTable(), "/files/output.csv");
+//  //}
+//Table particlesToTable() {
+//  Table tempTable = new Table();
+
+//  for (int j=0; j<9; j++) {
+//    tempTable.addColumn();
+//  }
+
+//  for (Particle p : particles) {
+//    TableRow newRow =tempTable.addRow();
+//    newRow.setFloat(0, p.position.x);
+//    newRow.setFloat(1, p.position.y);
+//    newRow.setFloat(2, p.position.z);
+//    newRow.setFloat(3, p.velocity.x);
+//    newRow.setFloat(4, p.velocity.y);
+//    newRow.setFloat(5, p.velocity.z);
+//    newRow.setFloat(6, p.acceleration.x);
+//    newRow.setFloat(7, p.acceleration.y);
+//    newRow.setFloat(8, p.acceleration.z);
+//  }
+
+
+
+//  return tempTable;
+//}

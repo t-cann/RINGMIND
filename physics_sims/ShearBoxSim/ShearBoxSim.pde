@@ -18,11 +18,11 @@ Boolean Running = true;
 Boolean Display = true;
 Boolean Moonlet = true;
 Boolean Self_Grav = false;
-Boolean Collisions =true;
-Boolean A1 =true;
-Boolean A2 =true;
+Boolean Collisions =false;
+//Boolean A1 =true;
+//Boolean A2 =true;
 Boolean Guides = false;
-Boolean Reset =true;
+Boolean Reset =false;
 
 ShearingBox s;
 
@@ -86,18 +86,29 @@ void keyPressed() {
     Moonlet = !Moonlet;
   } else if (key =='s') {
     Self_Grav = !Self_Grav;
-    if(Self_Grav){println("Self_Grav ON");}
-  }else if (key =='c') {
+    if (Self_Grav) {
+      println("Self_Grav ON");
+    }
+  } else if (key =='c') {
     Collisions = !Collisions;
-    if(Collisions){println("Collision ON");}
-  }else if (key =='1') {
-    A1 = !A1;
-    if(A1){println("A1 ON");}else{println("OFF");}
-  }
-  else if (key =='2') {
-    A2 = !A2;
-    if(A2){println("A2 ON");}else{println("OFF");}
-  }else if (key =='r') {
+    if (Collisions) {
+      println("Collision ON");
+    }
+  //} else if (key =='1') {
+  //  A1 = !A1;
+  //  if (A1) {
+  //    println("A1 ON");
+  //  } else {
+  //    println("OFF");
+  //  }
+  //} else if (key =='2') {
+  //  A2 = !A2;
+  //  if (A2) {
+  //    println("A2 ON");
+  //  } else {
+  //    println("OFF");
+  //  }
+  } else if (key =='r') {
     Reset = !Reset;
   }
 }
