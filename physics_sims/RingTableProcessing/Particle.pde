@@ -57,7 +57,7 @@ abstract class Particle {
    */
   Particle(float radius) {
     // Initialise ourRingParticle.
-    this(radius, random(1)*2.0*PI);
+    this(radius, 0); //random(1)*2.0*PI
   }
   
 

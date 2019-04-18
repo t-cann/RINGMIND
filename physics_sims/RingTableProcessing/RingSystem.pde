@@ -5,15 +5,14 @@
  */
 
 int N_PARTICLES = 10000; 
-float G = 6.67408E-8;       // Gravitational Constant 6.67408E-11[m^3 kg^-1 s^-2]
+float G = 6.67408E-9;       // Gravitational Constant 6.67408E-11[m^3 kg^-1 s^-2]
 float GMp = 3.7931187e16;    // Gravitational parameter (Saturn)
 
 // What are the minimum and maximum extents in r for initialisation
 float R_MIN = 1;
 float R_MAX = 5;
-int RING_INDEX =3;
-
-int MOON_INDEX =0;
+int RING_INDEX =7;
+int MOON_INDEX =1;
 
 
 final float Rp = 60268e3;          // Length scale (1 Saturn radius) [m]
@@ -69,6 +68,12 @@ class RingSystem {
     switch(MOON_INDEX) {
       case(1):
       // Adding Specific Moons ( e.g. Mima, Enceladus, Tethys, ... )
+      moons.add(new Moon(G*3.7e19, 2.08e6, 1.373657091*Rp));
+      moons.add(new Moon(G*3.7e19, 2.08e8, 2.180544711*Rp));
+      moons.add(new Moon(G*3.7e19, 2.08e5, 2.857321894*Rp));
+      moons.add(new Moon(G*3.7e19, 2.08e6, 3.226611418*Rp));
+      moons.add(new Moon(G*3.7e19, 2.08e6, 4.0165977*Rp));
+      
       //addMoon(5, moons);
       //addMoon(7, moons);
       //addMoon(9, moons);
@@ -132,12 +137,22 @@ class RingSystem {
     case 6:
       //Square
       importFromFile("Square.csv");
-  
+      break;
+   case 7:
+      // Main RingMind
+      rings.add(new Ring(1.110, 1.236, N_PARTICLES/12)); //inner ring
+      rings.add(new Ring(1.511, 2.18, N_PARTICLES/4)); //propeller ring
+      rings.add(new Ring(2.18, 2.6, N_PARTICLES/4));  //propeller ring
+      rings.add(new Ring(2.794, 2.795, N_PARTICLES/6)); //narrow ring
+      rings.add(new Ring(2.920, 2.921, N_PARTICLES/6)); //narrow ring
+      rings.add(new Ring(3.4, 3.7, N_PARTICLES/3)); //clumping ring
+
+      
+
       break;  
 
     default:
-    rings.add(new Ring(1, 3, 0));
-    
+      rings.add(new Ring(1, 3, 0));
     }
   }
 
