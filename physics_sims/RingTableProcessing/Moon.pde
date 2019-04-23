@@ -30,7 +30,7 @@ class Moon extends Particle {
     super(orb_radius);
     this.GM=Gm;
     this.radius=radius;
-    c= color(255,0,0);
+    c= color(0,255,0);
   }
   /**
    *  Class Constuctor - Default Moon object with properties of Mima (loosely). 
@@ -61,7 +61,7 @@ class Moon extends Particle {
     ellipseMode(CENTER);
     fill(c);
     stroke(c);
-    circle(SCALE*position.x, SCALE*position.y, 2*moonSizeScale*radius*SCALE);
+    circle(SCALE*position.x, SCALE*position.y, 2*moonSizeScale*radius*SCALE); //moonSizeScale
     pop();
   }
   //  void render(PGraphics x) {

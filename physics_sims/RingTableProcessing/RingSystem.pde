@@ -47,7 +47,7 @@ class RingSystem {
 
   void initialise() {
 
-    g.add( new Grid(1.0, 5.0, 1E-8, 1E4));
+    g.add(new Grid(1.0, 5.0, 1E-8, 1E4));
     //g.add( new Grid(2.5, 5.0, 1E-7, 1E3));
     initialiseMoons();
     initialiseRings();
@@ -68,12 +68,18 @@ class RingSystem {
     switch(MOON_INDEX) {
       case(1):
       // Adding Specific Moons ( e.g. Mima, Enceladus, Tethys, ... )
-      moons.add(new Moon(G*3.7e19, 2.08e6, 1.373657091*Rp));
-      moons.add(new Moon(G*3.7e19, 2.08e8, 2.180544711*Rp));
-      moons.add(new Moon(G*3.7e19, 2.08e5, 2.857321894*Rp));
-      moons.add(new Moon(G*3.7e19, 2.08e6, 3.226611418*Rp));
-      moons.add(new Moon(G*3.7e19, 2.08e6, 4.0165977*Rp));
-      
+      // Inner smaller moons
+      moons.add(new Moon(G*3.7e18, 1.77e6, 1.373657091*Rp));
+      moons.add(new Moon(G*8.7e19, 2.66e6, 2.180544711*Rp));
+      moons.add(new Moon(G*3.5e18, 9.90e5, 2.857321894*Rp));
+      moons.add(new Moon(G*3.7e19, 1.32e6, 3.226611418*Rp));
+      moons.add(new Moon(G*3.7e19, 4.08e6, 4.0165977*Rp));
+      // Larger outer moons
+      moons.add(new Moon(G*2.31e21, 1.65e7, 8.75091259*Rp));  //Rhea
+      moons.add(new Moon(G*4.9e20, 6.85e7, 16.49*Rp));
+      moons.add(new Moon(G*1.34455e23, 8.57e7, 20.27327*Rp));  //Titan
+      moons.add(new Moon(G*3.7e22, 2.08e8, 34.23*Rp));
+      moons.add(new Moon(G*1.81e21, 7.46e7, 49.09*Rp));  //Iapetus
       //addMoon(5, moons);
       //addMoon(7, moons);
       //addMoon(9, moons);
@@ -140,12 +146,14 @@ class RingSystem {
       break;
    case 7:
       // Main RingMind
+      g.add(new Grid(1.0, 3.4, 1E-8, 1E4));
+      g.add(new Grid(3.4, 5.0, 2E-7, 1E4));
       rings.add(new Ring(1.110, 1.236, N_PARTICLES/12)); //inner ring
-      rings.add(new Ring(1.511, 2.18, N_PARTICLES/4)); //propeller ring
-      rings.add(new Ring(2.18, 2.6, N_PARTICLES/4));  //propeller ring
+      rings.add(new Ring(1.611, 2.175, N_PARTICLES/4)); //propeller ring
+      rings.add(new Ring(2.185, 2.6, N_PARTICLES/4));  //propeller ring
       rings.add(new Ring(2.794, 2.795, N_PARTICLES/6)); //narrow ring
       rings.add(new Ring(2.920, 2.921, N_PARTICLES/6)); //narrow ring
-      rings.add(new Ring(3.4, 3.7, N_PARTICLES/3)); //clumping ring
+      rings.add(new Ring(3.5, 3.8, N_PARTICLES/3)); //clumping ring
 
       
 
@@ -211,10 +219,10 @@ class RingSystem {
         point(SCALE*p.position.x, SCALE*p.position.y);
       }
     }
-    strokeWeight(4);
-    stroke(255, 0, 0);
+    strokeWeight(0);
+    fill(255, 255, 0);
     for (Moon m : moons) {
-      point(SCALE*m.position.x, SCALE*m.position.y);
+      circle(SCALE*m.position.x, SCALE*m.position.y, 2*m.radius*SCALE);
     }
     guidelines();
 
