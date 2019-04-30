@@ -26,6 +26,10 @@ class RingParticle extends Particle {
     // Initialise ourRingParticle.
     super(radius, random(1)*2.0*PI);
   }
+  
+  RingParticle(){
+  super();
+  }
 
   /**
    *  Calculates the acceleration on this particle (based on its current position) (Does not override value of acceleration of particle)

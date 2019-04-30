@@ -56,6 +56,7 @@ void draw () {
   }
   fps();
   //******************************************************
+  //gap = totalSimTime /3600;
   totalSimTime += dt;
 }
 

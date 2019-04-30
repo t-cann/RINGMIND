@@ -1,4 +1,4 @@
-/**Class RingSystem collection of Rings, Ringlets and Gaps for a planetary ring system.  //<>// //<>//
+/**Class RingSystem collection of Rings, Ringlets and Gaps for a planetary ring system. 
  *
  * @author Thomas Cann
  * @version 1.0
@@ -11,9 +11,9 @@ float GMp = 3.7931187e16;    // Gravitational parameter (Saturn)
 // What are the minimum and maximum extents in r for initialisation
 float R_MIN = 1;
 float R_MAX = 5;
-
-int RING_INDEX =7;
+int RING_INDEX =3;
 int MOON_INDEX =1;
+
 
 final float Rp = 60268e3;          // Length scale (1 Saturn radius) [m]
 final float SCALE = 100/Rp;        // Converts from [m] to [pixel] with planetary radius (in pixels) equal to the numerator. Size of a pixel represents approximately 600km.
@@ -25,7 +25,7 @@ class RingSystem {
   ArrayList<Moon> moons;
   ArrayList<Grid> g;
   float r_min, r_max;
-  boolean[][] Aligned;
+
   /**
    *  Class Constuctor - General need passing all the values. 
    */
@@ -39,14 +39,7 @@ class RingSystem {
     rings = new ArrayList<Ring>();
     moons = new ArrayList<Moon>();
     initialise();
-    this.Aligned = new boolean[moons.size()+1][moons.size()+1];
-    //println(moons.size());
-    for (int i =0; i<moons.size(); i++) {
-      for (int j =0; j<=moons.size(); j++) {
-        this.Aligned[i][j]=false;
-      }
-    }
-    // println(Aligned[0][0]);
+
 
 
     //***********************************************
@@ -54,7 +47,7 @@ class RingSystem {
 
   void initialise() {
 
-    g.add(new Grid(1.0, 5.0, 1E-8, 1E4));
+    g.add( new Grid(1.0, 5.0, 1E-8, 1E4));
     //g.add( new Grid(2.5, 5.0, 1E-7, 1E3));
     initialiseMoons();
     initialiseRings();
@@ -72,21 +65,15 @@ class RingSystem {
   void initialiseMoons() {
     //***********Initialise Moons*********************
     moons.clear();
-    switch(0) {
+    switch(MOON_INDEX) {
       case(1):
       // Adding Specific Moons ( e.g. Mima, Enceladus, Tethys, ... )
-      // Inner smaller moons
-      moons.add(new Moon(G*3.7e18, 1.77e6, 1.373657091*Rp));
-      moons.add(new Moon(G*8.7e19, 2.66e6, 2.180544711*Rp));
-      moons.add(new Moon(G*3.5e18, 9.90e5, 2.857321894*Rp));
-      moons.add(new Moon(G*3.7e19, 1.32e6, 3.226611418*Rp));
-      moons.add(new Moon(G*3.7e19, 4.08e6, 4.0165977*Rp));
-      // Larger outer moons
-      moons.add(new Moon(G*2.31e21, 1.65e7, 8.75091259*Rp));  //Rhea
-      moons.add(new Moon(G*4.9e20, 6.85e7, 16.49*Rp));
-      moons.add(new Moon(G*1.34455e23, 8.57e7, 20.27327*Rp));  //Titan
-      moons.add(new Moon(G*3.7e22, 2.08e8, 34.23*Rp));
-      moons.add(new Moon(G*1.81e21, 7.46e7, 49.09*Rp));  //Iapetus
+      moons.add(new Moon(G*3.7e19, 2.08e6, 1.373657091*Rp));
+      moons.add(new Moon(G*3.7e19, 2.08e8, 2.180544711*Rp));
+      moons.add(new Moon(G*3.7e19, 2.08e5, 2.857321894*Rp));
+      moons.add(new Moon(G*3.7e19, 2.08e6, 3.226611418*Rp));
+      moons.add(new Moon(G*3.7e19, 2.08e6, 4.0165977*Rp));
+      
       //addMoon(5, moons);
       //addMoon(7, moons);
       //addMoon(9, moons);
@@ -153,14 +140,12 @@ class RingSystem {
       break;
    case 7:
       // Main RingMind
-      g.add(new Grid(1.0, 3.4, 1E-8, 1E4));
-      g.add(new Grid(3.4, 5.0, 2E-7, 1E4));
       rings.add(new Ring(1.110, 1.236, N_PARTICLES/12)); //inner ring
-      rings.add(new Ring(1.611, 2.175, N_PARTICLES/4)); //propeller ring
-      rings.add(new Ring(2.185, 2.6, N_PARTICLES/4));  //propeller ring
+      rings.add(new Ring(1.511, 2.18, N_PARTICLES/4)); //propeller ring
+      rings.add(new Ring(2.18, 2.6, N_PARTICLES/4));  //propeller ring
       rings.add(new Ring(2.794, 2.795, N_PARTICLES/6)); //narrow ring
       rings.add(new Ring(2.920, 2.921, N_PARTICLES/6)); //narrow ring
-      rings.add(new Ring(3.5, 3.8, N_PARTICLES/3)); //clumping ring
+      rings.add(new Ring(3.4, 3.7, N_PARTICLES/3)); //clumping ring
 
       
 
@@ -188,28 +173,6 @@ class RingSystem {
     rings.get(0).particles=tempParticles;
   }
 
-  void addParticlesFromTable(String Filename) {
-    Table table; 
-    table = loadTable("/files/"+Filename);//output.csv");//"input.csv"
-
-    //particles.clear();
-
-    for (int i = 0; i < table.getRowCount(); i++) {
-      RingParticle temp = new RingParticle();
-      temp.position.x= table.getFloat(i, 0);
-      temp.position.y= table.getFloat(i, 1);
-      temp.position.z= table.getFloat(i, 2);
-      temp.velocity.x= table.getFloat(i, 3);
-      temp.velocity.y= table.getFloat(i, 4);
-      temp.velocity.z= table.getFloat(i, 5);
-      temp.acceleration.x= table.getFloat(i, 6);
-      temp.acceleration.y= table.getFloat(i, 7);
-      temp.acceleration.z= table.getFloat(i, 8);
-      rings.get(0).particles.add(temp);
-      totalParticles.add(temp);
-    }
-  }
-
   /**
    *  Updates object for one time step of simulation taking into account the position of one moon.
    */
@@ -222,22 +185,6 @@ class RingSystem {
     for (Particle p : totalParticles) {
       p.updatePosition();
     }
-
-// Checks Alignment between all the moons each other and Planet
-    for (int i =0; i<(moons.size()-1); i++) {
-      for (int j = i+1; j<(moons.size()); j++) {
-        boolean isAligned =moons.get(i).isAligned(moons.get(j));
-        // println(this.Aligned[0][0]);//test[i][j]);
-        if (  Aligned[i][j] != isAligned && isAligned == true ) {
-          Aligned[i][j] =true; 
-          println(i+" "+j+" "+moons.get(i).timeToAlignment(moons.get(j)));
-        } else if ( Aligned[i][j] != isAligned && isAligned == false) {
-          Aligned[i][j] =false;
-        }
-      }
-    }
-
-
     for (Grid x : g) {
       x.update(this);
     }
@@ -245,9 +192,9 @@ class RingSystem {
       p.updateVelocity(p.getAcceleration(this));
     }
     //Output TABLE 
-    //if ((frameCount)%50 ==0) {
-    //  saveTable(g.get(0).gridToTable(g.get(0).grid), "/files/output.csv");
-    //}
+    if ((frameCount)%50 ==0) {
+      saveTable(g.get(0).gridToTable(g.get(0).grid), "/files/output.csv");
+    }
   }
 
   /**
@@ -264,16 +211,10 @@ class RingSystem {
         point(SCALE*p.position.x, SCALE*p.position.y);
       }
     }
-    strokeWeight(0);
-    fill(255, 255, 0);
+    strokeWeight(4);
+    stroke(255, 0, 0);
     for (Moon m : moons) {
-
-      stroke(m.c);
-      m.c = color(255, 0, 0);
       point(SCALE*m.position.x, SCALE*m.position.y);
-
-      //circle(SCALE*m.position.x, SCALE*m.position.y, 2*m.radius*SCALE);
-
     }
     guidelines();
 
@@ -290,32 +231,6 @@ class RingSystem {
     //}
     pop();
 
-    if (!debug) {
-      if (mousePressed) {
-        if (file) {
-          if (!Add) {
-            if (specific) {
-              addParticlesFromTable("SYMBOL1.csv");
-              addParticlesFromTable("SYMBOL2.csv");
-              addParticlesFromTable("SYMBOL3.csv");
-            } else {
-              addParticlesFromTable("SYMBOL4.csv");
-              //addParticlesFromTable("SYMBOL5.csv");
-            }
-          } else {
-            addParticlesFromTable("files/outputParticles.csv");
-          }
-        }
-      }
-    }
-
-    if (debug) { 
-      if ( frameCount %100 == 0) {
-        saveTable(particlesToTable(), "files/outputParticles.csv");
-      }
-    }
-
-
     for (Grid x : g) {
       x.display(this);
     }
@@ -330,28 +245,6 @@ class RingSystem {
     circle(0, 0, 2*R_MIN*SCALE*Rp);
     fill(255, 165, 0);
     circle(0, 0, 2.0*SCALE*Rp);
-  }
-
-  Table particlesToTable() {
-    Table tempTable = new Table();
-
-    for (int j=0; j<9; j++) {
-      tempTable.addColumn();
-    }
-
-    for (RingParticle p : rings.get(0).particles) {
-      TableRow newRow =tempTable.addRow();
-      newRow.setFloat(0, p.position.x);
-      newRow.setFloat(1, p.position.y);
-      newRow.setFloat(2, p.position.z);
-      newRow.setFloat(3, p.velocity.x);
-      newRow.setFloat(4, p.velocity.y);
-      newRow.setFloat(5, p.velocity.z);
-      newRow.setFloat(6, p.acceleration.x);
-      newRow.setFloat(7, p.acceleration.y);
-      newRow.setFloat(8, p.acceleration.z);
-    }
-    return tempTable;
   }
 
   /**

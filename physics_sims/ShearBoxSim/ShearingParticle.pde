@@ -3,7 +3,8 @@
  * @version 1.0
  */
 
-float scale =10.0; //Makes Particles Visible
+float scale =3.0; //Makes Particles Visible
+float gap=80; 
 
 class Particle {
 
@@ -24,6 +25,7 @@ class Particle {
 
 
 
+
   /**CONSTUCTOR Particle
    */
   Particle() {
@@ -32,7 +34,14 @@ class Particle {
     velocity = new PVector();
     acceleration = new PVector();
     //
-    position.x= (random(1)-0.5)*Lx;
+    //position.x= (random(1)-0.5)*Lx;
+    float x=  (random(1)-0.5);
+    if (x>0 ) {
+      position.x=x*(Lx-gap)+gap;
+    } else {
+      position.x=x*(Lx-gap)-gap;
+    }
+
     //
     if (position.x >0) {
       position.y = -Ly/2;
@@ -67,14 +76,14 @@ class Particle {
     //ellipse(-y*width/Ly,-x*height/Lx,20, 20); //Debugging
     //println(radius);
     //displayPosition(position,1,color(255,0,0));
-    
-      translate(-position.y*width/Ly, -position.x*height/Lx);
-      circle(0, 0, 2*scale*radius*width/Ly);
-      displayPVector(velocity, 1000, color(0, 255, 0));
-      displayPVector(acceleration, 100000000, color(0, 0, 255));
-    
-      
-    
+
+    translate(-position.y*width/Ly, -position.x*height/Lx);
+    circle(0, 0, 2*scale*radius*width/Ly);
+    displayPVector(velocity, 1000, color(0, 255, 0));
+    displayPVector(acceleration, 100000000, color(0, 0, 255));
+
+
+
     pop();
   }
   void displayPosition(PVector v, float scale, color c) {
@@ -96,11 +105,11 @@ class Particle {
     PVector a_grav = new PVector();
 
     //if (A1) {
-      a_grav.x += 2.0*Omega0*S0*position.x;
+    a_grav.x += 2.0*Omega0*S0*position.x;
     //}
     //if (A2) {
-      a_grav.x += 2.0*Omega0*velocity.y;
-      a_grav.y += -2.0*Omega0*velocity.x;
+    a_grav.x += 2.0*Omega0*velocity.y;
+    a_grav.y += -2.0*Omega0*velocity.x;
     //}
     if (Moonlet) {
       float moonlet_GMr3 = moonlet_GM/pow(position.mag(), 3.0);
@@ -153,7 +162,16 @@ class Particle {
     acceleration.x=0;
     acceleration.y=0;
     //
-    position.x= (random(1)-0.5)*Lx;
+    //position.x= (random(1)-0.5)*(Lx);
+
+    float x=  (random(1)-0.5);
+    if (x>0 ) {
+      position.x=x*(Lx-gap)+gap;
+    } else {
+      position.x=x*(Lx-gap)-gap;
+    }
+
+
     //
     if (position.x >0) {
       position.y = -Ly/2;

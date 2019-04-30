@@ -11,7 +11,7 @@
 float h_stepsize;
 
 //Dynamic Timestep variables
-final float simToRealTimeRatio = 3600.0/1.0;   // 3600.0/1.0 --> 1hour/second
+ float simToRealTimeRatio = -3600.0/1.0;   // 3600.0/1.0 --> 1hour/second
 final float maxTimeStep = 20* simToRealTimeRatio / 30;
 float totalSimTime =0.0;                       // Tracks length of time simulation has be running
 
@@ -19,14 +19,18 @@ Boolean Running = true;
 Boolean Display = true;
 Boolean Add = false;
 Boolean clear = false;
+Boolean debug = false;
+Boolean specific = false;
+Boolean file = true;
 
 //Initialising Objects
 RingSystem Saturn;
 
 
 void setup() {
-  //size (1200, 700, P2D);
-  fullScreen(P2D, 1);
+  size (1900, 1000, P2D);
+  //fullScreen(P2D, 2);
+
   frameRate(120);
   smooth(); //noSmooth();
   randomSeed(3);
@@ -37,12 +41,12 @@ void setup() {
 void draw() {
 
   // calculate simulation time step for this frame
-  if (simToRealTimeRatio/frameRate < maxTimeStep) {
-    h_stepsize= simToRealTimeRatio/frameRate;
-  } else {
-    h_stepsize= maxTimeStep;
-    println("At Maximum Time Step");
-  }
+  //if (simToRealTimeRatio/frameRate < maxTimeStep) {
+  h_stepsize= simToRealTimeRatio/frameRate;
+  //} else {
+  //  h_stepsize= maxTimeStep;
+  //  println("At Maximum Time Step");
+  //}
 
   //*************Update and Render Frame******************
 
@@ -92,19 +96,24 @@ void keyPressed() {
       Display = true;
     }
   } else if (key =='a') {
-    if (Add) {
-      Add =false;
-    } else {
-      println("test");
-      Add = true;
-    } 
+    Add = !Add;
+    println("Add: " + Add);
+  } else if (key=='c') {
+    clear= !clear;
+    println("Clear: " + clear);
+  } else if (key =='d') {
+    debug = !debug;
+    println("Debug: " + debug);
   }
-  else if (key=='c'){
-    if (clear){
-      clear=false;
-    }
-    else {
-      clear =true;
-    }
+  else if (key =='s') {
+    specific = !specific;
+    println("Specific : " + specific );
+  }  else if (key =='f') {
+    file = !file;
+    println("File : " + file );
+  } else if(key=='t'){
+     simToRealTimeRatio *=-1;
   }
+  
+  
 }
