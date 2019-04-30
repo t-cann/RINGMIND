@@ -60,22 +60,31 @@ class Moon extends Particle implements Alignable {
     boolean temp =false;
     Moon otherMoon = (Moon)other;
     float dAngle = this.position.heading() - otherMoon.position.heading();
-     float angleThreshold = radians(2);
+    float angleThreshold = radians(1);
     if ( abs(dAngle) < angleThreshold) {//% PI
-      temp=true;
-      if(dAngle >0){
-      float dOmega = sqrt(GMp/(pow(this.position.mag(), 3.0)))-sqrt(GMp/(pow(otherMoon.position.mag(), 3.0)));
-      println(timeToAlignment(dAngle,dOmega));
-      }
+      temp =true;
+      //if(dAngle >0){
+
+      //}
       this.c= color(0, 0, 255);
-      //otherMoon.c= color(0, 0, 255);
+      otherMoon.c= color(0, 0, 255);
     } 
     return temp;
   }
   
-  float timeToAlignment(float dAngle, float dOmega){
-  
-    return dAngle/dOmega;
+  float timeToAlignment(Alignable other){
+    Moon otherMoon = (Moon)other;
+    float dAngle = this.position.heading() - otherMoon.position.heading();
+    float dOmega = kepler_omega(this)-kepler_omega(otherMoon);
+    return dAngle/(dOmega*simToRealTimeRatio);
+  }
+
+  /** Method to calculate the Keplerian orbital angular frequency (using Kepler's 3rd law).
+   *@param r  Radial position (semi-major axis) to calculate the period [m].
+   *@return   The angular frequency [radians/s].
+   */
+  float kepler_omega(Moon m) {
+    return sqrt(GMp/(pow(m.position.mag(), 3.0)));
   }
 
   /**
