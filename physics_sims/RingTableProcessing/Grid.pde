@@ -6,7 +6,7 @@
 //Global Variables 
 float GRID_DELTA_R = 0.1; //[Planetary Radi]  
 float GRID_DELTA_THETA = 1; // [Degrees]
-float GRID_DRAG_CONSTANT = 5E-7;
+float GRID_DRAG_CONSTANT = 5E-6;
 float GRID_DRAG_PROBABILITY = 1E4 ;
 
 

@@ -5,6 +5,7 @@
 
 float scale =3.0; //Makes Particles Visible
 float gap=80; 
+
 class Particle {
 
 

@@ -3,7 +3,7 @@
  * @version 1.0
  */
 
-float num_particles = 1000;
+float num_particles = 5000;
 
 //Simulation dimensions [m]
 int Lx = 1000;       //Extent of simulation box along planet-point line [m].
