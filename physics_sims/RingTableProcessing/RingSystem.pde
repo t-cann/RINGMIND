@@ -1,4 +1,4 @@
-/**Class RingSystem collection of Rings, Ringlets and Gaps for a planetary ring system. 
+/**Class RingSystem collection of Rings, Ringlets and Gaps for a planetary ring system.  //<>// //<>//
  *
  * @author Thomas Cann
  * @version 1.0
@@ -12,9 +12,7 @@ float GMp = 3.7931187e16;    // Gravitational parameter (Saturn)
 float R_MIN = 1;
 float R_MAX = 5;
 int RING_INDEX =0;
-
 int MOON_INDEX =2;
-
 
 final float Rp = 60268e3;          // Length scale (1 Saturn radius) [m]
 final float SCALE = 100/Rp;        // Converts from [m] to [pixel] with planetary radius (in pixels) equal to the numerator. Size of a pixel represents approximately 600km.
@@ -26,7 +24,7 @@ class RingSystem {
   ArrayList<Moon> moons;
   ArrayList<Grid> g;
   float r_min, r_max;
-
+  boolean[][] Aligned;
   /**
    *  Class Constuctor - General need passing all the values. 
    */
@@ -40,7 +38,14 @@ class RingSystem {
     rings = new ArrayList<Ring>();
     moons = new ArrayList<Moon>();
     initialise();
-
+    this.Aligned = new boolean[moons.size()+1][moons.size()+1];
+    //println(moons.size());
+    for (int i =0; i<moons.size(); i++) {
+      for (int j =0; j<=moons.size(); j++) {
+        this.Aligned[i][j]=false;
+      }
+    }
+    // println(Aligned[0][0]);
 
 
     //***********************************************
@@ -66,7 +71,7 @@ class RingSystem {
   void initialiseMoons() {
     //***********Initialise Moons*********************
     moons.clear();
-    switch(MOON_INDEX) {
+    switch(0) {
       case(1):
       // Adding Specific Moons ( e.g. Mima, Enceladus, Tethys, ... )
       //addMoon(5, moons);
@@ -157,6 +162,28 @@ class RingSystem {
     rings.get(0).particles=tempParticles;
   }
 
+  void addParticlesFromTable(String Filename) {
+    Table table; 
+    table = loadTable("/files/"+Filename);//output.csv");//"input.csv"
+
+    //particles.clear();
+
+    for (int i = 0; i < table.getRowCount(); i++) {
+      RingParticle temp = new RingParticle();
+      temp.position.x= table.getFloat(i, 0);
+      temp.position.y= table.getFloat(i, 1);
+      temp.position.z= table.getFloat(i, 2);
+      temp.velocity.x= table.getFloat(i, 3);
+      temp.velocity.y= table.getFloat(i, 4);
+      temp.velocity.z= table.getFloat(i, 5);
+      temp.acceleration.x= table.getFloat(i, 6);
+      temp.acceleration.y= table.getFloat(i, 7);
+      temp.acceleration.z= table.getFloat(i, 8);
+      rings.get(0).particles.add(temp);
+      totalParticles.add(temp);
+    }
+  }
+
   /**
    *  Updates object for one time step of simulation taking into account the position of one moon.
    */
@@ -170,10 +197,15 @@ class RingSystem {
       p.updatePosition();
     }
 
-    for (Moon m : moons) {
-      for (Moon other : moons) {
-        if (m != other) {
-          m.isAligned(other);
+    for (int i =0; i<(moons.size()-1); i++) {
+      for (int j = i+1; j<(moons.size()); j++) {
+        boolean isAligned =moons.get(i).isAligned(moons.get(j));
+        // println(this.Aligned[0][0]);//test[i][j]);
+        if (  Aligned[i][j] != isAligned && isAligned == true ) {
+          Aligned[i][j] =true; 
+          println(i+" "+j+" "+moons.get(i).timeToAlignment(moons.get(j)));
+        } else if ( Aligned[i][j] != isAligned && isAligned == false) {
+          Aligned[i][j] =false;
         }
       }
     }
@@ -185,9 +217,9 @@ class RingSystem {
       p.updateVelocity(p.getAcceleration(this));
     }
     //Output TABLE 
-    if ((frameCount)%50 ==0) {
-      saveTable(g.get(0).gridToTable(g.get(0).grid), "/files/output.csv");
-    }
+    //if ((frameCount)%50 ==0) {
+    //  saveTable(g.get(0).gridToTable(g.get(0).grid), "/files/output.csv");
+    //}
   }
 
   /**
@@ -208,7 +240,7 @@ class RingSystem {
 
     for (Moon m : moons) {
       stroke(m.c);
-      m.c = color(255,0,0);
+      m.c = color(255, 0, 0);
       point(SCALE*m.position.x, SCALE*m.position.y);
     }
     guidelines();
@@ -226,6 +258,32 @@ class RingSystem {
     //}
     pop();
 
+    if (!debug) {
+      if (mousePressed) {
+        if (file) {
+          if (!Add) {
+            if (specific) {
+              addParticlesFromTable("SYMBOL1.csv");
+              addParticlesFromTable("SYMBOL2.csv");
+              addParticlesFromTable("SYMBOL3.csv");
+            } else {
+              addParticlesFromTable("SYMBOL4.csv");
+              //addParticlesFromTable("SYMBOL5.csv");
+            }
+          } else {
+            addParticlesFromTable("files/outputParticles.csv");
+          }
+        }
+      }
+    }
+
+    if (debug) { 
+      if ( frameCount %100 == 0) {
+        saveTable(particlesToTable(), "files/outputParticles.csv");
+      }
+    }
+
+
     for (Grid x : g) {
       x.display(this);
     }
@@ -240,6 +298,28 @@ class RingSystem {
     circle(0, 0, 2*R_MIN*SCALE*Rp);
     fill(255, 165, 0);
     circle(0, 0, 2.0*SCALE*Rp);
+  }
+
+  Table particlesToTable() {
+    Table tempTable = new Table();
+
+    for (int j=0; j<9; j++) {
+      tempTable.addColumn();
+    }
+
+    for (RingParticle p : rings.get(0).particles) {
+      TableRow newRow =tempTable.addRow();
+      newRow.setFloat(0, p.position.x);
+      newRow.setFloat(1, p.position.y);
+      newRow.setFloat(2, p.position.z);
+      newRow.setFloat(3, p.velocity.x);
+      newRow.setFloat(4, p.velocity.y);
+      newRow.setFloat(5, p.velocity.z);
+      newRow.setFloat(6, p.acceleration.x);
+      newRow.setFloat(7, p.acceleration.y);
+      newRow.setFloat(8, p.acceleration.z);
+    }
+    return tempTable;
   }
 
   /**
