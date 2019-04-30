@@ -60,7 +60,7 @@ class ShearingBox {
     translate(width/2, height/2);
     fill(255);
     if (Moonlet) {
-      circle(0, 0, 2*moonlet_r* height/Lx);
+      circle(0, 0, moonlet_r);
     }
     
     if (Guides) {
