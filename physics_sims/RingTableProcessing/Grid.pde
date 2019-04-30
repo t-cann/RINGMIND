@@ -326,41 +326,59 @@ class Grid {
    */
   void display(RingSystem rs) {
 
+    float r = sqrt(sq(mouseX-width/2)+ sq(mouseY-height/2))/SCALE;
+    float angle = (atan2((mouseY-height/2), mouseX-width/2)+TAU)%(TAU);
+    int i= i(angle);
+    int j = j(r);
+
+    if (validij(i, j)) {
+      displaycell(i, j );
+      float a = 1-exp(-(gridNorm[i][j]*drag_p)/h_stepsize);
+      String output = "\t Normalised Number Density: " +gridNorm[i][j] + "\n\t Average Velocity: " + gridV[i][j].mag()+ "\n\t Probability Threshold: " + a ;
+      text(output, 0.0, 10.0);
+      displayVector(i, j, gridV[i][j]);
+    }
+
     if (mousePressed) {
-      float r = sqrt(sq(mouseX-width/2)+ sq(mouseY-height/2))/SCALE;
-      float angle = (atan2((mouseY-height/2), mouseX-width/2)+TAU)%(TAU);
-      int i= i(angle);
-      int j = j(r);
+
+
 
       if (Add) {
-        for (int x=0; x<1; x++) { 
-          RingParticle a = new RingParticle(r_min+GRID_DELTA_R*j, GRID_DELTA_R, radians(GRID_DELTA_THETA*i), radians(GRID_DELTA_THETA));
-          rs.rings.get(0).particles.add(a);
-          rs.totalParticles.add(a);
-        }
-      }
-      
-      if (clear) {
-        ArrayList<Particle> temp = new ArrayList<Particle>();
-        for (Particle p: rs.totalParticles) {
-          if (i(p) == i){
-            if (j(p)== j){
-             temp.add(p);
+        if (frameCount %10==0) {
+          for (int x=0; x<1; x++) { 
+
+            if (!specific) {
+              RingParticle a = new RingParticle(r_min+GRID_DELTA_R*j, GRID_DELTA_R, radians(GRID_DELTA_THETA*i), radians(GRID_DELTA_THETA));
+              rs.rings.get(0).particles.add(a);
+              rs.totalParticles.add(a);
+            } else {
+              RingParticle a = new RingParticle(r*SCALE/100, 0, angle, 0);
+              rs.rings.get(0).particles.add(a);
+              rs.totalParticles.add(a);
             }
+            //println(+ " " +  (r_min+GRID_DELTA_R*j));
           }
-        }
-        for (Particle p: temp) {
-          rs.totalParticles.remove(p);
-          rs.rings.get(0).particles.remove(p);
         }
       }
 
-      if (validij(i, j)) {
-        displaycell(i, j );
-        float a = 1-exp(-(gridNorm[i][j]*drag_p)/h_stepsize);
-        String output = "\t Normalised Number Density: " +gridNorm[i][j] + "\n\t Average Velocity: " + gridV[i][j].mag()+ "\n\t Probability Threshold: " + a ;
-        text(output, 0.0, 10.0);
-        displayVector(i, j, gridV[i][j]);
+      if (clear) {
+        if (specific) {
+          ArrayList<Particle> temp = new ArrayList<Particle>();
+          for (Particle p : rs.totalParticles) {
+            if (i(p) == i) {
+              if (j(p)== j) {
+                temp.add(p);
+              }
+            }
+          }
+          for (Particle p : temp) {
+            rs.totalParticles.remove(p);
+            rs.rings.get(0).particles.remove(p);
+          }
+        } else {
+          rs.rings.get(0).particles.clear();
+          rs.totalParticles.clear();
+        }
       }
     }
     //else {
@@ -639,5 +657,6 @@ class Grid {
   //  catch (Exception e) {
   //  }
   //  return temp;
+  //}
   //}
 }
