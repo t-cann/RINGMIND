@@ -23,7 +23,7 @@ Usage:
 * Pressing <kbd>CTRL</kbd>+<kbd>R</kbd>; or
 * Selecting menu <kbd>Sketch</kbd> and <kbd>Run</kbd>;
 
-### Main concepts of QuadTree data structure (introduction and concepts)
+### Main concepts of RINGMIND (introduction and concepts)
 
 Ringmind is an arts-humanities-science research project on the self-organising powers of planetary
 rings. It is an interdisciplinary collaboration between Sociology, Physics, School of Computing and
