@@ -1,8 +1,8 @@
-# Ring-System-Processing
+# Ring-Table-Processing
 
 [Processing](https://processing.org/) project for 
 
-* (i) [Ring System](#rs-processing) simulation ([examples](#all-examples))
+* (i) [Ring Table](#rs-processing) simulation ([examples](#all-examples))
 
 ## Dependencies
 
@@ -15,7 +15,7 @@ Feel free to contact me by mail: canntj@gmail.com
 ---
 
 <a name="rs-processing"></a>
-## Ring System (RingSystemProcessing.pde)
+## Ring System (RingTableProcessing.pde)
 > Physics Simulation of Planetary Ring Systems including Moon, Ring and Ring Particle objects
 
 Usage:
@@ -31,6 +31,8 @@ The Motion of Objects are affected by a subset of objects:
 
 Ring Particles are affected by the Moons positions.  
 Moons are affected by the positions of other Moons.
+
+Additionally a grid which collect information such as local particle density, average velocity - using this an estimation of collision and local gravity could be calculated.
 
 ### Classes of RingSystem implementation
 
@@ -103,11 +105,11 @@ The methods for Ring class are:
   void render(PGraphics x) {...}
 ```
 
-* **RingSystemProcessing.pde**
+* **RingTableProcessing.pde**
 
 > Main class that is in charge of the main simulation loop (updating and displaying/rendering objects) and is dynamically in control of time step to make simulation smooth.
 
-The attributes for RingSystemProcessing class are:
+The attributes for RingTableProcessing class are:
  
 ```processing
   int n_particles = 10000;   
