@@ -27,4 +27,4 @@ Usage:
 
 Ringmind is an arts-humanities-science research project on the self-organising powers of planetary
 rings. It is an interdisciplinary collaboration between Sociology, Physics, School of Computing and
-Communication at Lancaster University, and independent digital artists.
+Communication at Lancaster University, and independent digital and audio artists.
