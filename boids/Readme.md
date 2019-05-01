@@ -4,8 +4,8 @@ this folder is a collection of boid (bird like object) systems.
 
 [Processing](https://processing.org/) projects for 
 
-* (i)   flowfield
-* (ii)  
+* (i)   flowfield_time
+* (ii)  standard_boids
 
 ## Dependencies
 
