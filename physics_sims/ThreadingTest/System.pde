@@ -1,4 +1,4 @@
-System s;
+ System s;
 float G = 6.67408E-11;       // Gravitational Constant 6.67408E-11[m^3 kg^-1 s^-2]
 
 import java.util.concurrent.TimeUnit;

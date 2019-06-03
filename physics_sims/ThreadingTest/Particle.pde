@@ -1,4 +1,4 @@
-//enum ParticleType {Ring, Moon, Tilt, Shearing, Moonlet};  Idea? //<>// //<>// //<>//
+ //enum ParticleType {Ring, Moon, Tilt, Shearing, Moonlet};  Idea? //<>// //<>// //<>//
 
 /**Class Particle
  * @author Thomas Cann
@@ -91,7 +91,7 @@ abstract class Particle {
   /** Calculates the acceleration on this particle (based on its current position) (Overrides value of acceleration stored by particle)
    * @param rs
    */
-  void set_getAcceleration(System s) {
+  void set_getAcceleration(System sb ) {
     acceleration = getAcceleration(s);
   }
 
@@ -549,7 +549,7 @@ class ShearParticle extends Particle {
     }
     if (s.A2) {
       a_grav.x += 2.0*s.Omega0*velocity.y;
-      a_grav.y += -2.0*s.Omega0*velocity.x;
+       
     }
     if (s.Moonlet) {
       float moonlet_GMr3 = s.moonlet.GM/pow(position.mag(), 3.0);
