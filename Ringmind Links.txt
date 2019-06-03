@@ -1,0 +1,39 @@
+Ringmind Links:
+
+https://www.red3d.com/cwr/steer/gdc99/    - Describes the steering characteristics of boids
+
+https://pdfs.semanticscholar.org/12d6/f0bb183050dd78b7671929455b7fdfdf73ce.pdf  -celular automata being turing complete paper
+
+http://www.cs.toronto.edu/~dt/siggraph97-course/cwr87/ - Flocks, Herd and Schools
+
+https://processing.org/tutorials/eclipse/ - Tutorial for using Processing in eclipse
+
+http://www.harmendeweerd.nl/boids/ - Thing to play about boids in real time
+
+https://gist.github.com/theantonius/891666  - Flow field following boids code
+
+https://www.youtube.com/watch?v=XXEK3UEDDIg - video explaining flow field
+
+https://en.wikipedia.org/wiki/Glider_%28Conway%27s_Life%29 How to make simple glider in game of life. 
+
+https://www.youtube.com/watch?v=W1zKu3fDQR8 -Cellular automata series
+
+https://github.com/FamishedHound/BOIDS - BOIDS with Collisions!
+
+https://www.khanacademy.org/computing/computer-programming/pjs-documentation processing functions
+
+https://www.oracle.com/technetwork/java/javase/documentation/index-137868.html how to javadoc correctly !!
+
+https://slideplayer.com/slide/7366963/ - slideshow about all the different ring resonances
+
+https://nssdc.gsfc.nasa.gov/planetary/factsheet/saturniansatfact.html - Saturns moons fact sheet
+
+https://gafferongames.com/post/fix_your_timestep/ - video game timestep control
+
+https://www.omnicalculator.com/physics/orbital-velocity - tool to work out elliptical orbits
+
+http://universesandbox.com/blog/2014/04/orbital-resonance/
+
+http://wiki.unity3d.com/index.php/Simple_planetary_orbits - 2D unity Simple Planetary Orbits
+
+
