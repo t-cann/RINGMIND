@@ -34,12 +34,12 @@ void setup () {
 void draw () {
 
   // calculate simulation time step for this frame
-  if (simToRealTimeRatio/frameRate < maxTimeStep) {
-    dt= simToRealTimeRatio/frameRate;
-  } else {
-    dt= maxTimeStep;
-    println("At Maximum Time Step");
-  }
+  //if (simToRealTimeRatio/frameRate < maxTimeStep) {
+  //  dt= simToRealTimeRatio/frameRate;
+  //} else {
+  //  dt= maxTimeStep;
+  //  println("At Maximum Time Step");
+  //}
 
 
   //println("Simulation Time: "+ timeSimTime);
@@ -68,7 +68,7 @@ void update() {
   s.update();
 }
 void fps() {
-  surface.setTitle("Framerate: " + int(frameRate) + "     Time Elapsed[Seconds]: " + int(millis()/1000.0) + "     Simulation Time Elapsed[Hours]: " + int(totalSimTime/3600)); //Set the frame title to the frame rate
+  surface.setTitle("Framerate: " + int(frameRate) +  "     dt[Seconds]:"+dt+ "     Time Elapsed[Seconds]: " + int(millis()/1000.0) + "     Simulation Time Elapsed[Hours]: " + int(totalSimTime/3600)); //Set the frame title to the frame rate
 }
 
 void keyPressed() {

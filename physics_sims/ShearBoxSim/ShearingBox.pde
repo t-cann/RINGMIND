@@ -50,7 +50,10 @@ class ShearingBox {
         grid[i][j] = new ArrayList<Particle>();
       }
     }
-    random_start();
+    
+    particles.add(new Particle(new PVector(-Lx/10,Ly/4,0)));
+    
+    //random_start();
   }
 
   /** 
@@ -119,10 +122,24 @@ class ShearingBox {
     if (Collisions) {
       grid_update();
     }
+    
+    if(frameCount %10 ==0){
+      println(particles.get(0).velocity.magSq());
+    }
   }
+  
+  /**
+  */
+  void systemEnergy(){
+  //for all particles in system
+  //kinetic energy 1/2 m v^2
+  //potential energy particles from moonlet gM/r^2
+  
+  //output to table or plotting library in gwoptics
+  }
+  
 
   /** Take a step using the Velocity Verlet (Leapfrog) ODE integration algorithm.
-   *   TODO: Check Algorithm is correct.
    */
   void step_verlet() {
 

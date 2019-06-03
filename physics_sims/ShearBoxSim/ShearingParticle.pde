@@ -4,7 +4,7 @@
  */
 
 float scale =3.0; //Makes Particles Visible
-float gap=80; 
+float gap=0; 
 
 class Particle {
 
@@ -55,6 +55,18 @@ class Particle {
     velocity.y = 1.5 * Omega0 * position.x;
     //
     this.radius = - log((particle_C-random(1.0))/particle_D)/particle_lambda;
+    this.GM = G* (4.0*PI/3.0)*pow(radius, 3.0)*particle_rho;
+    m= PI*pow(radius, 3.0)*4.0/3.0;
+  }
+  
+    Particle(PVector p ) {
+    //Initialise default Particle Object.
+    position = p;
+    velocity = new PVector();
+    acceleration = new PVector();
+    velocity.y = 1.5 * Omega0 * position.x;
+    //
+    this.radius = - log((particle_C-0.9)/particle_D)/particle_lambda;
     this.GM = G* (4.0*PI/3.0)*pow(radius, 3.0)*particle_rho;
     m= PI*pow(radius, 3.0)*4.0/3.0;
   }
