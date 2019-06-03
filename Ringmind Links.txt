@@ -36,4 +36,7 @@ http://universesandbox.com/blog/2014/04/orbital-resonance/
 
 http://wiki.unity3d.com/index.php/Simple_planetary_orbits - 2D unity Simple Planetary Orbits
 
+http://wiki.unity3d.com/index.php?title=Gravity - 3D unity Gravity 
+
+
 
