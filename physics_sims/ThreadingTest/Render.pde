@@ -288,7 +288,7 @@ class Renderer {
     pop();
   }
 
-  //  /**Method to Display ShearingParticle
+  //  /**Method to Display ShearingParticle TODO
   //  */
   //    void display() {
   //    push();
@@ -335,7 +335,7 @@ class Renderer {
   //    line(0, 0, -v.y*scale, -v.x*scale);
   //  }
 
-  /**Method displayRotate
+  /**Method displayRotate TODO Removed
    *@param p
    *@return
    */

@@ -425,6 +425,55 @@ public interface Alignable {
 }
 
 //---------------------------------------------------------------------------------------------------------------------------------------------------//
+/**Class ResonantParticle - Removes Gravity interaction and used information in Resonance class to thin rings.  
+ * @author Thomas Cann
+ */
+public class ResonantParticle extends RingParticle{
+
+  ResonantParticle(){
+    
+  }
+  
+  /**
+   *  Calculates the acceleration on this particle (based on its current position) (Does not override value of acceleration of particle)
+   */
+  PVector getAcceleration(RingSystem rs) {
+
+    //// acceleration due to planet in centre of the ring. 
+    PVector a_grav = new PVector();
+    //a_grav = PVector.mult(position.copy().normalize(), -GMp/position.copy().magSq());
+
+    ////Acceleration from the Grid Object
+    //for (Grid x : rs.g) {
+    //  a_grav.add(x.gridAcceleration(this));
+    //}
+    //for (Moon m : rs.moons) {
+    //  //for all resonances of the moon 
+
+    //  PVector dist = PVector.sub(m.position, position);
+    //  PVector a = PVector.mult(dist, m.GM/pow(dist.mag(), 3));
+       
+    //  if (m.r != null){
+    //  for (Resonance R : m.r) {
+
+    //    float x = position.mag()/60268e3;
+    //    //Check if Particle >Rgap ?&& <Rmax
+    //    //println(x+" "+R.rGap+ " "+ R.rMax);
+    //    if (x>R.rGap && x<R.rMax) {
+    //      //Calcuaculate and Apply if it is !
+    //      println(R.calcAccleration(x-R.rGap));
+    //      a.mult(R.calcAccleration(x-R.rGap));
+    //    }
+    //  }}else{
+    //    println("No Resonances ");
+        
+    //  }
+    //  a_grav.add(a);
+    //}
+
+    return a_grav;
+  }
+}
 
 /**Class ResonantMoon - Removes Gravity interaction and used information in Resonance class to thin rings.  
  * @author Thomas Cann
@@ -524,48 +573,48 @@ void addResonanceMoon(int i, ArrayList<ResonantMoon> m) {
  */
 class TiltParticle extends RingParticle {
 
-  float MAX_INCLINATION=80; //[degrees]
-  float MIN_INCLINATION=1;  //[degrees]
-  float LAMBDA= 8E-5;  //float LAMBDA= 3E-5;
+  float inclination;        //Rotation round x axis [degrees].
+  float rotation;           //Rotation round z axis [degrees].
+  float minInclination;     //minimum inclination of particle [degrees].
+  float lambda;             //exponential decay constant [milliseconds^{-1}].
+  float initialiseTime;     //time when particle is initialised [milliseconds].
 
-  float rotation;           //[degrees]
-  float inclination;        //[degrees]
-  float initialiseTime;     //[milliseconds]
-  float minInclination;     //[degrees]
-
-  /** Class Constuctor - Initialises an TiltParticle object with a random position in the ring with correct orbital velocity. 
+  /** 
+   * Class Constuctor - Initialises an TiltParticle object with a random position in the ring with correct orbital velocity. 
    */
-  //TiltParticle(float r, float dr, float theta, float dtheta) {
-  //  super(r, dr, theta, dtheta);
-  //  rotation =random(360);
-  //  inclination= randomGaussian()*MAX_INCLINATION;
-  //  minInclination = randomGaussian()* MIN_INCLINATION;
-  //  initialiseTime = millis();
-  //}
-  /** Class Constuctor - Initialises an TiltParticle object with a random position in the ring with correct orbital velocity. 
-   */
-  TiltParticle(float inner, float outer) {
+  TiltParticle(float inner, float outer, float max_inclination, float min_inclination, float lambda) {
     super(inner, outer);
-    rotation =random(360);
-    inclination= randomGaussian()*MAX_INCLINATION;
-    minInclination = randomGaussian()* MIN_INCLINATION;
-    initialiseTime = millis();
+    this.inclination= randomGaussian()*max_inclination;
+    this.rotation =random(360);
+    this.minInclination = randomGaussian()* min_inclination;
+    this.lambda= lambda;
+    this.initialiseTime = millis();
   }
 
-  /** Class Constuctor - Initialises a TiltParticle object with a random position in the ring with correct orbital velocity. 
-   */
-  //TiltParticle(float radius) {
-  //  super(radius);
-  //  rotation =random(360);
-  //  inclination= randomGaussian()*MAX_INCLINATION;
-  //  minInclination = randomGaussian()* MIN_INCLINATION;
-  //  initialiseTime = millis();
-  //}
-
   /** Method to exponential decrease inclination with after since initialisation.
+   *  @return  curretn angle to incline plane[degrees]
    */
   float inclination() {
-    return inclination* exp(-LAMBDA*(millis()-initialiseTime)) +minInclination ;
+    return inclination* exp(-lambda*(millis()-initialiseTime)) +minInclination ;
+  }
+
+  /**Method rotates a Tilt Particle Simulated Position. Around x-axis by inclination() the around z-axis by rotation.   
+   *@param p TiltParticle object
+   *@return RotatedPosition PVector[m,m,m]
+   */
+  PVector displayRotate(TiltParticle p) {
+    PVector temp = p.position.copy();
+    float angle = radians(p.inclination());
+    float cosi = cos(angle);
+    float sini = sin(angle);
+    temp.y = cosi * p.position.y - sini * p.position.z;
+    temp.z = cosi * p.position.z + sini * p.position.y;
+    PVector temp1 = temp.copy();
+    float cosa = cos(radians(p.rotation));
+    float sina = sin(radians(p.rotation));
+    temp.x = cosa * temp1.x - sina * temp1.y;
+    temp.y = cosa * temp1.y + sina * temp1.x;
+    return temp;
   }
 }
 
