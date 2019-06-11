@@ -3,6 +3,7 @@
  * @author ashley james brown
  */
 class Ring {
+  
   //render variables
   private int maxRenderedParticle;
   Material material = null;
@@ -33,7 +34,7 @@ class Ring {
   }
 
   /**
-   *
+   *  Method to add RingParticle to particles arraylist (increasing number ofrendered particles as well)
    */
   void addParticle(RingParticle rp) {
     particles.add(rp);
@@ -41,14 +42,16 @@ class Ring {
   }
 
   /**
-   *
+   *  Get Method - MaxRenderedParticle
+   *  @return maxRenderedParticle (used in Render)
    */
   int getMaxRenderedParticle() {
     return maxRenderedParticle;
   }
 
   /**
-   *
+   *  Set Method - MaxRenderedParticle
+   *  @param newMax
    */
   void setMaxRenderedParticle(int newMax) {
     maxRenderedParticle = min(particles.size(), newMax);

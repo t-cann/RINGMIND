@@ -1,4 +1,4 @@
- //enum ParticleType {Ring, Moon, Tilt, Shearing, Moonlet};  Idea? //<>// //<>// //<>//
+//enum ParticleType {Ring, Moon, Tilt, Shearing, Moonlet};  Idea? //<>// //<>// //<>//
 
 /**Class Particle
  * @author Thomas Cann
@@ -426,6 +426,86 @@ public interface Alignable {
 
 //---------------------------------------------------------------------------------------------------------------------------------------------------//
 
+/**Class ResonantMoon - Removes Gravity interaction and used information in Resonance class to thin rings.  
+ * @author Thomas Cann
+ */
+public class ResonantMoon extends Moon {
+
+  ArrayList<Resonance> r;
+
+  /**
+   *  Class Constuctor - Create Resonant Moon object with empty arraylist to store Resonances. 
+   */
+  ResonantMoon(float Gm, float radius, float orb_radius) {
+    super(Gm, radius, orb_radius);
+    r = new ArrayList<Resonance>();
+  }
+
+  /**Method to add a Resonance to arraylsit.
+   * @param Q ratio [t_moon/t_particle].
+   */
+  void addResonance(float Q) {
+    r.add(new Resonance(Q, this));
+  }
+}
+
+/**Class Resonance - Orbital Resonance / Limdblad Resonance information.  
+ * @author Thomas Cann
+ */
+public class Resonance {
+
+  float Q;
+  float rGap;
+  float Effect;
+  float rMax;
+  float bellMag = 1e5;
+  float bellWidth = 0.001913069;
+
+  Resonance(float Q, Moon m) {
+    this.Q = Q;
+    calcRGap(m);
+    //calcEffect(m);
+    calcRmax();
+  }
+
+  void calcRGap(Moon m) {
+    rGap = (m.position.mag()*pow(Q, (-2.0/3.0)))/60268e3;
+  }
+  //void calcEffect(Moon m) {
+  //  //Accleration at gap ( Gravitational force due to moon at ring gap --> moonmass/(rmoon -rgap)^2 multiplied by a constant
+  //}
+
+  float calcAccleration(float x) {
+
+    // a proportional to GM pow(Q, ?) 
+    return bellMag*exp( -sq(x) /(Q*bellWidth)) + 1;
+  }
+
+  void calcRmax() {
+    // Bell Curve/ Effect curve gets to f(0)= 1 ---> f(RMax)=0.01
+    rMax = rGap + sqrt((-bellWidth*log(0.01/bellMag))/Q);
+  }
+}
+
+/**
+ * Method to add specific ResonanceMoon object to an Arraylist.
+ */
+void addResonanceMoon(int i, ArrayList<ResonantMoon> m) {
+  //Source: Nasa Saturn Factsheet
+
+  switch(i) {
+  case 1: 
+    // Mimas Mass 3.7e19 [kg] Radius 2.08e5 [m] Obital Radius 185.52e6 [m]
+    ResonantMoon moon =new ResonantMoon(G*3.7e19, 2.08e5, 185.52e6);
+    moon.addResonance(2.0);
+    m.add(moon);
+    break;
+  }
+}
+
+
+//---------------------------------------------------------------------------------------------------------------------------------------------------//
+
 /** Class TiltParticle
  */
 class TiltParticle extends RingParticle {
@@ -549,7 +629,6 @@ class ShearParticle extends Particle {
     }
     if (s.A2) {
       a_grav.x += 2.0*s.Omega0*velocity.y;
-       
     }
     if (s.Moonlet) {
       float moonlet_GMr3 = s.moonlet.GM/pow(position.mag(), 3.0);
