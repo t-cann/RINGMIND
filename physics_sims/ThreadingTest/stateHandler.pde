@@ -53,7 +53,7 @@ void setupStates() {
     createMaterials();       //extra materials we can apply to the rings
 
     //init with = rings 10,  moons 4, rendering normal =true (titl would be false);
-    s = new ParticleSystem();  
+    s = new RingmindSystem(1,0);  
 
     break;
   case introState:
@@ -175,12 +175,13 @@ void updateCurrentState(int t) {
   } else {
     blendMode(NORMAL);
   }
- 
+   
   renderOffScreenOnPGraphicsClean();
   switch(systemState) {
   case connectedState:
   renderer.renderComms(s, renderContext, 1);
     break;
+    
   default:
    renderer.render(s, renderContext, 1);
     break;
