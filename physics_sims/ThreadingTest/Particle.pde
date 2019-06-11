@@ -1,4 +1,4 @@
-//enum ParticleType {Ring, Moon, Tilt, Shearing, Moonlet};  Idea? //<>// //<>// //<>//
+//enum ParticleType {Ring, Moon, Tilt, Shearing, Moonlet};  Idea? //<>// //<>// //<>// //<>//
 
 /**Class Particle
  * @author Thomas Cann
@@ -100,62 +100,20 @@ abstract class Particle {
   /** 
    *  Update Position of particle based of Velocity and Acceleration. 
    */
-  Runnable updatePosition(float dt) {
-    class UpdatePosition implements Runnable {
-      float dt;
-      UpdatePosition(float dt) {
-        this.dt = dt;
-      }
+  void updatePosition(float dt) {
 
-      public void run() {
-        position.add(velocity.copy().mult(dt)).add(acceleration.copy().mult(0.5*sq(dt)));
-      }
-    }
-    return new UpdatePosition(dt);
+    position.add(velocity.copy().mult(dt)).add(acceleration.copy().mult(0.5*sq(dt)));
   }
 
   /**
    * Updates the velocity of this Particle (Based on Velocity Verlet) using 2 accelerations. 
    * @param a current acceleration of particle
    */
-  Runnable updateVelocity(PVector a, float dt) {
-    class UpdateVelocity implements Runnable {
-      PVector a;
-      float dt;
-      UpdateVelocity(PVector a, float dt ) {
-        this.dt =dt;
-        this.a = a;
-      }
-      public void run() {
-        velocity.add(PVector.add(acceleration.copy(), a).mult(0.5 *dt));
-      }
-    }
-    return new UpdateVelocity( a, dt);
+  void updateVelocity(PVector a, float dt) {
+
+    velocity.add(PVector.add(acceleration.copy(), a).mult(0.5 *dt));
   }
 
-
-
-  ///**
-  // *  Updates object for one time step of simulation.
-  // */
-  //void update(float dt) {
-  //  // acceleration functions
-
-  //  PVector a_grav = PVector.mult(position.copy().normalize(), -System.GMp/position.copy().magSq());
-
-  //  PVector tempPosition = PVector.add(position.copy(), velocity.copy().mult(dt)).add(a_grav.copy().mult(0.5*sq(dt)));
-
-  //  PVector a_grav1 = PVector.mult(tempPosition.copy().normalize(), -System.GMp/tempPosition.copy().magSq());
-
-  //  this.velocity.add(PVector.add(a_grav, a_grav1).mult(0.5 *dt));
-  //  this.position = tempPosition;
-  //}
-
-  ///**
-  // * Render Method - Renders this object to PGraphics Object. 
-  // */
-  //void render(PGraphics x) {
-  //}
   abstract Particle clone();
 }
 
@@ -221,7 +179,7 @@ class RingParticle extends Particle {
    * @param s System
    * @return PVector [ms^(-2)] 
    */
-  PVector getAcceleration(System s) {
+  @Override PVector getAcceleration(System s) {
 
     PVector a_grav;
     if (s instanceof RingmindSystem) {
@@ -442,7 +400,7 @@ public class ResonantParticle extends RingParticle {
   /**
    *  Calculates the acceleration on this particle (based on its current position) (Does not override value of acceleration of particle)
    */
-  PVector getAcceleration(RingSystem rs) {
+  @Override PVector getAcceleration(System s) {
 
     //TODO
     //// acceleration due to planet in centre of the ring. 
@@ -622,6 +580,12 @@ class TiltParticle extends RingParticle {
     temp.y = cosa * temp1.y + sina * temp1.x;
     return temp;
   }
+  /**Method rotates this Tilt Particle Simulated Position. Around x-axis by inclination() the around z-axis by rotation. 
+   *@return RotatedPosition PVector[m,m,m]
+   */
+  PVector displayRotate() {
+    return displayRotate(this);
+  }
 }
 
 //------------------------------------- SHEAR PARTICLE -------------------------------------------------------
@@ -668,6 +632,7 @@ class ShearParticle extends Particle {
     velocity.x = 0;
     velocity.y = 1.5 * s.Omega0 * position.x;
     //
+
     this.radius = - log((particle_C-random(1.0))/particle_D)/particle_lambda;
     this.GM = SG* (4.0*PI/3.0)*pow(radius, 3.0)*particle_rho;
     m= PI*pow(radius, 3.0)*4.0/3.0;
@@ -688,25 +653,24 @@ class ShearParticle extends Particle {
    * @param sb Shearing Box
    * @return accleration of this particles due to ShearingBox
    */
-  PVector getAcceleration(ShearSystem s) {
-
+  @Override PVector getAcceleration(System s) {
+    ShearSystem ss = (ShearSystem)s;
     // acceleration due planet in centre of the ring. 
     PVector a_grav = new PVector();
-
-    if (s.A1) {
-      a_grav.x += 2.0*s.Omega0*s.S0*position.x;
+    if (ss.A1) {
+      a_grav.x += 2.0*ss.Omega0*ss.S0*position.x;
     }
-    if (s.A2) {
-      a_grav.x += 2.0*s.Omega0*velocity.y;
+    if (ss.A2) {
+      a_grav.x += 2.0*ss.Omega0*velocity.y;
     }
-    if (s.Moonlet) {
-      float moonlet_GMr3 = s.moonlet.GM/pow(position.mag(), 3.0);
+    if (ss.Moonlet) {
+      float moonlet_GMr3 = ss.moonlet.GM/pow(position.mag(), 3.0);
       a_grav.x += -moonlet_GMr3*position.x;
       a_grav.y += -moonlet_GMr3*position.y;
     }
 
-    if (s.Self_Grav) {
-      for (Particle p : s.particles) {
+    if (ss.Self_Grav) {
+      for (Particle p : ss.particles) {
         ShearParticle sp = (ShearParticle)p;
         if (sp!=this) {
           PVector distanceVect = PVector.sub(position.copy(), sp.position.copy());
@@ -724,28 +688,6 @@ class ShearParticle extends Particle {
     //PVector.mult(position.copy().normalize(), -GMp/position.copy().magSq())
     return a_grav;
   }
-
-  //TODO Check don't need these as should be imported from Particle.
-  ///**
-  // *
-  // */
-  //void set_getAcceleration(System s) {
-  //  acceleration = getAcceleration(s);
-  //}
-
-  ///**
-  // *
-  // */
-  //void updatePosition(float dt) {
-  //  position.add(velocity.copy().mult(dt)).add(acceleration.copy().mult(0.5*sq(dt)));
-  //}
-
-  ///**
-  // *    Updates the velocity of this Ring Particle (Based on Velocity Verlet) using 2 accelerations.  
-  // */
-  //void updateVelocity(PVector a, float dt) {
-  //  this.velocity.add(PVector.add(acceleration.copy(), a).mult(0.5 *dt));
-  //}
 
   /** Reset
    * @param s 
@@ -770,7 +712,6 @@ class ShearParticle extends Particle {
     this.radius = - log((particle_C-random(1))/particle_D)/particle_lambda;
     this.GM = SG* (4*PI/3)*pow(radius, 3)*particle_rho;
   }
-
 
   /**Clone Method - Return New Object with same properties.
    * @return particle object a deep copy of this. 
