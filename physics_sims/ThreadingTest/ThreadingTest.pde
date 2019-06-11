@@ -12,6 +12,8 @@ void setup() {
   randomSeed(3);
   systemState = State.initState;  //which state shall we begin with 
   setupStates();    //instantiate the scenarios so they are avialble for the state system to handle
+  systemState = State.shearState;  //which state shall we begin with 
+  setupStates();
 }
 
 void draw() {
