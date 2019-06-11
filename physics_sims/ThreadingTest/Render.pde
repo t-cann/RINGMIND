@@ -81,8 +81,9 @@ class Renderer {
    */
   void render(System s, RenderContext ctx, int renderType) {
     PGraphicsOpenGL pg = (PGraphicsOpenGL) ctx.pgfx.g;
-    if ( s instanceof ParticleSystem) {
+    if ( s instanceof ThreadedSystem) {
       push();
+      ThreadedSystem ts = (ThreadedSystem)s;
       shader(ctx.shader, POINTS);
 
       Material mat  = RingMat1;
@@ -99,8 +100,8 @@ class Renderer {
       } else {
         beginShape(LINES);
       }
-      for (int x = 0; x < s.particles.size(); x++) {
-        Particle p = s.particles.get(x);
+      for (int x = 0; x < ts.tp.size(); x++) {
+        ThreadedParticle p = ts.tp.get(x);
         vertex(scale*p.position.x, scale*p.position.y, scale*p.position.z);
       }
       endShape();

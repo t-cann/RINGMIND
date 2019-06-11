@@ -1,4 +1,4 @@
- //enum ParticleType {Ring, Moon, Tilt, Shearing, Moonlet};  Idea? //<>// //<>// //<>//
+//enum ParticleType {Ring, Moon, Tilt, Shearing, Moonlet};  Idea? //<>// //<>// //<>//
 
 /**Class Particle
  * @author Thomas Cann
@@ -91,47 +91,24 @@ abstract class Particle {
   /** Calculates the acceleration on this particle (based on its current position) (Overrides value of acceleration stored by particle)
    * @param rs
    */
-  void set_getAcceleration(System sb ) {
+  void set_getAcceleration(System s) {
     acceleration = getAcceleration(s);
   }
 
   /** 
    *  Update Position of particle based of Velocity and Acceleration. 
    */
-  Runnable updatePosition(float dt) {
-    class UpdatePosition implements Runnable {
-      float dt;
-      UpdatePosition(float dt) {
-        this.dt = dt;
-      }
-
-      public void run() {
-        position.add(velocity.copy().mult(dt)).add(acceleration.copy().mult(0.5*sq(dt)));
-      }
-    }
-    return new UpdatePosition(dt);
+  void updatePosition(float dt) {
+    position.add(velocity.copy().mult(dt)).add(acceleration.copy().mult(0.5*sq(dt)));
   }
 
   /**
    * Updates the velocity of this Particle (Based on Velocity Verlet) using 2 accelerations. 
    * @param a current acceleration of particle
    */
-  Runnable updateVelocity(PVector a, float dt) {
-    class UpdateVelocity implements Runnable {
-      PVector a;
-      float dt;
-      UpdateVelocity(PVector a, float dt ) {
-        this.dt =dt;
-        this.a = a;
-      }
-      public void run() {
-        velocity.add(PVector.add(acceleration.copy(), a).mult(0.5 *dt));
-      }
-    }
-    return new UpdateVelocity( a, dt);
+  void updateVelocity(PVector a, float dt) {
+    velocity.add(PVector.add(acceleration.copy(), a).mult(0.5 *dt));
   }
-
-
 
   ///**
   // *  Updates object for one time step of simulation.
@@ -149,11 +126,6 @@ abstract class Particle {
   //  this.position = tempPosition;
   //}
 
-  ///**
-  // * Render Method - Renders this object to PGraphics Object. 
-  // */
-  //void render(PGraphics x) {
-  //}
   abstract Particle clone();
 }
 
@@ -219,7 +191,8 @@ class RingParticle extends Particle {
    * @param s System
    * @return PVector [ms^(-2)] 
    */
-  PVector getAcceleration(System s) {
+  @Override
+    PVector getAcceleration(System s) {
 
     PVector a_grav;
     if (s instanceof RingmindSystem) {
@@ -549,7 +522,6 @@ class ShearParticle extends Particle {
     }
     if (s.A2) {
       a_grav.x += 2.0*s.Omega0*velocity.y;
-       
     }
     if (s.Moonlet) {
       float moonlet_GMr3 = s.moonlet.GM/pow(position.mag(), 3.0);
@@ -733,3 +705,144 @@ void importFromFileToGrid(System s, String filename) {
 }
 
 //---------------------------------------------------------------------------------------------------------------
+
+/**Class ThreadedParticle
+ * @author Thomas Cann
+ * @version 1.0
+ */
+class ThreadedParticle {
+
+  PVector position; // Position float x1, x2, x3; 
+  PVector velocity; // Velocity float v1, v2, v3;
+  PVector acceleration;  //Update all constructors!
+
+  /**
+   *  Class Constuctor - General need passing all the values. 
+   */
+  ThreadedParticle(float x1_, float x2_, float x3_, float v1_, float v2_, float v3_, float a1_, float a2_, float a3_) {
+    //default position
+    this.position = new PVector(x1_, x2_, x3_);
+    //default velocity
+    this.velocity = new PVector(v1_, v2_, v3_);
+    this.acceleration = new PVector(a1_, a2_, a3_);
+  }
+
+  /**
+   *  Class Constuctor - General need passing all the values. 
+   */
+  ThreadedParticle(float x1_, float x2_, float x3_, float v1_, float v2_, float v3_) {
+    //default position
+    this.position = new PVector(x1_, x2_, x3_);
+    //default velocity
+    this.velocity = new PVector(v1_, v2_, v3_);
+    this.acceleration = new PVector();
+  }
+
+  /**
+   *  Class Constuctor - General need passing all the values. 
+   */
+  ThreadedParticle(PVector position_, PVector velocity_) {
+    //default position
+    this.position = position_.copy();
+    //default velocity
+    this.velocity = velocity_.copy();
+  }
+
+  /**
+   *  Class Constuctor - Initialises an Orboid object with a random position in the ring with correct orbital velocity. 
+   */
+  ThreadedParticle(float r, float phi) {
+    this(r*cos(phi), r*sin(phi), 0, sqrt(System.GMp/(r))*sin(phi), -sqrt(System.GMp/(r))*cos(phi), 0);
+  }
+
+  /**
+   *  Class Constuctor - Initialises an RingParticle object with a random position in the ring with correct orbital velocity. 
+   */
+  ThreadedParticle(float radius) {
+    // Initialise ourRingParticle.
+    this(radius, random(1)*2.0*PI); //random(1)
+  }
+
+  /**
+   *  Class Constuctor - Initialises an Particle object with zero position and velocity. 
+   */
+  ThreadedParticle() {
+    this(0, 0, 0, 0, 0, 0);
+  }
+
+
+
+  /**Calculates the acceleration on this particle (based on its current position) (Does not override value of acceleration of particle)
+   * @param rs
+   * @return acceleration on the particle PVector[m.s^-2,m.s^-2,m.s^-2]
+   */
+  PVector getAcceleration(System s) {
+    PVector a_grav = new PVector();
+
+    // acceleration due planet in centre of the ring. 
+    a_grav = PVector.mult(position.copy().normalize(), -System.GMp/position.copy().magSq());
+
+    //Acceleration from the Grid Object
+    //for (Grid x : s.g) {
+    //  a_grav.add(x.gridAcceleration(this, s.dt));
+    //}
+    return a_grav;
+  }
+
+  /** Calculates the acceleration on this particle (based on its current position) (Overrides value of acceleration stored by particle)
+   * @param rs
+   */
+  void set_getAcceleration(System s) {
+    acceleration = getAcceleration(s);
+  }
+
+  /** 
+   *  Update Position of particle based of Velocity and Acceleration. 
+   * @param dt
+   * @return Runnable
+   */
+  Runnable updatePosition(float dt) {
+    class UpdatePosition implements Runnable {
+      float dt;
+      UpdatePosition(float dt) {
+        this.dt = dt;
+      }
+
+      public void run() {
+        position.add(velocity.copy().mult(dt)).add(acceleration.copy().mult(0.5*sq(dt)));
+      }
+    }
+    return new UpdatePosition(dt);
+  }
+
+  /**
+   * Updates the velocity of this Particle (Based on Velocity Verlet) using 2 accelerations. 
+   * @param a current acceleration of particle
+   * @return Runnable
+   */
+  Runnable updateVelocity(PVector a, float dt) {
+    class UpdateVelocity implements Runnable {
+      PVector a;
+      float dt;
+      UpdateVelocity(PVector a, float dt ) {
+        this.dt =dt;
+        this.a = a;
+      }
+      public void run() {
+        velocity.add(PVector.add(acceleration.copy(), a).mult(0.5 *dt));
+      }
+    }
+    return new UpdateVelocity( a, dt);
+  }
+
+  /**
+   *  Clone Method - Return New Object with same properties.
+   * @return particle object a deep copy of this. 
+   */
+  ThreadedParticle clone() {
+    ThreadedParticle p = new ThreadedParticle(); 
+    p.position= this.position.copy();
+    p.velocity = this.velocity.copy();
+    return p;
+  }
+}

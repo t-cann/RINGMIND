@@ -1,4 +1,4 @@
- System s;
+System s;
 float G = 6.67408E-11;       // Gravitational Constant 6.67408E-11[m^3 kg^-1 s^-2]
 
 import java.util.concurrent.TimeUnit;
@@ -9,15 +9,12 @@ import java.util.concurrent.Executors;
  */
 public abstract class System {
 
-
-  ExecutorService executor;
-  int numThreads = 8;
-  
   //Timestep variables 
   float dt;                                      //Simulation Time step [s]
   float simToRealTimeRatio = 3600.0/1.0;         // 3600.0/1.0 --> 1hour/second
   float maxTimeStep = 20* simToRealTimeRatio / 30;
   float totalSystemTime =0.0;                    // Tracks length of time simulation has be running
+
 
   int n_particles = 10000;                       //Used for system initialiations 
   ArrayList<Particle> particles;
@@ -46,13 +43,13 @@ public abstract class System {
       p.set_getAcceleration(this);
     }
     for (Particle p : particles) {
-      p.updatePosition(dt).run();
+      p.updatePosition(dt);
     }
     for (Grid x : g) {
       x.update(this);
     }
     for (Particle p : particles) {
-      p.updateVelocity(p.getAcceleration(this), dt).run();
+      p.updateVelocity(p.getAcceleration(this), dt);
     }
     totalSystemTime += dt;
   }
@@ -60,124 +57,87 @@ public abstract class System {
 
   ///**  Updates System for one time step of simulation taking into account the System.
   // */
-  //void update(System s) {
+  void update(System s) {
 
-  //  if (simToRealTimeRatio/frameRate < maxTimeStep) {
-  //    s.dt= simToRealTimeRatio/frameRate;
-  //  } else {
-  //    s.dt= maxTimeStep;
-  //    println("At Maximum Time Step");
-  //  }
+    if (simToRealTimeRatio/frameRate < maxTimeStep) {
+      s.dt= simToRealTimeRatio/frameRate;
+    } else {
+      s.dt= maxTimeStep;
+      println("At Maximum Time Step");
+    }
 
-  //  for (Particle p : particles) {
-  //    p.set_getAcceleration(s);
-  //  }
-  //  for (Particle p : particles) {
-  //    p.updatePosition(s.dt);
-  //  }
-  //  for (Grid x : g) {
-  //    x.update(this);
-  //  }
-  //  for (Particle p : particles) {
-  //    p.updateVelocity(p.getAcceleration(s), s.dt);
-  //  }
-  //  s.totalSystemTime += s.dt;
-  //}
+    for (Particle p : particles) {
+      p.set_getAcceleration(s);
+    }
+    for (Particle p : particles) {
+      p.updatePosition(s.dt);
+    }
+    for (Grid x : g) {
+      x.update(this);
+    }
+    for (Particle p : particles) {
+      p.updateVelocity(p.getAcceleration(s), s.dt);
+    }
+    s.totalSystemTime += s.dt;
+  }
 }
-
-
-//public class TaskSGA implements Runnable {
-//    System s;
-
-
-//    @Override
-//    public void run() {
-//        s.doSomeStuff();
-
-//    }
-//}
-
 
 /**
  *
  */
-class ParticleSystem extends System {
+class ThreadedSystem extends System {
+
+  ExecutorService executor;
+  int numThreads = 8;
+  ArrayList<ThreadedParticle> tp;
 
   /**
    */
-  ParticleSystem() {
+  ThreadedSystem() {
 
-    particles = new ArrayList<Particle>();
+    tp = new ArrayList<ThreadedParticle>();
     g = new ArrayList<Grid>();
 
-    for (int i = 0; i < 10000; i++) {
-      particles.add(new RingParticle(1, 3));
+    for (int i = 0; i < n_particles; i++) {
+      tp.add(new ThreadedParticle(1, 3));
     }
   }
 
-//  void update() {
+  void update() {
 
-//    if (simToRealTimeRatio/frameRate < maxTimeStep) {
-//      this.dt= simToRealTimeRatio/frameRate;
-//    } else {
-//      this.dt= maxTimeStep;
-//      println("At Maximum Time Step");
-//    }
+    if (simToRealTimeRatio/frameRate < maxTimeStep) {
+      this.dt= simToRealTimeRatio/frameRate;
+    } else {
+      this.dt= maxTimeStep;
+      println("At Maximum Time Step");
+    }
 
-//     for (Particle p : particles) {
-//      p.set_getAcceleration(this);
-//    }
-//    executor = Executors.newFixedThreadPool(numThreads);
-//    for (Particle p : particles) {
-//      executor.execute(p.updatePosition(dt));
-//    }
- 
-//    executor.shutdown();
-//    while (!executor.isTerminated()) {
-//    }
-    
-//       for (Grid x : g) {
-//      x.update(this);
-//    }
-   
-//    executor = Executors.newFixedThreadPool(numThreads);
-//    for (Particle p : particles) {
-//      executor.execute(p.updateVelocity(p.getAcceleration(this),dt));
-//    }
+    for (ThreadedParticle p : tp) {
+      p.set_getAcceleration(this);
+    }
+    executor = Executors.newFixedThreadPool(numThreads);
+    for (ThreadedParticle p : tp) {
+      executor.execute(p.updatePosition(dt));
+    }
 
-//    executor.shutdown();
-//    while (!executor.isTerminated()) {
-//    }
-//    totalSystemTime += dt;
-//  }
+    executor.shutdown();
+    while (!executor.isTerminated()) {
+    }
 
+    for (Grid x : g) {
+      x.update(this);
+    }
 
-//  private Runnable set_getAcceleration(final Particle p, System s) {
-//    Runnable aRunnable = new Runnable() {
-//      public void run() {
-//        p.set_getAcceleration(s);
-//      }
-//    };
-//    return aRunnable;
-//  }
+    executor = Executors.newFixedThreadPool(numThreads);
+    for (ThreadedParticle p : tp) {
+      executor.execute(p.updateVelocity(p.getAcceleration(this), dt));
+    }
 
-//  private Runnable updatePosition(final Particle p, final float dt ) {
-//    Runnable aRunnable = new Runnable() {
-//      public void run() {
-//        p.updatePosition(dt);
-//      }
-//    };
-//    return aRunnable;
-//  }
-
-//  private Runnable updateVelocity( final Particle p, final float dt ) {
-//    Runnable aRunnable = new Runnable() {
-//      public void run() {
-//        p.updateVelocity(p.getAcceleration(this), dt);
-//      }
-//    };
-//    return aRunnable;
-//  }
+    executor.shutdown();
+    while (!executor.isTerminated()) {
+    }
+    totalSystemTime += dt;
+  }
 }
 
 //---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -569,7 +529,8 @@ class ShearSystem extends System {
     return -1.5*kepler_omega(r);
   }
 
-
+  /** Method to initilse particles from file "shearoutput.csv".
+   */
   void initTable() {
     addParticlesFromTable(this, "shearoutput.csv");
   }
@@ -579,7 +540,6 @@ class ShearSystem extends System {
  *@author Thomas Cann
  */
 class TiltSystem extends System {
-
 
   float Inner = 1.1;
   float Outer = 4.9;

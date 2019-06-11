@@ -53,7 +53,7 @@ void setupStates() {
     createMaterials();       //extra materials we can apply to the rings
 
     //init with = rings 10,  moons 4, rendering normal =true (titl would be false);
-    s = new ParticleSystem();  
+    s = new ThreadedSystem();  
 
     break;
   case introState:
