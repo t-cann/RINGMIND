@@ -1,4 +1,4 @@
-/**Render System Global Variables //<>//
+/**Render System Global Variables //<>// //<>//
  */
 Renderer renderer;
 PGraphics pg;
@@ -81,32 +81,8 @@ class Renderer {
    */
   void render(System s, RenderContext ctx, int renderType) {
     PGraphicsOpenGL pg = (PGraphicsOpenGL) ctx.pgfx.g;
-    if ( s instanceof ParticleSystem) {
-      push();
-      shader(ctx.shader, POINTS);
 
-      Material mat  = RingMat1;
-      stroke(mat.strokeColor, mat.partAlpha);
-      strokeWeight(mat.strokeWeight);
-
-      ctx.shader.set("weight", mat.partWeight);
-      ctx.shader.set("sprite", mat.spriteTexture);
-      ctx.shader.set("diffTex", mat.diffTexture);
-      ctx.shader.set("view", pg.camera); //don't touch that :-)
-
-      if (renderType==1) {
-        beginShape(POINTS);
-      } else {
-        beginShape(LINES);
-      }
-      for (int x = 0; x < s.particles.size(); x++) {
-        Particle p = s.particles.get(x);
-        vertex(scale*p.position.x, scale*p.position.y, scale*p.position.z);
-      }
-      endShape();
-
-      pop();
-    } else if (s instanceof RingmindSystem) {
+    if (s instanceof RingmindSystem) {
       //--------------------------------------------RingSystemRender-------------------------------------------------- 
       RingmindSystem rms = (RingmindSystem)s;
       RingSystem rs = rms.rs;
@@ -190,19 +166,43 @@ class Renderer {
       beginShape(POINTS);
       for (int PP = 0; PP < ss.particles.size(); PP++) {
         ShearParticle sp = (ShearParticle)ss.particles.get(PP);
+
+        ////Highlight was boolean flag to show check for collisions in Shearing Particle
+        //if (sp.highlight) {
+        //  fill(255, 0, 0);
+        //  stroke(255, 0, 0);
+        //} else { 
+        //  fill(255);
+        //  stroke(255);
+        //}
         vertex(-sp.position.y*width/ss.Ly, -sp.position.x*height/ss.Lx, 2*scale*sp.radius*width/ss.Ly, 2*scale*sp.radius*height/ss.Lx);
       }
       endShape();
       pop();
 
+      if (ss.Guides) {
+        for (int PP = 0; PP < ss.particles.size(); PP++) {
+          ShearParticle sp = (ShearParticle)ss.particles.get(PP);
+          //ss.displayPosition(sp.position, 1, color(255, 0, 0));
+          push();
+          translate(-sp.position.y*width/ss.Ly, -sp.position.x*height/ss.Lx, 0);
+          //circle(0, 0, 2*scale*sp.radius*width/ss.Ly);
+          ss.displayPVector(sp.velocity, 1000, color(0, 255, 0)); //green
+          ss.displayPVector(sp.acceleration, 10000000, color(0, 0, 255)); //blue
+          pop();
+        }
+      }
+
       //moonlet
       if (ss.Moonlet) {
-        ellipseMode(CENTER);
-        push();
-        translate(0, 0);
-        fill(0);
-        sphere(ss.moonlet.radius/8);
-        pop();
+        if (ss.Guides) {
+          ellipseMode(CENTER);
+          push();
+          translate(0, 0);
+          fill(255);
+          sphere(ss.moonlet.radius/2);
+          pop();
+        }
       }
     } else if (s instanceof TiltSystem) {
       //--------------------------------------------TiltSystemRender--------------------------------------------------
@@ -228,7 +228,7 @@ class Renderer {
       beginShape(POINTS);
       for (int ringI = 0; ringI < r.particles.size(); ringI++) {
         TiltParticle tp = (TiltParticle)r.particles.get(ringI);
-        PVector position1 = displayRotate(tp);
+        PVector position1 = tp.displayRotate();
         vertex(scale*position1.x, scale*position1.y, scale*position1.z);
       }
       endShape();
@@ -244,7 +244,6 @@ class Renderer {
    */
   void renderComms(System s, RenderContext ctx, int renderType) {
     PGraphicsOpenGL pg = (PGraphicsOpenGL) ctx.pgfx.g;
-
     RingmindSystem rms= (RingmindSystem)s;
     push();
     shader(ctx.shader, POINTS);
@@ -286,72 +285,6 @@ class Renderer {
     endShape();
 
     pop();
-  }
-
-  //  /**Method to Display ShearingParticle TODO
-  //  */
-  //    void display() {
-  //    push();
-  //    if (!highlight) {
-  //      fill(255, 0, 0);
-  //      stroke(255, 0, 0);
-  //    } else { 
-  //      fill( 0);
-  //      stroke(0);
-  //    }
-  //    ellipseMode(CENTER);  // Set ellipseMode to CENTER
-  //    //ellipse(-y*width/Ly,-x*height/Lx,20, 20); //Debugging
-  //    //println(radius);
-  //    //displayPosition(position,1,color(255,0,0));
-  //    if (Guides) {
-  //      translate(-position.y*width/Ly, -position.x*height/Lx);
-  //      circle(0, 0, 2*scale*radius*width/Ly);
-  //      displayPVector(velocity, 1000, color(0, 255, 0));
-  //      displayPVector(acceleration, 1000000, color(0, 0, 255));
-  //    } else {
-  //      ellipse(-position.y*width/Ly, -position.x*height/Lx, 2*scale*radius*width/Ly, 2*scale*radius*height/Lx);
-  //    }
-  //    pop();
-  //  }
-
-
-  //  /**Display vector from the centre of screen to position that a particle is rendered
-  //   * @param v vector to display from middle of screen.
-  //   * @param scale multiple by magnitude.
-  //   * @param c color of line.
-  //   */
-  //  void displayPosition(PVector v, float scale, color c) {
-  //    stroke(c);
-  //    line(0, 0, -v.y*scale*width/Ly, -v.x*scale*height/Lx);
-  //  }
-
-  //  /**Display vector from the centre of screen with length and direction of vector (no screen dimension scaling)
-  //   * @param v vector to display from middle of screen.
-  //   * @param scale multiple by magnitude.
-  //   * @param c color of line.
-  //   */
-  //  void displayPVector(PVector v, float scale, color c) {
-  //    stroke(c);
-  //    line(0, 0, -v.y*scale, -v.x*scale);
-  //  }
-
-  /**Method displayRotate TODO Removed
-   *@param p
-   *@return
-   */
-  PVector displayRotate(TiltParticle p) {
-    PVector temp = p.position.copy();
-    float angle = radians(p.inclination());
-    float cosi = cos(angle);
-    float sini = sin(angle);
-    temp.y = cosi * p.position.y - sini * p.position.z;
-    temp.z = cosi * p.position.z + sini * p.position.y;
-    PVector temp1 = temp.copy();
-    float cosa = cos(radians(p.rotation));
-    float sina = sin(radians(p.rotation));
-    temp.x = cosa * temp1.x - sina * temp1.y;
-    temp.y = cosa * temp1.y + sina * temp1.x;
-    return temp;
   }
 }
 
@@ -637,10 +570,11 @@ void cameraChaos() {
  */
 void titleText() {
   String txt_fps;
-  try{
-  txt_fps = String.format(getClass().getSimpleName()+ "   [size %d/%d]   [frame %d]   [fps %6.2f] [Time Elapsed in Seconds %d] [Simulation Time Elapsed in Hours %d]", width, height, frameCount, frameRate, int(millis()/1000.0), int(s.totalSystemTime/3600.0) );
-  }catch(Exception e){
-  txt_fps = "";
+  try {
+    txt_fps = String.format(getClass().getSimpleName()+ "   [size %d/%d]   [frame %d]   [fps %6.2f] [Time Elapsed in Seconds %d] [Simulation Time Elapsed in Hours %d]", width, height, frameCount, frameRate, int(millis()/1000.0), int(s.totalSystemTime/3600.0) );
+  }
+  catch(Exception e) {
+    txt_fps = "";
   }
   surface.setTitle(txt_fps);
 }
