@@ -1,17 +1,11 @@
-System s;
+System s; //<>//
 float G = 6.67408E-11;       // Gravitational Constant 6.67408E-11[m^3 kg^-1 s^-2]
 
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
+
 
 /**Class System
  */
 public abstract class System {
-
-
-  ExecutorService executor;
-  int numThreads = 8;
 
   //Timestep variables 
   float dt;                                      //Simulation Time step [s]
@@ -33,178 +27,71 @@ public abstract class System {
    */
   void update() {
 
-    //update(this);
+    update(this);
 
-    if (simToRealTimeRatio/frameRate < maxTimeStep) {
-      this.dt= simToRealTimeRatio/frameRate;
-    } else {
-      this.dt= maxTimeStep;
-      println("At Maximum Time Step");
-    }
+    //if (simToRealTimeRatio/frameRate < maxTimeStep) {
+    //  this.dt= simToRealTimeRatio/frameRate;
+    //} else {
+    //  this.dt= maxTimeStep;
+    //  println("At Maximum Time Step");
+    //}
 
-    for (Particle p : particles) {
-      p.set_getAcceleration(this);
-    }
-    for (Particle p : particles) {
-      p.updatePosition(dt).run();
-    }
-    for (Grid x : g) {
-      x.update(this);
-    }
-    for (Particle p : particles) {
-      p.updateVelocity(p.getAcceleration(this), dt).run();
-    }
-    totalSystemTime += dt;
+    //for (Particle p : particles) {
+    //  p.set_getAcceleration(this);
+    //}
+    //for (Particle p : particles) {
+    //  p.updatePosition(dt);
+    //}
+    //for (Grid x : g) {
+    //  x.update(this);
+    //}
+    //for (Particle p : particles) {
+    //  p.updateVelocity(p.getAcceleration(this), dt);
+    //}
+    //totalSystemTime += dt;
   }
 
 
   ///**  Updates System for one time step of simulation taking into account the System.
   // */
-  //void update(System s) {
+  void update(System s) {
 
-  //  if (simToRealTimeRatio/frameRate < maxTimeStep) {
-  //    s.dt= simToRealTimeRatio/frameRate;
-  //  } else {
-  //    s.dt= maxTimeStep;
-  //    println("At Maximum Time Step");
-  //  }
-
-  //  for (Particle p : particles) {
-  //    p.set_getAcceleration(s);
-  //  }
-  //  for (Particle p : particles) {
-  //    p.updatePosition(s.dt);
-  //  }
-  //  for (Grid x : g) {
-  //    x.update(this);
-  //  }
-  //  for (Particle p : particles) {
-  //    p.updateVelocity(p.getAcceleration(s), s.dt);
-  //  }
-  //  s.totalSystemTime += s.dt;
-  //}
-}
-
-
-//public class TaskSGA implements Runnable {
-//    System s;
-
-
-//    @Override
-//    public void run() {
-//        s.doSomeStuff();
-
-//    }
-//}
-
-
-/**
- *
- */
-class ParticleSystem extends System {
-
-  /**
-   */
-  ParticleSystem() {
-
-    particles = new ArrayList<Particle>();
-    g = new ArrayList<Grid>();
-
-    for (int i = 0; i < 10000; i++) {
-      particles.add(new RingParticle(1, 3));
+    if (simToRealTimeRatio/frameRate < maxTimeStep) {
+      s.dt= simToRealTimeRatio/frameRate;
+    } else {
+      s.dt= maxTimeStep;
+      println("At Maximum Time Step");
     }
+
+    for (Particle p : particles) {
+      p.set_getAcceleration(s);
+    }
+    for (Particle p : particles) {
+      p.updatePosition(s.dt);
+    }
+    for (Grid x : g) {
+      x.update(this);
+    }
+    for (Particle p : particles) {
+      p.updateVelocity(p.getAcceleration(s), s.dt);
+    }
+    s.totalSystemTime += s.dt;
   }
-
-  //  void update() {
-
-  //    if (simToRealTimeRatio/frameRate < maxTimeStep) {
-  //      this.dt= simToRealTimeRatio/frameRate;
-  //    } else {
-  //      this.dt= maxTimeStep;
-  //      println("At Maximum Time Step");
-  //    }
-
-  //     for (Particle p : particles) {
-  //      p.set_getAcceleration(this);
-  //    }
-  //    executor = Executors.newFixedThreadPool(numThreads);
-  //    for (Particle p : particles) {
-  //      executor.execute(p.updatePosition(dt));
-  //    }
-
-  //    executor.shutdown();
-  //    while (!executor.isTerminated()) {
-  //    }
-
-  //       for (Grid x : g) {
-  //      x.update(this);
-  //    }
-
-  //    executor = Executors.newFixedThreadPool(numThreads);
-  //    for (Particle p : particles) {
-  //      executor.execute(p.updateVelocity(p.getAcceleration(this),dt));
-  //    }
-
-  //    executor.shutdown();
-  //    while (!executor.isTerminated()) {
-  //    }
-  //    totalSystemTime += dt;
-  //  }
-
-
-  //  private Runnable set_getAcceleration(final Particle p, System s) {
-  //    Runnable aRunnable = new Runnable() {
-  //      public void run() {
-  //        p.set_getAcceleration(s);
-  //      }
-  //    };
-  //    return aRunnable;
-  //  }
-
-  //  private Runnable updatePosition(final Particle p, final float dt ) {
-  //    Runnable aRunnable = new Runnable() {
-  //      public void run() {
-  //        p.updatePosition(dt);
-  //      }
-  //    };
-  //    return aRunnable;
-  //  }
-
-  //  private Runnable updateVelocity( final Particle p, final float dt ) {
-  //    Runnable aRunnable = new Runnable() {
-  //      public void run() {
-  //        p.updateVelocity(p.getAcceleration(this), dt);
-  //      }
-  //    };
-  //    return aRunnable;
-  //  }
 }
 
 //---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
-
 class RingmindSystem extends System {
+
   RingSystem rs;
   MoonSystem ms;
 
   RingmindSystem(int ring_index, int moon_index) {
-
     rs = new RingSystem(ring_index);
     ms = new MoonSystem(moon_index);
-
-    //particles = new ArrayList<Particle>();
-    //for(Particle p :rs.particles){
-    //particles.add(p);
-    //}
-    //for(Particle p :ms.particles){
-    //particles.add(p);
-    //}
-    //for(Grid x :rs.g){
-    //g.add(x);
-    //}
   }
 
-  void update() {
+  @Override void update() {
     if (simToRealTimeRatio/frameRate < maxTimeStep) {
       rs.dt= simToRealTimeRatio/frameRate;
     } else {
@@ -447,8 +334,8 @@ class ShearSystem extends System {
   Boolean Output = false;
   Boolean A1 =true;
   Boolean A2 =true;
-  Boolean Guides = false;
-  Boolean Reset =true;
+  Boolean Guides = true;
+  Boolean Reset =false;
 
   //Simulation dimensions [m]
   int Lx = 1000;       //Extent of simulation box along planet-point line [m].
@@ -463,15 +350,16 @@ class ShearSystem extends System {
   Moonlet moonlet;
 
   ShearSystem() {
-
-    particles = new ArrayList<Particle>();
     g = new ArrayList<Grid>();
+    particles = new ArrayList<Particle>();
+    moonlet = new Moonlet();
+    random_start();
   }
 
   /** Take a step using the Velocity Verlet (Leapfrog) ODE integration algorithm.
    * Additional Method to Check if particles have left simulation.
    */
-  void update() {
+  @Override void update() {
 
     super.update();
 
@@ -520,7 +408,7 @@ class ShearSystem extends System {
   void random_inject(float n) {
     //particles.add(new Moonlet());
     for (int i = 0; i < n; i++) {
-      particles.add(new ShearParticle());
+      particles.add(new ShearParticle(this));
     }
   }
 
@@ -566,6 +454,26 @@ class ShearSystem extends System {
   void initTable() {
     addParticlesFromTable(this, "shearoutput.csv");
   }
+
+  /**Display vector from the centre of screen to position that a particle is rendered
+   * @param v vector to display from middle of screen.
+   * @param scale multiple by magnitude.
+   * @param c color of line.
+   */
+  void displayPosition(PVector v, float scale, color c) {
+    stroke(c);
+    line(0, 0, -v.y*scale*width/Ly, -v.x*scale*height/Lx);
+  }
+
+  /**Display vector from the centre of screen with length and direction of vector (no screen dimension scaling)
+   * @param v vector to display from middle of screen.
+   * @param scale multiple by magnitude.
+   * @param c color of line.
+   */
+  void displayPVector(PVector v, float scale, color c) {
+    stroke(c);
+    line(0, 0, -v.y*scale, -v.x*scale);
+  }
 }
 
 /**Class TiltSystem
@@ -576,7 +484,7 @@ class TiltSystem extends System {
   float Max_Inclination=80; //Maximum Magnitude of Inclined Planes round x-axis[degrees]
   float Min_Inclination=1;  //Minimum Magnitude of Inclined Planes round x-axis[degrees]
   float Lambda= 8E-5;       //Exponential decay constant [milliseconds^-1] == 1/LAMBDA -> Mean Life Time[ milliseconds]
-                            //Example Ranges for Lambda ==> 8E-5 decays in about 30seconds // 3E-5 decays in 90 seconds;
+  //Example Ranges for Lambda ==> 8E-5 decays in about 30seconds // 3E-5 decays in 90 seconds;
   float Inner = 1.1;        //Inner Radius for Particles[Planetary Radi] 
   float Outer = 4.9;        //Outer Radius for Particles[Planetary Radi] 
 
@@ -714,3 +622,134 @@ void addMoon(int i, ArrayList<Particle> m) {
     break;
   }
 }
+
+
+//---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+//import java.util.concurrent.TimeUnit;
+//import java.util.concurrent.ExecutorService;
+//import java.util.concurrent.Executors;
+
+///**
+// *
+// */
+//class ThreadingSystem extends System {
+  
+  
+
+//ExecutorService executor;
+//int numThreads = 8;
+
+//Render
+
+//if ( s instanceof ThreadingSystem) {
+//  push();
+//  shader(ctx.shader, POINTS);
+
+//  Material mat  = RingMat1;
+//  stroke(mat.strokeColor, mat.partAlpha);
+//  strokeWeight(mat.strokeWeight);
+
+//  ctx.shader.set("weight", mat.partWeight);
+//  ctx.shader.set("sprite", mat.spriteTexture);
+//  ctx.shader.set("diffTex", mat.diffTexture);
+//  ctx.shader.set("view", pg.camera); //don't touch that :-)
+
+//  if (renderType==1) {
+//    beginShape(POINTS);
+//  } else {
+//    beginShape(LINES);
+//  }
+//  for (int x = 0; x < s.particles.size(); x++) {
+//    Particle p = s.particles.get(x);
+//    vertex(scale*p.position.x, scale*p.position.y, scale*p.position.z);
+//  }
+//  endShape();
+
+//  pop();
+//} else
+
+//Requires Thread Particle with these methods.
+//    /** 
+// *  Update Position of particle based of Velocity and Acceleration. 
+// */
+//Runnable updatePosition(float dt) {
+//  class UpdatePosition implements Runnable {
+//    float dt;
+//    UpdatePosition(float dt) {
+//      this.dt = dt;
+//    }
+
+//    public void run() {
+//      position.add(velocity.copy().mult(dt)).add(acceleration.copy().mult(0.5*sq(dt)));
+//    }
+//  }
+//  return new UpdatePosition(dt);
+//}
+
+///**
+// * Updates the velocity of this Particle (Based on Velocity Verlet) using 2 accelerations. 
+// * @param a current acceleration of particle
+// */
+//Runnable updateVelocity(PVector a, float dt) {
+//  class UpdateVelocity implements Runnable {
+//    PVector a;
+//    float dt;
+//    UpdateVelocity(PVector a, float dt ) {
+//      this.dt =dt;
+//      this.a = a;
+//    }
+//    public void run() {
+//      velocity.add(PVector.add(acceleration.copy(), a).mult(0.5 *dt));
+//    }
+//  }
+//  return new UpdateVelocity( a, dt);
+//}
+
+//  /**
+//   */
+//  ThreadingSystem() {
+
+
+
+//    for (int i = 0; i < 10000; i++) {
+//      particles.add(new RingParticle(1, 3));
+//    }
+//  }
+
+//    void update() {
+
+//      if (simToRealTimeRatio/frameRate < maxTimeStep) {
+//        this.dt= simToRealTimeRatio/frameRate;
+//      } else {
+//        this.dt= maxTimeStep;
+//        println("At Maximum Time Step");
+//      }
+
+//       for (Particle p : particles) {
+//        p.set_getAcceleration(this);
+//      }
+//      executor = Executors.newFixedThreadPool(numThreads);
+//      for (Particle p : particles) {
+//        executor.execute(p.updatePosition(dt));
+//      }
+
+//      executor.shutdown();
+//      while (!executor.isTerminated()) {
+//      }
+
+//         for (Grid x : g) {
+//        x.update(this);
+//      }
+
+//      executor = Executors.newFixedThreadPool(numThreads);
+//      for (Particle p : particles) {
+//        executor.execute(p.updateVelocity(p.getAcceleration(this),dt));
+//      }
+
+//      executor.shutdown();
+//      while (!executor.isTerminated()) {
+//      }
+//      totalSystemTime += dt;
+//    }
+//}
