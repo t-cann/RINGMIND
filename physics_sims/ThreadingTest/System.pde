@@ -12,7 +12,7 @@ public abstract class System {
 
   ExecutorService executor;
   int numThreads = 8;
-  
+
   //Timestep variables 
   float dt;                                      //Simulation Time step [s]
   float simToRealTimeRatio = 3600.0/1.0;         // 3600.0/1.0 --> 1hour/second
@@ -115,69 +115,69 @@ class ParticleSystem extends System {
     }
   }
 
-//  void update() {
+  //  void update() {
 
-//    if (simToRealTimeRatio/frameRate < maxTimeStep) {
-//      this.dt= simToRealTimeRatio/frameRate;
-//    } else {
-//      this.dt= maxTimeStep;
-//      println("At Maximum Time Step");
-//    }
+  //    if (simToRealTimeRatio/frameRate < maxTimeStep) {
+  //      this.dt= simToRealTimeRatio/frameRate;
+  //    } else {
+  //      this.dt= maxTimeStep;
+  //      println("At Maximum Time Step");
+  //    }
 
-//     for (Particle p : particles) {
-//      p.set_getAcceleration(this);
-//    }
-//    executor = Executors.newFixedThreadPool(numThreads);
-//    for (Particle p : particles) {
-//      executor.execute(p.updatePosition(dt));
-//    }
- 
-//    executor.shutdown();
-//    while (!executor.isTerminated()) {
-//    }
-    
-//       for (Grid x : g) {
-//      x.update(this);
-//    }
-   
-//    executor = Executors.newFixedThreadPool(numThreads);
-//    for (Particle p : particles) {
-//      executor.execute(p.updateVelocity(p.getAcceleration(this),dt));
-//    }
+  //     for (Particle p : particles) {
+  //      p.set_getAcceleration(this);
+  //    }
+  //    executor = Executors.newFixedThreadPool(numThreads);
+  //    for (Particle p : particles) {
+  //      executor.execute(p.updatePosition(dt));
+  //    }
 
-//    executor.shutdown();
-//    while (!executor.isTerminated()) {
-//    }
-//    totalSystemTime += dt;
-//  }
+  //    executor.shutdown();
+  //    while (!executor.isTerminated()) {
+  //    }
+
+  //       for (Grid x : g) {
+  //      x.update(this);
+  //    }
+
+  //    executor = Executors.newFixedThreadPool(numThreads);
+  //    for (Particle p : particles) {
+  //      executor.execute(p.updateVelocity(p.getAcceleration(this),dt));
+  //    }
+
+  //    executor.shutdown();
+  //    while (!executor.isTerminated()) {
+  //    }
+  //    totalSystemTime += dt;
+  //  }
 
 
-//  private Runnable set_getAcceleration(final Particle p, System s) {
-//    Runnable aRunnable = new Runnable() {
-//      public void run() {
-//        p.set_getAcceleration(s);
-//      }
-//    };
-//    return aRunnable;
-//  }
+  //  private Runnable set_getAcceleration(final Particle p, System s) {
+  //    Runnable aRunnable = new Runnable() {
+  //      public void run() {
+  //        p.set_getAcceleration(s);
+  //      }
+  //    };
+  //    return aRunnable;
+  //  }
 
-//  private Runnable updatePosition(final Particle p, final float dt ) {
-//    Runnable aRunnable = new Runnable() {
-//      public void run() {
-//        p.updatePosition(dt);
-//      }
-//    };
-//    return aRunnable;
-//  }
+  //  private Runnable updatePosition(final Particle p, final float dt ) {
+  //    Runnable aRunnable = new Runnable() {
+  //      public void run() {
+  //        p.updatePosition(dt);
+  //      }
+  //    };
+  //    return aRunnable;
+  //  }
 
-//  private Runnable updateVelocity( final Particle p, final float dt ) {
-//    Runnable aRunnable = new Runnable() {
-//      public void run() {
-//        p.updateVelocity(p.getAcceleration(this), dt);
-//      }
-//    };
-//    return aRunnable;
-//  }
+  //  private Runnable updateVelocity( final Particle p, final float dt ) {
+  //    Runnable aRunnable = new Runnable() {
+  //      public void run() {
+  //        p.updateVelocity(p.getAcceleration(this), dt);
+  //      }
+  //    };
+  //    return aRunnable;
+  //  }
 }
 
 //---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -192,9 +192,7 @@ class RingmindSystem extends System {
     rs = new RingSystem(ring_index);
     ms = new MoonSystem(moon_index);
 
-    particles = new ArrayList<Particle>();
-    g = new ArrayList<Grid>();
-
+    //particles = new ArrayList<Particle>();
     //for(Particle p :rs.particles){
     //particles.add(p);
     //}
@@ -576,21 +574,26 @@ class ShearSystem extends System {
 }
 
 /**Class TiltSystem
- *@author Thomas Cann
+ * @author Thomas Cann
  */
 class TiltSystem extends System {
 
+  float Max_Inclination=80; //Maximum Magnitude of Inclined Planes round x-axis[degrees]
+  float Min_Inclination=1;  //Minimum Magnitude of Inclined Planes round x-axis[degrees]
+  float Lambda= 8E-5;       //Exponential decay constant [milliseconds^-1] == 1/LAMBDA -> Mean Life Time[ milliseconds]
+                            //Example Ranges for Lambda ==> 8E-5 decays in about 30seconds // 3E-5 decays in 90 seconds;
+  float Inner = 1.1;        //Inner Radius for Particles[Planetary Radi] 
+  float Outer = 4.9;        //Outer Radius for Particles[Planetary Radi] 
 
-  float Inner = 1.1;
-  float Outer = 4.9;
-  /** Default Constructor
+  /**
+   *  Default Constructor
    */
   TiltSystem() {
     particles = new ArrayList<Particle>();
     g = new ArrayList<Grid>();
 
     for (int i = 0; i < n_particles; i++) {
-      particles.add(new TiltParticle(Inner, Outer));
+      particles.add(new TiltParticle(Inner, Outer, Max_Inclination, Min_Inclination, Lambda));
     }
   }
 }
