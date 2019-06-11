@@ -524,24 +524,24 @@ void addResonanceMoon(int i, ArrayList<ResonantMoon> m) {
  */
 class TiltParticle extends RingParticle {
 
-  float MAX_INCLINATION=80;
-  float MIN_INCLINATION=1;
+  float MAX_INCLINATION=80; //[degrees]
+  float MIN_INCLINATION=1;  //[degrees]
   float LAMBDA= 8E-5;  //float LAMBDA= 3E-5;
 
-  float rotation;
-  float inclination;
-  float initialiseTime;
-  float minInclination;
+  float rotation;           //[degrees]
+  float inclination;        //[degrees]
+  float initialiseTime;     //[milliseconds]
+  float minInclination;     //[degrees]
 
   /** Class Constuctor - Initialises an TiltParticle object with a random position in the ring with correct orbital velocity. 
    */
-  TiltParticle(float r, float dr, float theta, float dtheta) {
-    super(r, dr, theta, dtheta);
-    rotation =random(360);
-    inclination= randomGaussian()*MAX_INCLINATION;
-    minInclination = randomGaussian()* MIN_INCLINATION;
-    initialiseTime = millis();
-  }
+  //TiltParticle(float r, float dr, float theta, float dtheta) {
+  //  super(r, dr, theta, dtheta);
+  //  rotation =random(360);
+  //  inclination= randomGaussian()*MAX_INCLINATION;
+  //  minInclination = randomGaussian()* MIN_INCLINATION;
+  //  initialiseTime = millis();
+  //}
   /** Class Constuctor - Initialises an TiltParticle object with a random position in the ring with correct orbital velocity. 
    */
   TiltParticle(float inner, float outer) {
@@ -554,13 +554,13 @@ class TiltParticle extends RingParticle {
 
   /** Class Constuctor - Initialises a TiltParticle object with a random position in the ring with correct orbital velocity. 
    */
-  TiltParticle(float radius) {
-    super(radius);
-    rotation =random(360);
-    inclination= randomGaussian()*MAX_INCLINATION;
-    minInclination = randomGaussian()* MIN_INCLINATION;
-    initialiseTime = millis();
-  }
+  //TiltParticle(float radius) {
+  //  super(radius);
+  //  rotation =random(360);
+  //  inclination= randomGaussian()*MAX_INCLINATION;
+  //  minInclination = randomGaussian()* MIN_INCLINATION;
+  //  initialiseTime = millis();
+  //}
 
   /** Method to exponential decrease inclination with after since initialisation.
    */
