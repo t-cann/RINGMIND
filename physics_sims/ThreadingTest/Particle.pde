@@ -454,13 +454,16 @@ public class ResonantMoon extends Moon {
  */
 public class Resonance {
 
-  float Q;
-  float rGap;
-  float Effect;
-  float rMax;
-  float bellMag = 1e5;
-  float bellWidth = 0.001913069;
+  float Q;                         //ratio [t_moon/t_particle]
+  float rGap;                      //inner most radius of gap. [Planetary Radi](Hard Edge)
+  float rMax;                      //outer most radius of gap. [Planetary Radi](Soft Edge)
+  float bellMag = 1e5;             //Strength of Clearing Force [m.s^-2]
+  float bellWidth = 0.001913069;   //Width of Clearing Force [Planetary Radi ^2]
+  //float Effect;                  //Scale of strength Force based on Gravitational force due to moon at ring gap --> moonmass/(rmoon -rgap)^2 multiplied by a constant
 
+  /**
+   *  Class Constuctor - Calculates Resonance properties based of Q and Moon.
+   */
   Resonance(float Q, Moon m) {
     this.Q = Q;
     calcRGap(m);
@@ -468,23 +471,34 @@ public class Resonance {
     calcRmax();
   }
 
+  /** Method to calculate inner radius at which gap should form.
+   *  @param m Moon Object which resonance is based off.  
+   */
   void calcRGap(Moon m) {
     rGap = (m.position.mag()*pow(Q, (-2.0/3.0)))/60268e3;
   }
+
+  /** Method to calculate inner radius at which gap should form.
+   *  @param x radius from centre planet[Planetary Radi]
+   *  @return acceleration[m.s^-2]
+   */
+  float calcAccleration(float x) {
+    return bellMag*exp( -sq(x) /(Q*bellWidth)) + 1; // a proportional to GM pow(Q, ?)
+  }
+
+  /**
+   *  Method to calculate a radius at which stop applying gap force. Magnitude of force is 1/100 of max.
+   *  Bell/Effect curve ==> f(0)= 1 ---> f(RMax)=0.01
+   */
+  void calcRmax() {
+    //
+    rMax = rGap + sqrt((-bellWidth*log(0.01/bellMag))/Q);
+  }
+
+  //TODO
   //void calcEffect(Moon m) {
   //  //Accleration at gap ( Gravitational force due to moon at ring gap --> moonmass/(rmoon -rgap)^2 multiplied by a constant
   //}
-
-  float calcAccleration(float x) {
-
-    // a proportional to GM pow(Q, ?) 
-    return bellMag*exp( -sq(x) /(Q*bellWidth)) + 1;
-  }
-
-  void calcRmax() {
-    // Bell Curve/ Effect curve gets to f(0)= 1 ---> f(RMax)=0.01
-    rMax = rGap + sqrt((-bellWidth*log(0.01/bellMag))/Q);
-  }
 }
 
 /**
