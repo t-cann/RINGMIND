@@ -260,12 +260,7 @@ class RingSystem extends System {
       rings.add(new Ring( 2.754, 2.874, n_particles/10)); // G Ring: Inner 2.754 Outer 2.874
       //rings.add(new Ring(2.987, 7.964, 1000)); // E Ring: Inner 2.987 Outer 7.964
       //Gaps/Ringlet Data  // Titan Ringlet 1.292 // Maxwell Gap 1.452 // Encke Gap 2.26 // Keeler Gap 2.265
-
       applyBasicMaterials();
-
-      //for (Ring r : rings) {
-      //  r.material = RingMat3;
-      //}
       break;
 
     case 3:

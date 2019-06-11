@@ -82,8 +82,10 @@ abstract class Particle {
     a_grav = PVector.mult(position.copy().normalize(), -System.GMp/position.copy().magSq());
 
     //Acceleration from the Grid Object
-    for (Grid x : s.g) {
-      a_grav.add(x.gridAcceleration(this, s.dt));
+    if (s.g != null) {
+      for (Grid x : s.g) {
+        a_grav.add(x.gridAcceleration(this, s.dt));
+      }
     }
     return a_grav;
   }
@@ -91,7 +93,7 @@ abstract class Particle {
   /** Calculates the acceleration on this particle (based on its current position) (Overrides value of acceleration stored by particle)
    * @param rs
    */
-  void set_getAcceleration(System sb ) {
+  void set_getAcceleration(System s) {
     acceleration = getAcceleration(s);
   }
 
@@ -252,7 +254,7 @@ class RingParticle extends Particle {
    *  Clone Method - Return New Object with same properties.
    * @return particle object a deep copy of this. 
    */
-  Particle clone() {
+  @Override Particle clone() {
     Particle p = new RingParticle(); 
     p.position= this.position.copy();
     p.velocity = this.velocity.copy();
@@ -320,7 +322,7 @@ class Moon extends Particle implements Alignable {
   /**
    *Display Method - Renders this object to screen displaying its position and colour.
    */
-  void display() {
+  @Deprecated void display() {
     push();
     translate(width/2, height/2);
     ellipseMode(CENTER);
@@ -357,7 +359,7 @@ class Moon extends Particle implements Alignable {
   /**Clone Method - Return New Object with same properties.
    * @return particle object a deep copy of this. 
    */
-  Particle clone() {
+  @Override Particle clone() {
     Moon p = new Moon(); 
     p.position= this.position.copy();
     p.velocity = this.velocity.copy();
@@ -428,17 +430,21 @@ public interface Alignable {
 /**Class ResonantParticle - Removes Gravity interaction and used information in Resonance class to thin rings.  
  * @author Thomas Cann
  */
-public class ResonantParticle extends RingParticle{
+public class ResonantParticle extends RingParticle {
 
-  ResonantParticle(){
-    
+  /**
+   * TODO
+   */
+  ResonantParticle() {
+    //TODO
   }
-  
+
   /**
    *  Calculates the acceleration on this particle (based on its current position) (Does not override value of acceleration of particle)
    */
   PVector getAcceleration(RingSystem rs) {
 
+    //TODO
     //// acceleration due to planet in centre of the ring. 
     PVector a_grav = new PVector();
     //a_grav = PVector.mult(position.copy().normalize(), -GMp/position.copy().magSq());
@@ -452,7 +458,7 @@ public class ResonantParticle extends RingParticle{
 
     //  PVector dist = PVector.sub(m.position, position);
     //  PVector a = PVector.mult(dist, m.GM/pow(dist.mag(), 3));
-       
+
     //  if (m.r != null){
     //  for (Resonance R : m.r) {
 
@@ -466,7 +472,7 @@ public class ResonantParticle extends RingParticle{
     //    }
     //  }}else{
     //    println("No Resonances ");
-        
+
     //  }
     //  a_grav.add(a);
     //}
