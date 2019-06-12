@@ -1,4 +1,4 @@
-//<Particle Tab>//
+//<Particle Tab>// //<>//
 //Contains:
 //-Classes(Particle, RingParticle, Moon, ResonantParticle, ResonantMoon, Resonance, TiltParticle, ShearingParticle, Moonlet
 //-Interfaces(Alignable)
@@ -78,12 +78,12 @@ abstract class Particle {
     // acceleration due planet in centre of the ring. 
     a_grav = PVector.mult(position.copy().normalize(), -System.GMp/position.copy().magSq());
 
-    //Acceleration from the Grid Object
-    if (s.g != null) {
-      for (Grid x : s.g) {
-        a_grav.add(x.gridAcceleration(this, s.dt));
-      }
-    }
+    ////Acceleration from the Grid Object
+    //if (s.g != null) {
+    //  for (Grid x : s.g) {
+    //    a_grav.add(x.gridAcceleration(this, s.dt));
+    //  }
+    //}
     return a_grav;
   }
 
@@ -390,8 +390,8 @@ public class ResonantParticle extends RingParticle {
   /**
    * TODO
    */
-  ResonantParticle() {
-    //TODO
+  ResonantParticle(float inner, float outer) {
+    super(inner, outer);
   }
 
   /**
@@ -399,42 +399,39 @@ public class ResonantParticle extends RingParticle {
    */
   @Override PVector getAcceleration(System s) {
 
-    //TODO
+    ResonantSystem rs = (ResonantSystem)s;
     //// acceleration due to planet in centre of the ring. 
-    PVector a_grav = new PVector();
-    //a_grav = PVector.mult(position.copy().normalize(), -GMp/position.copy().magSq());
+    PVector a_grav = PVector.mult(position.copy().normalize(), -System.GMp/position.copy().magSq());
 
-    ////Acceleration from the Grid Object
-    //for (Grid x : rs.g) {
-    //  a_grav.add(x.gridAcceleration(this));
-    //}
-    //for (Moon m : rs.moons) {
-    //  //for all resonances of the moon 
+    for (Particle mr : rs.ms.particles) {
+      //for all resonances of the moon 
+      ResonantMoon m = (ResonantMoon)mr;
 
-    //  PVector dist = PVector.sub(m.position, position);
-    //  PVector a = PVector.mult(dist, m.GM/pow(dist.mag(), 3));
+      PVector dist = PVector.sub(m.position, position);
+      PVector a = PVector.mult(dist, m.GM/pow(dist.mag(), 3));
 
-    //  if (m.r != null){
-    //  for (Resonance R : m.r) {
-
-    //    float x = position.mag()/60268e3;
-    //    //Check if Particle >Rgap ?&& <Rmax
-    //    //println(x+" "+R.rGap+ " "+ R.rMax);
-    //    if (x>R.rGap && x<R.rMax) {
-    //      //Calcuaculate and Apply if it is !
-    //      println(R.calcAccleration(x-R.rGap));
-    //      a.mult(R.calcAccleration(x-R.rGap));
-    //    }
-    //  }}else{
-    //    println("No Resonances ");
-
-    //  }
-    //  a_grav.add(a);
-    //}
+      if (m.r != null) {
+        for (Resonance R : m.r) {
+          float x = position.mag()/60268e3;
+          //Check if Particle >Rgap ?&& <Rmax
+          //println(x+" "+R.rGap+ " "+ R.rMax);
+          if (x>R.rGap && x<R.rMax) {
+            //Calcuaculate and Apply if it is !
+            //println(R.calcAccleration(x-R.rGap));
+            a.mult(R.calcAccleration(x-R.rGap));
+          }
+        }
+      } else {
+        println("No Resonances ");
+      }
+      a_grav.add(a);
+    }
 
     return a_grav;
   }
 }
+
+
 
 /**Class ResonantMoon - Removes Gravity interaction and used information in Resonance class to thin rings.  
  * @author Thomas Cann
@@ -511,21 +508,7 @@ public class Resonance {
   //}
 }
 
-/**
- * Method to add specific ResonanceMoon object to an Arraylist.
- */
-void addResonanceMoon(int i, ArrayList<ResonantMoon> m) {
-  //Source: Nasa Saturn Factsheet
 
-  switch(i) {
-  case 1: 
-    // Mimas Mass 3.7e19 [kg] Radius 2.08e5 [m] Obital Radius 185.52e6 [m]
-    ResonantMoon moon =new ResonantMoon(G*3.7e19, 2.08e5, 185.52e6);
-    moon.addResonance(2.0);
-    m.add(moon);
-    break;
-  }
-}
 
 
 //---------------------------------------------------------------------------------------------------------------------------------------------------//
@@ -764,7 +747,15 @@ void addParticlesFromTable(System s, String filename) {
       temp.acceleration.x= table.getFloat(i, 6);
       temp.acceleration.y= table.getFloat(i, 7);
       temp.acceleration.z= table.getFloat(i, 8);
-      rs.rings.get(0).addParticle(temp);
+      rs.rings.get(0).addParticle(temp);              //TODO needed for added particles to be rendered. Streamline.98
+      rs.particles.add(temp);                         //TODO needed for added particles to be updated.
+    }
+  } else if (s instanceof RingmindSystem) {
+    if (s instanceof ResonantSystem) {
+    } else {
+      RingmindSystem rs=(RingmindSystem)s;
+
+      addParticlesFromTable(rs.rs, filename);
     }
   } else if (s instanceof ShearSystem) {
     s.particles.clear();
@@ -796,7 +787,7 @@ void importFromFileToGrid(System s, String filename) {
   table = loadTable("./files/" + filename); //DEBUG println(table.getRowCount()+" "+ table.getColumnCount());
 
   //Check that there is a ArrayList of Grid objects and it is not empty.
-  if (s.g != null && !s.g.isEmpty()) {
+  
 
     //If Statement to depending on System.
     if (s instanceof RingSystem) {
@@ -804,12 +795,13 @@ void importFromFileToGrid(System s, String filename) {
       //If Multiple Grids will always use Index 0. 
       int index =0;
       RingSystem rs = (RingSystem)s;
+      if (rs.g != null && !rs.g.isEmpty()) {
       rs.rings.add(new Ring( 1, 3, 0));
       ArrayList<RingParticle> tempParticles = new ArrayList<RingParticle>();
       for (int i = 0; i < table.getRowCount(); i++) {
         for (int j = 0; j < table.getColumnCount(); j++) {
           for (int x=0; x<table.getInt(i, j); x++) {
-            tempParticles.add(new RingParticle(s.g.get(index).r_min+GRID_DELTA_R*i, GRID_DELTA_R, radians(GRID_DELTA_THETA*-j-180), radians(GRID_DELTA_THETA)));
+            tempParticles.add(new RingParticle(rs.g.get(index).r_min+GRID_DELTA_R*i, GRID_DELTA_R, radians(GRID_DELTA_THETA*-j-180), radians(GRID_DELTA_THETA)));
           }
         }
       }

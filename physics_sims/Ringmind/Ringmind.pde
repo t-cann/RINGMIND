@@ -169,7 +169,12 @@ void keyPressed() {
   } else if (key=='S') {
     //Release to Save Path to JSON
   } else if (key=='d') {
+    if(s instanceof ShearSystem){
+      ShearSystem ss = (ShearSystem)s;
+      ss.Guides= !ss.Guides;
+    }else{
     traceAmount=190;
+    }
   } else if (key=='D') {
     //
   } else if (key=='f') {

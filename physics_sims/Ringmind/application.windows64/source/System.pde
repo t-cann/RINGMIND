@@ -1,4 +1,4 @@
-System s;
+System s; //<>//
 float G = 6.67408E-11;       // Gravitational Constant 6.67408E-11[m^3 kg^-1 s^-2]
 
 
@@ -89,6 +89,9 @@ class RingmindSystem extends System {
   RingmindSystem(int ring_index, int moon_index) {
     rs = new RingSystem(ring_index);
     ms = new MoonSystem(moon_index);
+  }
+
+  RingmindSystem() {
   }
 
   @Override void update() {
@@ -219,7 +222,7 @@ class RingSystem extends System {
       break;
 
     case 13:
-      //rings.add(new Ring( 5.0, 5.2, 22500));
+      rings.add(new Ring( 5.0, 5.2, 22500));
       //// rings.get(0).particles.clear();
       ////addParticlesFromTable("outputParticles.csv");
       //// rings.add(new Ring(1,5.0,5.2,1000));
@@ -349,7 +352,8 @@ class ShearSystem extends System {
 
   Moonlet moonlet;
 
-  ShearSystem() {
+  ShearSystem(boolean Guides) {
+    this.Guides =Guides;
     g = new ArrayList<Grid>();
     particles = new ArrayList<Particle>();
     moonlet = new Moonlet();
@@ -501,6 +505,40 @@ class TiltSystem extends System {
   }
 }
 
+/**Class ResonantSystem
+ * @author Thomas Cann
+ */
+class ResonantSystem extends RingmindSystem {
+
+  /**
+   *  Default Constructor
+   */
+  ResonantSystem() {
+    super(0, 0);
+    for (int i = 0; i < n_particles; i++) {
+      rs.particles.add(new ResonantParticle(R_MIN, R_MAX));
+    }
+
+    addResonanceMoon(1, ms.particles);
+  }
+
+  /**
+   * Method to add specific ResonanceMoon object to an Arraylist.
+   */
+  void addResonanceMoon(int i, ArrayList<Particle> m) {
+    //Source: Nasa Saturn Factsheet
+
+    switch(i) {
+    case 1: 
+      // Mimas Mass 3.7e19 [kg] Radius 2.08e5 [m] Obital Radius 185.52e6 [m]
+      ResonantMoon moon =new ResonantMoon(G*3.7e19, 2.08e5, 185.52e6);
+      moon.addResonance(2.0);
+      m.add(moon);
+      break;
+    }
+  }
+}
+
 //---------------------------------------------------------------------------------------------
 
 /** Method addMoon - method to add specific moon to Arraylist of Particles.
@@ -625,131 +663,3 @@ void addMoon(int i, ArrayList<Particle> m) {
 
 
 //---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-
-//import java.util.concurrent.TimeUnit;
-//import java.util.concurrent.ExecutorService;
-//import java.util.concurrent.Executors;
-
-///**
-// *
-// */
-//class ThreadingSystem extends System {
-  
-  
-
-//ExecutorService executor;
-//int numThreads = 8;
-
-//Render
-
-//if ( s instanceof ThreadingSystem) {
-//  push();
-//  shader(ctx.shader, POINTS);
-
-//  Material mat  = RingMat1;
-//  stroke(mat.strokeColor, mat.partAlpha);
-//  strokeWeight(mat.strokeWeight);
-
-//  ctx.shader.set("weight", mat.partWeight);
-//  ctx.shader.set("sprite", mat.spriteTexture);
-//  ctx.shader.set("diffTex", mat.diffTexture);
-//  ctx.shader.set("view", pg.camera); //don't touch that :-)
-
-//  if (renderType==1) {
-//    beginShape(POINTS);
-//  } else {
-//    beginShape(LINES);
-//  }
-//  for (int x = 0; x < s.particles.size(); x++) {
-//    Particle p = s.particles.get(x);
-//    vertex(scale*p.position.x, scale*p.position.y, scale*p.position.z);
-//  }
-//  endShape();
-
-//  pop();
-//} else
-
-//Requires Thread Particle with these methods.
-//    /** 
-// *  Update Position of particle based of Velocity and Acceleration. 
-// */
-//Runnable updatePosition(float dt) {
-//  class UpdatePosition implements Runnable {
-//    float dt;
-//    UpdatePosition(float dt) {
-//      this.dt = dt;
-//    }
-
-//    public void run() {
-//      position.add(velocity.copy().mult(dt)).add(acceleration.copy().mult(0.5*sq(dt)));
-//    }
-//  }
-//  return new UpdatePosition(dt);
-//}
-
-///**
-// * Updates the velocity of this Particle (Based on Velocity Verlet) using 2 accelerations. 
-// * @param a current acceleration of particle
-// */
-//Runnable updateVelocity(PVector a, float dt) {
-//  class UpdateVelocity implements Runnable {
-//    PVector a;
-//    float dt;
-//    UpdateVelocity(PVector a, float dt ) {
-//      this.dt =dt;
-//      this.a = a;
-//    }
-//    public void run() {
-//      velocity.add(PVector.add(acceleration.copy(), a).mult(0.5 *dt));
-//    }
-//  }
-//  return new UpdateVelocity( a, dt);
-//}
-
-//  /**
-//   */
-//  ThreadingSystem() {
-
-
-
-//    for (int i = 0; i < 10000; i++) {
-//      particles.add(new RingParticle(1, 3));
-//    }
-//  }
-
-//    void update() {
-
-//      if (simToRealTimeRatio/frameRate < maxTimeStep) {
-//        this.dt= simToRealTimeRatio/frameRate;
-//      } else {
-//        this.dt= maxTimeStep;
-//        println("At Maximum Time Step");
-//      }
-
-//       for (Particle p : particles) {
-//        p.set_getAcceleration(this);
-//      }
-//      executor = Executors.newFixedThreadPool(numThreads);
-//      for (Particle p : particles) {
-//        executor.execute(p.updatePosition(dt));
-//      }
-
-//      executor.shutdown();
-//      while (!executor.isTerminated()) {
-//      }
-
-//         for (Grid x : g) {
-//        x.update(this);
-//      }
-
-//      executor = Executors.newFixedThreadPool(numThreads);
-//      for (Particle p : particles) {
-//        executor.execute(p.updateVelocity(p.getAcceleration(this),dt));
-//      }
-
-//      executor.shutdown();
-//      while (!executor.isTerminated()) {
-//      }
-//      totalSystemTime += dt;
-//    }
-//}

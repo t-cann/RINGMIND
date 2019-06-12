@@ -192,9 +192,14 @@ public void keyPressed() {
     useTrace = !useTrace;
     //Proscene - Fill Screen
   } else if (key=='S') {
-    //Save Path to JSON
+    //Release to Save Path to JSON
   } else if (key=='d') {
+    if(s instanceof ShearSystem){
+      ShearSystem ss = (ShearSystem)s;
+      ss.Guides= !ss.Guides;
+    }else{
     traceAmount=190;
+    }
   } else if (key=='D') {
     //
   } else if (key=='f') {
@@ -272,18 +277,18 @@ public void keyReleased() {
 
 public void mouseReleased() {
   //lets debug print all the camera stuff to help figure out what data we need for each scene
-  println("****** camera debug info ******");
-  println();
-  println("camera orientation");
-  Rotation r = scene.camera().frame().orientation();
-  r.print();
-  println();
-  println("camera position");
-  println(scene.camera().position());
-  println();
-  println("view direction");
-  println(scene.camera().viewDirection());
-  println();
+  //println("****** camera debug info ******");
+  //println();
+  //println("camera orientation");
+  //Rotation r = scene.camera().frame().orientation();
+  //r.print();
+  //println();
+  //println("camera position");
+  //println(scene.camera().position());
+  //println();
+  //println("view direction");
+  //println(scene.camera().viewDirection());
+  //println();
 }
 //Grid Default Variables 
 float R_MIN = 1;                   //[Planetary Radi] 
@@ -293,7 +298,7 @@ float GRID_DELTA_THETA = 1;        //[Degrees]
 float GRID_DRAG_CONSTANT = 5e-7f;   //[s^{2}]
 float GRID_DRAG_PROBABILITY = 1e4f ;//[[Planetary Radi^{2}.s]
 
-/**Class Grid TODO
+/**Class Grid - polar spatial subdivision using density of particles, average velocity and center of mass to probabliticly model collisions. 
  * @author Thomas Cann
  * @author Sam Hinson
  */
@@ -331,7 +336,7 @@ class Grid {
   }
 
   /**
-   *  Grid Constuctor - Taking in a value for r_min and r_max and all the other values from global variables. 
+   *  Grid Constuctor - Taking in a value for r_min and r_max and drag constants but all the other values from global variables. 
    */
   Grid(float r_min, float r_max ,float drag_c, float drag_p) {
     this(r_min, r_max, GRID_DELTA_R, GRID_DELTA_THETA, drag_c, drag_p);
@@ -559,100 +564,7 @@ class Grid {
     }
     return a_selfgrav;
   }
-
-  //  /**
-  //   *    Displays Grid cell mouse is over and relevant informotion when mouse is pressed
-  //   */
-  //  void display(RingSystem rs) {
-
-  //    if (mousePressed) {
-  //      float r = sqrt(sq(mouseX-width/2)+ sq(mouseY-height/2))/SCALE;
-  //      float angle = (atan2((mouseY-height/2), mouseX-width/2)+TAU)%(TAU);
-  //      int i= i(angle);
-  //      int j = j(r);
-
-  //      if (Add) {
-  //        for (int x=0; x<1; x++) { 
-  //          RingParticle a = new RingParticle(r_min+GRID_DELTA_R*j, GRID_DELTA_R, radians(GRID_DELTA_THETA*i), radians(GRID_DELTA_THETA));
-  //          rs.rings.get(0).particles.add(a);
-  //          rs.totalParticles.add(a);
-  //        }
-  //      }
-
-  //      if (clear) {
-  //        ArrayList<Particle> temp = new ArrayList<Particle>();
-  //        for (Particle p : rs.totalParticles) {
-  //          if (i(p) == i) {
-  //            if (j(p)== j) {
-  //              temp.add(p);
-  //            }
-  //          }
-  //        }
-  //        for (Particle p : temp) {
-  //          rs.totalParticles.remove(p);
-  //          rs.rings.get(0).particles.remove(p);
-  //        }
-  //      }
-
-  //      if (validij(i, j)) {
-  //        displaycell(i, j );
-  //        float a = 1-exp(-(gridNorm[i][j]*drag_p)/dt);
-  //        String output = "\t Normalised Number Density: " +gridNorm[i][j] + "\n\t Average Velocity: " + gridV[i][j].mag()+ "\n\t Probability Threshold: " + a ;
-  //        text(output, 0.0, 10.0);
-  //        displayVector(i, j, gridV[i][j]);
-  //      }
-  //    }
-  //  }
-
-  //  /**
-  //   * Displays PVectorfrom the centre of a Grid Cell to the Sketch.
-  //   *
-  //   * @param i angular index of grid [between 0 and 360/dr]
-  //   * @param j radial index of grid[between 0 and ring thickness / dr]
-  //   */
-  //  void displayVector(int i, int j, PVector v) {
-  //    push();
-  //    //translate(width/2, height/2);
-  //    stroke(255);
-  //    strokeWeight(1);
-  //    PVector cofc = centreofCell(i, j);
-  //    cofc.mult(SCALE);
-  //    PVector temp = v.copy().mult(5E-3);
-  //    line(cofc.x, cofc.y, cofc.x + temp.x, cofc.y + temp.y);
-  //    pop();
-  //  }
-
-  //  /**
-  //   * Displays Outline of Grid Cell to the Sketch.
-  //   *
-  //   * @param i angular index of grid [between 0 and 360/dr]
-  //   * @param j radial index of grid[between 0 and ring thickness / dr]
-  //   */
-  //  void displaycell(int i, int j) {
-  //    push();
-  //    //Style and Matrix Tranformation Information
-  //    //translate(width/2, height/2);
-  //    noFill();
-  //    stroke(255);
-  //    strokeWeight(1);
-  //    //Properties Needed
-  //    float r = SCALE*Rp*(r_min + dr *j);
-  //    float R = SCALE*Rp*(r_min + dr *(j+1));
-  //    float theta = radians(dtheta *i);
-  //    float N =GRID_DELTA_THETA;
-  //    beginShape();
-  //    // Outer circle
-  //    for (int x = 0; x<=N; x++) {
-  //      vertex(R*cos(x*radians(dtheta)/N + theta), R*sin(x*radians(dtheta)/N +theta));
-  //    }
-  //    // Inner circle
-  //    for (int x = 0; x<=N; x++) {
-  //      vertex(r*cos((theta+radians(dtheta))-x*radians(dtheta)/N), r*sin((theta+radians(dtheta))-x*radians(dtheta)/N));
-  //    }
-  //    endShape(CLOSE);
-  //    pop();
-  //  }
-
+  
   /**
    * Loops through all the particles adding relevant properties to  grids. Will allow generalised rules to be applied to particles.
    *
@@ -693,23 +605,7 @@ class Grid {
           }
         }
       }
-      // Improve the calculate of gridV 
 
-      //As cannot simulate every particle, add constant or multiple number of particles with keplerian velocity to help maintain correct averages.
-
-      //float actualtosimratio = 2; // actual number of particles to simulated 
-
-      //for (int i = 0; i < int(360/dtheta); i++) {
-      //  for (int j = 0; j < int((r_max-r_min)/dr); j++) {
-      //    gridNorm[i][j] = grid[i][j]/((r_min+j*dr+dr/2)*dr*radians(dtheta)*total);
-      //    gridV[i][j].add(keplerianVelocityCell(i, j));
-      //    gridV[i][j].add(keplerianVelocityCell(i, j));
-      //    for (int k = 0; k<grid[i][j]; k ++) {
-      //      gridV[i][j].add(keplerianVelocityCell(i, j));
-      //    }
-      //    gridV[i][j].div(actualtosimratio*(grid[i][j]+1));
-      //  }
-      //}
 
 
 
@@ -729,57 +625,6 @@ class Grid {
       }
     }
   }
-
-  ////---------------------------------------
-  //void tiltupdate(RingSystem rs) {
-
-  //  //Reset all the grid values.
-  //  reset();
-
-  //  //Loop through all the tilt particles trying to add them to the grid.
-  //  for (Ring x : rs.rings) {
-  //    for (TiltParticle r : x.Tparticles) {
-  //      int i = i(r);
-  //      int j = j(r);
-  //      if (validij(i, j)) {
-  //        grid[i][j] +=1;
-  //        PVector v = new PVector(r.velocity.x, r.velocity.y);
-  //        v.rotate(-angleDiff(r)).mult(1/radialScaling(r));
-  //        gridV[i][j].add(v);
-  //        gridCofM[i][j].add(r.position);
-  //      }
-  //    }
-  //  }
-
-  //  int total =0 ;
-  //  for (int i = 0; i < int(360/dtheta); i++) {
-  //    for (int j = 0; j < int((r_max-r_min)/dr); j++) {
-  //      total += grid[i][j];
-  //      if (grid[i][j] !=0) {
-  //        gridCofM[i][j].div(grid[i][j]);
-  //      } else {
-  //        gridCofM[i][j].set(0.0, 0.0, 0.0);
-  //      }
-  //    }
-  //  }
-
-  //  //Looping through all the grid cell combining properties to calculate normalised values and average values from total values.
-  //  for (int i = 0; i < int(360/dtheta); i++) {
-  //    for (int j = 0; j < int((r_max-r_min)/dr); j++) {
-
-  //      gridNorm[i][j] = grid[i][j]/((r_min+j*dr+dr/2)*dr*radians(dtheta)*total);
-
-
-  //      if (grid[i][j] !=0) {
-  //        gridV[i][j].div(grid[i][j]);
-  //      } else {
-  //        gridV[i][j].set(0.0, 0.0, 0.0);
-  //      }
-  //    }
-  //  }
-  //}
-
-  //-----------------------------------
 
   /**
    * Returns a Table Object from a 2D array containing Int data type.
@@ -848,25 +693,7 @@ class Grid {
     return tempTable;
   }
 }
-
-//TODO
-//abstract class AbstractGrid {
-
-
-//  protected float dr, dtheta, r_min, r_max; 
-//  protected int sizeTheta, sizeR;
-//  protected float drag_c, drag_p;  //Constants for Drag Rule.
-//  protected AbstractGridElement grid[][];
-
-//  abstract void Reset();
-//  abstract int i(Object o);
-//  abstract int j(Object o);
-//  abstract boolean validij(Object o);
-//}
-
-//abstract class AbstractGridElement {
-//}
-//<Particle Tab>//
+//<Particle Tab>// //<>//
 //Contains:
 //-Classes(Particle, RingParticle, Moon, ResonantParticle, ResonantMoon, Resonance, TiltParticle, ShearingParticle, Moonlet
 //-Interfaces(Alignable)
@@ -946,12 +773,12 @@ abstract class Particle {
     // acceleration due planet in centre of the ring. 
     a_grav = PVector.mult(position.copy().normalize(), -System.GMp/position.copy().magSq());
 
-    //Acceleration from the Grid Object
-    if (s.g != null) {
-      for (Grid x : s.g) {
-        a_grav.add(x.gridAcceleration(this, s.dt));
-      }
-    }
+    ////Acceleration from the Grid Object
+    //if (s.g != null) {
+    //  for (Grid x : s.g) {
+    //    a_grav.add(x.gridAcceleration(this, s.dt));
+    //  }
+    //}
     return a_grav;
   }
 
@@ -1258,8 +1085,8 @@ public class ResonantParticle extends RingParticle {
   /**
    * TODO
    */
-  ResonantParticle() {
-    //TODO
+  ResonantParticle(float inner, float outer) {
+    super(inner, outer);
   }
 
   /**
@@ -1267,42 +1094,39 @@ public class ResonantParticle extends RingParticle {
    */
   public @Override PVector getAcceleration(System s) {
 
-    //TODO
+    ResonantSystem rs = (ResonantSystem)s;
     //// acceleration due to planet in centre of the ring. 
-    PVector a_grav = new PVector();
-    //a_grav = PVector.mult(position.copy().normalize(), -GMp/position.copy().magSq());
+    PVector a_grav = PVector.mult(position.copy().normalize(), -System.GMp/position.copy().magSq());
 
-    ////Acceleration from the Grid Object
-    //for (Grid x : rs.g) {
-    //  a_grav.add(x.gridAcceleration(this));
-    //}
-    //for (Moon m : rs.moons) {
-    //  //for all resonances of the moon 
+    for (Particle mr : rs.ms.particles) {
+      //for all resonances of the moon 
+      ResonantMoon m = (ResonantMoon)mr;
 
-    //  PVector dist = PVector.sub(m.position, position);
-    //  PVector a = PVector.mult(dist, m.GM/pow(dist.mag(), 3));
+      PVector dist = PVector.sub(m.position, position);
+      PVector a = PVector.mult(dist, m.GM/pow(dist.mag(), 3));
 
-    //  if (m.r != null){
-    //  for (Resonance R : m.r) {
-
-    //    float x = position.mag()/60268e3;
-    //    //Check if Particle >Rgap ?&& <Rmax
-    //    //println(x+" "+R.rGap+ " "+ R.rMax);
-    //    if (x>R.rGap && x<R.rMax) {
-    //      //Calcuaculate and Apply if it is !
-    //      println(R.calcAccleration(x-R.rGap));
-    //      a.mult(R.calcAccleration(x-R.rGap));
-    //    }
-    //  }}else{
-    //    println("No Resonances ");
-
-    //  }
-    //  a_grav.add(a);
-    //}
+      if (m.r != null) {
+        for (Resonance R : m.r) {
+          float x = position.mag()/60268e3f;
+          //Check if Particle >Rgap ?&& <Rmax
+          //println(x+" "+R.rGap+ " "+ R.rMax);
+          if (x>R.rGap && x<R.rMax) {
+            //Calcuaculate and Apply if it is !
+            //println(R.calcAccleration(x-R.rGap));
+            a.mult(R.calcAccleration(x-R.rGap));
+          }
+        }
+      } else {
+        println("No Resonances ");
+      }
+      a_grav.add(a);
+    }
 
     return a_grav;
   }
 }
+
+
 
 /**Class ResonantMoon - Removes Gravity interaction and used information in Resonance class to thin rings.  
  * @author Thomas Cann
@@ -1379,21 +1203,7 @@ public class Resonance {
   //}
 }
 
-/**
- * Method to add specific ResonanceMoon object to an Arraylist.
- */
-public void addResonanceMoon(int i, ArrayList<ResonantMoon> m) {
-  //Source: Nasa Saturn Factsheet
 
-  switch(i) {
-  case 1: 
-    // Mimas Mass 3.7e19 [kg] Radius 2.08e5 [m] Obital Radius 185.52e6 [m]
-    ResonantMoon moon =new ResonantMoon(G*3.7e19f, 2.08e5f, 185.52e6f);
-    moon.addResonance(2.0f);
-    m.add(moon);
-    break;
-  }
-}
 
 
 //---------------------------------------------------------------------------------------------------------------------------------------------------//
@@ -1632,7 +1442,15 @@ public void addParticlesFromTable(System s, String filename) {
       temp.acceleration.x= table.getFloat(i, 6);
       temp.acceleration.y= table.getFloat(i, 7);
       temp.acceleration.z= table.getFloat(i, 8);
-      rs.rings.get(0).addParticle(temp);
+      rs.rings.get(0).addParticle(temp);              //TODO needed for added particles to be rendered. Streamline.98
+      rs.particles.add(temp);                         //TODO needed for added particles to be updated.
+    }
+  } else if (s instanceof RingmindSystem) {
+    if (s instanceof ResonantSystem) {
+    } else {
+      RingmindSystem rs=(RingmindSystem)s;
+
+      addParticlesFromTable(rs.rs, filename);
     }
   } else if (s instanceof ShearSystem) {
     s.particles.clear();
@@ -1664,7 +1482,7 @@ public void importFromFileToGrid(System s, String filename) {
   table = loadTable("./files/" + filename); //DEBUG println(table.getRowCount()+" "+ table.getColumnCount());
 
   //Check that there is a ArrayList of Grid objects and it is not empty.
-  if (s.g != null && !s.g.isEmpty()) {
+  
 
     //If Statement to depending on System.
     if (s instanceof RingSystem) {
@@ -1672,12 +1490,13 @@ public void importFromFileToGrid(System s, String filename) {
       //If Multiple Grids will always use Index 0. 
       int index =0;
       RingSystem rs = (RingSystem)s;
+      if (rs.g != null && !rs.g.isEmpty()) {
       rs.rings.add(new Ring( 1, 3, 0));
       ArrayList<RingParticle> tempParticles = new ArrayList<RingParticle>();
       for (int i = 0; i < table.getRowCount(); i++) {
         for (int j = 0; j < table.getColumnCount(); j++) {
           for (int x=0; x<table.getInt(i, j); x++) {
-            tempParticles.add(new RingParticle(s.g.get(index).r_min+GRID_DELTA_R*i, GRID_DELTA_R, radians(GRID_DELTA_THETA*-j-180), radians(GRID_DELTA_THETA)));
+            tempParticles.add(new RingParticle(rs.g.get(index).r_min+GRID_DELTA_R*i, GRID_DELTA_R, radians(GRID_DELTA_THETA*-j-180), radians(GRID_DELTA_THETA)));
           }
         }
       }
@@ -1687,7 +1506,7 @@ public void importFromFileToGrid(System s, String filename) {
 }
 
 //---------------------------------------------------------------------------------------------------------------
-/**Render System Global Variables
+/**Render System Global Variables //<>//
  */
 Renderer renderer;
 PGraphics pg;
@@ -1770,15 +1589,70 @@ class Renderer {
    */
   public void render(System s, RenderContext ctx, int renderType) {
     PGraphicsOpenGL pg = (PGraphicsOpenGL) ctx.pgfx.g;
+    
+    if (s instanceof ResonantSystem) {
+      ResonantSystem Rs =  (ResonantSystem)s;
+      RingSystem rs = Rs.rs;
+      MoonSystem ms = Rs.ms;
+      push();
+      shader(ctx.shader, POINTS);
 
-    if (s instanceof RingmindSystem) {
+      Material mat = RingMat1;
+      if (mat == null) {
+        mat = ctx.mat;
+      }
+      stroke(mat.strokeColor, mat.partAlpha);
+      strokeWeight(mat.strokeWeight);
+
+      ctx.shader.set("weight", mat.partWeight);
+      ctx.shader.set("sprite", mat.spriteTexture);
+      ctx.shader.set("diffTex", mat.diffTexture);
+      ctx.shader.set("view", pg.camera); //don't touch that :-)
+
+
+      if (renderType==1) {
+        beginShape(POINTS);
+      } else {
+        beginShape(LINES);
+      }
+      for (int ringI = 0; ringI < rs.particles.size(); ringI++) {
+        Particle p = rs.particles.get(ringI);
+        vertex(scale*p.position.x, scale*p.position.y, scale*p.position.z);
+      }
+      endShape();
+
+      pop();
+
+      if (withMoon) {
+        ellipseMode(CENTER);
+        push();
+        for (Particle p : ms.particles) {
+
+          Moon m=(Moon)p;
+          pushMatrix();
+          //translate(width/2, height/2);
+          fill(m.c);
+          stroke(m.c);
+          //strokeWeight(m.radius*scale);
+          //strokeWeight(10);
+
+          //beginShape(POINTS);
+          translate(scale*m.position.x, scale*m.position.y, 0);
+          sphere(m.radius*scale);
+          //vertex(scale*m.position.x, scale*m.position.y, 2*m.radius*scale);
+          //endShape();
+          // circle(scale*position.x, scale*position.y, 2*radius*scale);
+          popMatrix();
+        }
+        pop();
+      }
+    }else if (s instanceof RingmindSystem) {
       //--------------------------------------------RingSystemRender-------------------------------------------------- 
       RingmindSystem rms = (RingmindSystem)s;
       RingSystem rs = rms.rs;
       MoonSystem ms = rms.ms;
       push();
       shader(ctx.shader, POINTS);
-
 
       for (int i = 0; i < rs.rings.size(); i++) {
         Ring r = rs.rings.get(i);
@@ -1958,7 +1832,12 @@ class Renderer {
 
     //stroke(255);
     //strokeWeight(10);
-    beginShape(LINES);
+     if (renderType==1) {
+       beginShape(LINES);
+      } else {
+       beginShape(POINTS);
+      }
+    
     for (int i=0; i <1000; i++) {
       RingParticle rp = (RingParticle) r.particles.get(i);
       float distance=0;
@@ -2341,7 +2220,7 @@ class Ring {
     return particles.size() /(PI *(sq(r_outer) - sq(r_inner)));
   }
 }
-System s;
+System s; //<>//
 float G = 6.67408e-11f;       // Gravitational Constant 6.67408E-11[m^3 kg^-1 s^-2]
 
 
@@ -2432,6 +2311,9 @@ class RingmindSystem extends System {
   RingmindSystem(int ring_index, int moon_index) {
     rs = new RingSystem(ring_index);
     ms = new MoonSystem(moon_index);
+  }
+
+  RingmindSystem() {
   }
 
   public @Override void update() {
@@ -2562,7 +2444,7 @@ class RingSystem extends System {
       break;
 
     case 13:
-      //rings.add(new Ring( 5.0, 5.2, 22500));
+      rings.add(new Ring( 5.0f, 5.2f, 22500));
       //// rings.get(0).particles.clear();
       ////addParticlesFromTable("outputParticles.csv");
       //// rings.add(new Ring(1,5.0,5.2,1000));
@@ -2692,7 +2574,8 @@ class ShearSystem extends System {
 
   Moonlet moonlet;
 
-  ShearSystem() {
+  ShearSystem(boolean Guides) {
+    this.Guides =Guides;
     g = new ArrayList<Grid>();
     particles = new ArrayList<Particle>();
     moonlet = new Moonlet();
@@ -2844,6 +2727,40 @@ class TiltSystem extends System {
   }
 }
 
+/**Class ResonantSystem
+ * @author Thomas Cann
+ */
+class ResonantSystem extends RingmindSystem {
+
+  /**
+   *  Default Constructor
+   */
+  ResonantSystem() {
+    super(0, 0);
+    for (int i = 0; i < n_particles; i++) {
+      rs.particles.add(new ResonantParticle(R_MIN, R_MAX));
+    }
+
+    addResonanceMoon(1, ms.particles);
+  }
+
+  /**
+   * Method to add specific ResonanceMoon object to an Arraylist.
+   */
+  public void addResonanceMoon(int i, ArrayList<Particle> m) {
+    //Source: Nasa Saturn Factsheet
+
+    switch(i) {
+    case 1: 
+      // Mimas Mass 3.7e19 [kg] Radius 2.08e5 [m] Obital Radius 185.52e6 [m]
+      ResonantMoon moon =new ResonantMoon(G*3.7e19f, 2.08e5f, 185.52e6f);
+      moon.addResonance(2.0f);
+      m.add(moon);
+      break;
+    }
+  }
+}
+
 //---------------------------------------------------------------------------------------------
 
 /** Method addMoon - method to add specific moon to Arraylist of Particles.
@@ -2968,142 +2885,14 @@ public void addMoon(int i, ArrayList<Particle> m) {
 
 
 //---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-
-//import java.util.concurrent.TimeUnit;
-//import java.util.concurrent.ExecutorService;
-//import java.util.concurrent.Executors;
-
-///**
-// *
-// */
-//class ThreadingSystem extends System {
-  
-  
-
-//ExecutorService executor;
-//int numThreads = 8;
-
-//Render
-
-//if ( s instanceof ThreadingSystem) {
-//  push();
-//  shader(ctx.shader, POINTS);
-
-//  Material mat  = RingMat1;
-//  stroke(mat.strokeColor, mat.partAlpha);
-//  strokeWeight(mat.strokeWeight);
-
-//  ctx.shader.set("weight", mat.partWeight);
-//  ctx.shader.set("sprite", mat.spriteTexture);
-//  ctx.shader.set("diffTex", mat.diffTexture);
-//  ctx.shader.set("view", pg.camera); //don't touch that :-)
-
-//  if (renderType==1) {
-//    beginShape(POINTS);
-//  } else {
-//    beginShape(LINES);
-//  }
-//  for (int x = 0; x < s.particles.size(); x++) {
-//    Particle p = s.particles.get(x);
-//    vertex(scale*p.position.x, scale*p.position.y, scale*p.position.z);
-//  }
-//  endShape();
-
-//  pop();
-//} else
-
-//Requires Thread Particle with these methods.
-//    /** 
-// *  Update Position of particle based of Velocity and Acceleration. 
-// */
-//Runnable updatePosition(float dt) {
-//  class UpdatePosition implements Runnable {
-//    float dt;
-//    UpdatePosition(float dt) {
-//      this.dt = dt;
-//    }
-
-//    public void run() {
-//      position.add(velocity.copy().mult(dt)).add(acceleration.copy().mult(0.5*sq(dt)));
-//    }
-//  }
-//  return new UpdatePosition(dt);
-//}
-
-///**
-// * Updates the velocity of this Particle (Based on Velocity Verlet) using 2 accelerations. 
-// * @param a current acceleration of particle
-// */
-//Runnable updateVelocity(PVector a, float dt) {
-//  class UpdateVelocity implements Runnable {
-//    PVector a;
-//    float dt;
-//    UpdateVelocity(PVector a, float dt ) {
-//      this.dt =dt;
-//      this.a = a;
-//    }
-//    public void run() {
-//      velocity.add(PVector.add(acceleration.copy(), a).mult(0.5 *dt));
-//    }
-//  }
-//  return new UpdateVelocity( a, dt);
-//}
-
-//  /**
-//   */
-//  ThreadingSystem() {
-
-
-
-//    for (int i = 0; i < 10000; i++) {
-//      particles.add(new RingParticle(1, 3));
-//    }
-//  }
-
-//    void update() {
-
-//      if (simToRealTimeRatio/frameRate < maxTimeStep) {
-//        this.dt= simToRealTimeRatio/frameRate;
-//      } else {
-//        this.dt= maxTimeStep;
-//        println("At Maximum Time Step");
-//      }
-
-//       for (Particle p : particles) {
-//        p.set_getAcceleration(this);
-//      }
-//      executor = Executors.newFixedThreadPool(numThreads);
-//      for (Particle p : particles) {
-//        executor.execute(p.updatePosition(dt));
-//      }
-
-//      executor.shutdown();
-//      while (!executor.isTerminated()) {
-//      }
-
-//         for (Grid x : g) {
-//        x.update(this);
-//      }
-
-//      executor = Executors.newFixedThreadPool(numThreads);
-//      for (Particle p : particles) {
-//        executor.execute(p.updateVelocity(p.getAcceleration(this),dt));
-//      }
-
-//      executor.shutdown();
-//      while (!executor.isTerminated()) {
-//      }
-//      totalSystemTime += dt;
-//    }
-//}
-/** Enumerated Variable State - Values equaling Different Display States
+/** Enumerated Variable State - Values equaling Different Display States //<>//
  */
 enum State {
   // State called at start of program in initialise everything. 
   initState, 
 
   /**
-   * Main Initialisation States
+   *Main Initialisation States
    */
     //
     introState, 
@@ -3128,9 +2917,9 @@ enum State {
     //
     addAlienLettersState, 
     //outro - what is a ringmind lets return back to the beginning.
-    
-    resonanceState,
-    
+
+    resonanceState, 
+
     outroState, 
 
   /**
@@ -3154,7 +2943,7 @@ public void setupStates() {
     createMaterials();       //extra materials we can apply to the rings
 
     //init with = rings 10,  moons 4, rendering normal =true (titl would be false);
-    s = new RingmindSystem(1,0);  
+    s = new RingmindSystem(1, 0);  
 
     break;
   case introState:
@@ -3182,7 +2971,7 @@ public void setupStates() {
     break;
 
   case connectedState:
-
+  
     useAdditiveBlend=true;
     //Connecting=true; 
     //simToRealTimeRatio = 360.0/1.0; //slow it down
@@ -3191,9 +2980,7 @@ public void setupStates() {
     break;
 
   case saturnState:
-
     s = new RingmindSystem(2, 4);
-
     break;
 
   case ringboarderState:
@@ -3201,51 +2988,32 @@ public void setupStates() {
     //zoomedCamera();
     initCamera();
     s = new RingmindSystem(13, 0);
-
-
     break;
+
   case addAlienLettersState:
-    if (s instanceof RingmindSystem) {
-      //RingmindSystem rms = (RingmindSystem)s;
-      addParticlesFromTable(s, "outputParticles.csv");
-      // rms.rs.rings.get(1).setMaxRenderedParticle(rms.rs.rings.get(1).particles.size());
-      //for (Ring r : rms.rs.rings) {
-      //  r.material = RingMat5;
-      //}
-    }
+  
+    addParticlesFromTable(s, "outputParticles.csv");
     break;
 
   case formingState:
+  
     useAdditiveBlend=true;
     s = new TiltSystem();
     break;
 
-    //case orbitalState:
-
-    //  drawMoons=false;
-    //  Threading=true;
-    //  toptiltCamera();
-    //  G=6.67408E-13;
-    //  Saturn = new RingSystem(1, 2, true);
-    //  applyBasicMaterials();
-    //  for (Ring r : Saturn.rings) {
-    //    r.material = RingMat5;
-    //  }
-    //  for (Moon m : Saturn.moons) {
-    //    m.radius = 1;
-    //  }
-
-    //  Saturn.moons.get(2).GM =4.529477495e13;
-    //  Saturn.moons.get(0).GM =2.529477495e13;
-
-    //  break;
-
   case shearState:
     useAdditiveBlend=true;
     zoomedCamera();
-    s = new ShearSystem();
+    s = new ShearSystem(false);
     s.simToRealTimeRatio = 2000.0f/1.0f;  
     break;
+    
+   case resonanceState:
+   
+   s = new ResonantSystem();
+   break;
+
+  default:
   }
 }
 
@@ -3256,8 +3024,8 @@ public void setupStates() {
 public void updateCurrentState(int t) {
 
   if (Running) {
-    if(s != null){
-    s.update();
+    if (s != null) {
+      s.update();
     }
   }
 
@@ -3276,15 +3044,15 @@ public void updateCurrentState(int t) {
   } else {
     blendMode(NORMAL);
   }
-   
+
   renderOffScreenOnPGraphicsClean();
   switch(systemState) {
   case connectedState:
-  renderer.renderComms(s, renderContext, 1);
+    renderer.renderComms(s, renderContext, 1);
     break;
-    
+
   default:
-   renderer.render(s, renderContext, 1);
+    renderer.render(s, renderContext, 1);
     break;
   }
 

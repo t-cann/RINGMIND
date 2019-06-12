@@ -6,7 +6,7 @@ float GRID_DELTA_THETA = 1;        //[Degrees]
 float GRID_DRAG_CONSTANT = 5E-7;   //[s^{2}]
 float GRID_DRAG_PROBABILITY = 1E4 ;//[[Planetary Radi^{2}.s]
 
-/**Class Grid TODO
+/**Class Grid - polar spatial subdivision using density of particles, average velocity and center of mass to probabliticly model collisions. 
  * @author Thomas Cann
  * @author Sam Hinson
  */
@@ -44,7 +44,7 @@ class Grid {
   }
 
   /**
-   *  Grid Constuctor - Taking in a value for r_min and r_max and all the other values from global variables. 
+   *  Grid Constuctor - Taking in a value for r_min and r_max and drag constants but all the other values from global variables. 
    */
   Grid(float r_min, float r_max ,float drag_c, float drag_p) {
     this(r_min, r_max, GRID_DELTA_R, GRID_DELTA_THETA, drag_c, drag_p);
@@ -272,100 +272,7 @@ class Grid {
     }
     return a_selfgrav;
   }
-
-  //  /**
-  //   *    Displays Grid cell mouse is over and relevant informotion when mouse is pressed
-  //   */
-  //  void display(RingSystem rs) {
-
-  //    if (mousePressed) {
-  //      float r = sqrt(sq(mouseX-width/2)+ sq(mouseY-height/2))/SCALE;
-  //      float angle = (atan2((mouseY-height/2), mouseX-width/2)+TAU)%(TAU);
-  //      int i= i(angle);
-  //      int j = j(r);
-
-  //      if (Add) {
-  //        for (int x=0; x<1; x++) { 
-  //          RingParticle a = new RingParticle(r_min+GRID_DELTA_R*j, GRID_DELTA_R, radians(GRID_DELTA_THETA*i), radians(GRID_DELTA_THETA));
-  //          rs.rings.get(0).particles.add(a);
-  //          rs.totalParticles.add(a);
-  //        }
-  //      }
-
-  //      if (clear) {
-  //        ArrayList<Particle> temp = new ArrayList<Particle>();
-  //        for (Particle p : rs.totalParticles) {
-  //          if (i(p) == i) {
-  //            if (j(p)== j) {
-  //              temp.add(p);
-  //            }
-  //          }
-  //        }
-  //        for (Particle p : temp) {
-  //          rs.totalParticles.remove(p);
-  //          rs.rings.get(0).particles.remove(p);
-  //        }
-  //      }
-
-  //      if (validij(i, j)) {
-  //        displaycell(i, j );
-  //        float a = 1-exp(-(gridNorm[i][j]*drag_p)/dt);
-  //        String output = "\t Normalised Number Density: " +gridNorm[i][j] + "\n\t Average Velocity: " + gridV[i][j].mag()+ "\n\t Probability Threshold: " + a ;
-  //        text(output, 0.0, 10.0);
-  //        displayVector(i, j, gridV[i][j]);
-  //      }
-  //    }
-  //  }
-
-  //  /**
-  //   * Displays PVectorfrom the centre of a Grid Cell to the Sketch.
-  //   *
-  //   * @param i angular index of grid [between 0 and 360/dr]
-  //   * @param j radial index of grid[between 0 and ring thickness / dr]
-  //   */
-  //  void displayVector(int i, int j, PVector v) {
-  //    push();
-  //    //translate(width/2, height/2);
-  //    stroke(255);
-  //    strokeWeight(1);
-  //    PVector cofc = centreofCell(i, j);
-  //    cofc.mult(SCALE);
-  //    PVector temp = v.copy().mult(5E-3);
-  //    line(cofc.x, cofc.y, cofc.x + temp.x, cofc.y + temp.y);
-  //    pop();
-  //  }
-
-  //  /**
-  //   * Displays Outline of Grid Cell to the Sketch.
-  //   *
-  //   * @param i angular index of grid [between 0 and 360/dr]
-  //   * @param j radial index of grid[between 0 and ring thickness / dr]
-  //   */
-  //  void displaycell(int i, int j) {
-  //    push();
-  //    //Style and Matrix Tranformation Information
-  //    //translate(width/2, height/2);
-  //    noFill();
-  //    stroke(255);
-  //    strokeWeight(1);
-  //    //Properties Needed
-  //    float r = SCALE*Rp*(r_min + dr *j);
-  //    float R = SCALE*Rp*(r_min + dr *(j+1));
-  //    float theta = radians(dtheta *i);
-  //    float N =GRID_DELTA_THETA;
-  //    beginShape();
-  //    // Outer circle
-  //    for (int x = 0; x<=N; x++) {
-  //      vertex(R*cos(x*radians(dtheta)/N + theta), R*sin(x*radians(dtheta)/N +theta));
-  //    }
-  //    // Inner circle
-  //    for (int x = 0; x<=N; x++) {
-  //      vertex(r*cos((theta+radians(dtheta))-x*radians(dtheta)/N), r*sin((theta+radians(dtheta))-x*radians(dtheta)/N));
-  //    }
-  //    endShape(CLOSE);
-  //    pop();
-  //  }
-
+  
   /**
    * Loops through all the particles adding relevant properties to  grids. Will allow generalised rules to be applied to particles.
    *
@@ -406,23 +313,7 @@ class Grid {
           }
         }
       }
-      // Improve the calculate of gridV 
 
-      //As cannot simulate every particle, add constant or multiple number of particles with keplerian velocity to help maintain correct averages.
-
-      //float actualtosimratio = 2; // actual number of particles to simulated 
-
-      //for (int i = 0; i < int(360/dtheta); i++) {
-      //  for (int j = 0; j < int((r_max-r_min)/dr); j++) {
-      //    gridNorm[i][j] = grid[i][j]/((r_min+j*dr+dr/2)*dr*radians(dtheta)*total);
-      //    gridV[i][j].add(keplerianVelocityCell(i, j));
-      //    gridV[i][j].add(keplerianVelocityCell(i, j));
-      //    for (int k = 0; k<grid[i][j]; k ++) {
-      //      gridV[i][j].add(keplerianVelocityCell(i, j));
-      //    }
-      //    gridV[i][j].div(actualtosimratio*(grid[i][j]+1));
-      //  }
-      //}
 
 
 
@@ -442,57 +333,6 @@ class Grid {
       }
     }
   }
-
-  ////---------------------------------------
-  //void tiltupdate(RingSystem rs) {
-
-  //  //Reset all the grid values.
-  //  reset();
-
-  //  //Loop through all the tilt particles trying to add them to the grid.
-  //  for (Ring x : rs.rings) {
-  //    for (TiltParticle r : x.Tparticles) {
-  //      int i = i(r);
-  //      int j = j(r);
-  //      if (validij(i, j)) {
-  //        grid[i][j] +=1;
-  //        PVector v = new PVector(r.velocity.x, r.velocity.y);
-  //        v.rotate(-angleDiff(r)).mult(1/radialScaling(r));
-  //        gridV[i][j].add(v);
-  //        gridCofM[i][j].add(r.position);
-  //      }
-  //    }
-  //  }
-
-  //  int total =0 ;
-  //  for (int i = 0; i < int(360/dtheta); i++) {
-  //    for (int j = 0; j < int((r_max-r_min)/dr); j++) {
-  //      total += grid[i][j];
-  //      if (grid[i][j] !=0) {
-  //        gridCofM[i][j].div(grid[i][j]);
-  //      } else {
-  //        gridCofM[i][j].set(0.0, 0.0, 0.0);
-  //      }
-  //    }
-  //  }
-
-  //  //Looping through all the grid cell combining properties to calculate normalised values and average values from total values.
-  //  for (int i = 0; i < int(360/dtheta); i++) {
-  //    for (int j = 0; j < int((r_max-r_min)/dr); j++) {
-
-  //      gridNorm[i][j] = grid[i][j]/((r_min+j*dr+dr/2)*dr*radians(dtheta)*total);
-
-
-  //      if (grid[i][j] !=0) {
-  //        gridV[i][j].div(grid[i][j]);
-  //      } else {
-  //        gridV[i][j].set(0.0, 0.0, 0.0);
-  //      }
-  //    }
-  //  }
-  //}
-
-  //-----------------------------------
 
   /**
    * Returns a Table Object from a 2D array containing Int data type.
@@ -561,21 +401,3 @@ class Grid {
     return tempTable;
   }
 }
-
-//TODO
-//abstract class AbstractGrid {
-
-
-//  protected float dr, dtheta, r_min, r_max; 
-//  protected int sizeTheta, sizeR;
-//  protected float drag_c, drag_p;  //Constants for Drag Rule.
-//  protected AbstractGridElement grid[][];
-
-//  abstract void Reset();
-//  abstract int i(Object o);
-//  abstract int j(Object o);
-//  abstract boolean validij(Object o);
-//}
-
-//abstract class AbstractGridElement {
-//}

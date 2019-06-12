@@ -1,4 +1,4 @@
-/**Render System Global Variables
+/**Render System Global Variables //<>//
  */
 Renderer renderer;
 PGraphics pg;
@@ -81,15 +81,70 @@ class Renderer {
    */
   void render(System s, RenderContext ctx, int renderType) {
     PGraphicsOpenGL pg = (PGraphicsOpenGL) ctx.pgfx.g;
+    
+    if (s instanceof ResonantSystem) {
+      ResonantSystem Rs =  (ResonantSystem)s;
+      RingSystem rs = Rs.rs;
+      MoonSystem ms = Rs.ms;
+      push();
+      shader(ctx.shader, POINTS);
 
-    if (s instanceof RingmindSystem) {
+      Material mat = RingMat1;
+      if (mat == null) {
+        mat = ctx.mat;
+      }
+      stroke(mat.strokeColor, mat.partAlpha);
+      strokeWeight(mat.strokeWeight);
+
+      ctx.shader.set("weight", mat.partWeight);
+      ctx.shader.set("sprite", mat.spriteTexture);
+      ctx.shader.set("diffTex", mat.diffTexture);
+      ctx.shader.set("view", pg.camera); //don't touch that :-)
+
+
+      if (renderType==1) {
+        beginShape(POINTS);
+      } else {
+        beginShape(LINES);
+      }
+      for (int ringI = 0; ringI < rs.particles.size(); ringI++) {
+        Particle p = rs.particles.get(ringI);
+        vertex(scale*p.position.x, scale*p.position.y, scale*p.position.z);
+      }
+      endShape();
+
+      pop();
+
+      if (withMoon) {
+        ellipseMode(CENTER);
+        push();
+        for (Particle p : ms.particles) {
+
+          Moon m=(Moon)p;
+          pushMatrix();
+          //translate(width/2, height/2);
+          fill(m.c);
+          stroke(m.c);
+          //strokeWeight(m.radius*scale);
+          //strokeWeight(10);
+
+          //beginShape(POINTS);
+          translate(scale*m.position.x, scale*m.position.y, 0);
+          sphere(m.radius*scale);
+          //vertex(scale*m.position.x, scale*m.position.y, 2*m.radius*scale);
+          //endShape();
+          // circle(scale*position.x, scale*position.y, 2*radius*scale);
+          popMatrix();
+        }
+        pop();
+      }
+    }else if (s instanceof RingmindSystem) {
       //--------------------------------------------RingSystemRender-------------------------------------------------- 
       RingmindSystem rms = (RingmindSystem)s;
       RingSystem rs = rms.rs;
       MoonSystem ms = rms.ms;
       push();
       shader(ctx.shader, POINTS);
-
 
       for (int i = 0; i < rs.rings.size(); i++) {
         Ring r = rs.rings.get(i);
@@ -269,7 +324,12 @@ class Renderer {
 
     //stroke(255);
     //strokeWeight(10);
-    beginShape(LINES);
+     if (renderType==1) {
+       beginShape(LINES);
+      } else {
+       beginShape(POINTS);
+      }
+    
     for (int i=0; i <1000; i++) {
       RingParticle rp = (RingParticle) r.particles.get(i);
       float distance=0;

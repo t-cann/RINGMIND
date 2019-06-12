@@ -1,11 +1,11 @@
-/** Enumerated Variable State - Values equaling Different Display States //<>//
+/** Enumerated Variable State - Values equaling Different Display States //<>// //<>//
  */
 enum State {
   // State called at start of program in initialise everything. 
   initState, 
 
   /**
-   * Main Initialisation States
+   *Main Initialisation States
    */
     //
     introState, 
@@ -114,35 +114,16 @@ void setupStates() {
     s = new TiltSystem();
     break;
 
-    //case orbitalState:
-    ////Threading Removed: as didn't speed up code, need a full rewrite to fix. 
-    //  drawMoons=false;
-    //  Threading=true;
-    //  toptiltCamera();
-    //  G=6.67408E-13;
-    //  Saturn = new RingSystem(1, 2, true);
-    //  applyBasicMaterials();
-    //  for (Ring r : Saturn.rings) {
-    //    r.material = RingMat5;
-    //  }
-    //  for (Moon m : Saturn.moons) {
-    //    m.radius = 1;
-    //  }
-
-    //  Saturn.moons.get(2).GM =4.529477495e13;
-    //  Saturn.moons.get(0).GM =2.529477495e13;
-
-    //  break;
-
   case shearState:
     useAdditiveBlend=true;
     zoomedCamera();
-    s = new ShearSystem();
+    s = new ShearSystem(false);
     s.simToRealTimeRatio = 2000.0/1.0;  
     break;
     
    case resonanceState:
    
+   s = new ResonantSystem();
    break;
 
   default:

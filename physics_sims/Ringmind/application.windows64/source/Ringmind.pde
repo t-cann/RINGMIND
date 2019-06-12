@@ -167,9 +167,14 @@ void keyPressed() {
     useTrace = !useTrace;
     //Proscene - Fill Screen
   } else if (key=='S') {
-    //Save Path to JSON
+    //Release to Save Path to JSON
   } else if (key=='d') {
+    if(s instanceof ShearSystem){
+      ShearSystem ss = (ShearSystem)s;
+      ss.Guides= !ss.Guides;
+    }else{
     traceAmount=190;
+    }
   } else if (key=='D') {
     //
   } else if (key=='f') {
@@ -247,16 +252,16 @@ public void keyReleased() {
 
 public void mouseReleased() {
   //lets debug print all the camera stuff to help figure out what data we need for each scene
-  println("****** camera debug info ******");
-  println();
-  println("camera orientation");
-  Rotation r = scene.camera().frame().orientation();
-  r.print();
-  println();
-  println("camera position");
-  println(scene.camera().position());
-  println();
-  println("view direction");
-  println(scene.camera().viewDirection());
-  println();
+  //println("****** camera debug info ******");
+  //println();
+  //println("camera orientation");
+  //Rotation r = scene.camera().frame().orientation();
+  //r.print();
+  //println();
+  //println("camera position");
+  //println(scene.camera().position());
+  //println();
+  //println("view direction");
+  //println(scene.camera().viewDirection());
+  //println();
 }

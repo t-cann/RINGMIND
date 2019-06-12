@@ -1,11 +1,11 @@
-/** Enumerated Variable State - Values equaling Different Display States
+/** Enumerated Variable State - Values equaling Different Display States //<>//
  */
 enum State {
   // State called at start of program in initialise everything. 
   initState, 
 
   /**
-   * Main Initialisation States
+   *Main Initialisation States
    */
     //
     introState, 
@@ -30,9 +30,9 @@ enum State {
     //
     addAlienLettersState, 
     //outro - what is a ringmind lets return back to the beginning.
-    
-    resonanceState,
-    
+
+    resonanceState, 
+
     outroState, 
 
   /**
@@ -56,7 +56,7 @@ void setupStates() {
     createMaterials();       //extra materials we can apply to the rings
 
     //init with = rings 10,  moons 4, rendering normal =true (titl would be false);
-    s = new RingmindSystem(1,0);  
+    s = new RingmindSystem(1, 0);  
 
     break;
   case introState:
@@ -84,7 +84,7 @@ void setupStates() {
     break;
 
   case connectedState:
-
+  
     useAdditiveBlend=true;
     //Connecting=true; 
     //simToRealTimeRatio = 360.0/1.0; //slow it down
@@ -93,9 +93,7 @@ void setupStates() {
     break;
 
   case saturnState:
-
     s = new RingmindSystem(2, 4);
-
     break;
 
   case ringboarderState:
@@ -103,51 +101,32 @@ void setupStates() {
     //zoomedCamera();
     initCamera();
     s = new RingmindSystem(13, 0);
-
-
     break;
+
   case addAlienLettersState:
-    if (s instanceof RingmindSystem) {
-      //RingmindSystem rms = (RingmindSystem)s;
-      addParticlesFromTable(s, "outputParticles.csv");
-      // rms.rs.rings.get(1).setMaxRenderedParticle(rms.rs.rings.get(1).particles.size());
-      //for (Ring r : rms.rs.rings) {
-      //  r.material = RingMat5;
-      //}
-    }
+  
+    addParticlesFromTable(s, "outputParticles.csv");
     break;
 
   case formingState:
+  
     useAdditiveBlend=true;
     s = new TiltSystem();
     break;
 
-    //case orbitalState:
-
-    //  drawMoons=false;
-    //  Threading=true;
-    //  toptiltCamera();
-    //  G=6.67408E-13;
-    //  Saturn = new RingSystem(1, 2, true);
-    //  applyBasicMaterials();
-    //  for (Ring r : Saturn.rings) {
-    //    r.material = RingMat5;
-    //  }
-    //  for (Moon m : Saturn.moons) {
-    //    m.radius = 1;
-    //  }
-
-    //  Saturn.moons.get(2).GM =4.529477495e13;
-    //  Saturn.moons.get(0).GM =2.529477495e13;
-
-    //  break;
-
   case shearState:
     useAdditiveBlend=true;
     zoomedCamera();
-    s = new ShearSystem();
+    s = new ShearSystem(false);
     s.simToRealTimeRatio = 2000.0/1.0;  
     break;
+    
+   case resonanceState:
+   
+   s = new ResonantSystem();
+   break;
+
+  default:
   }
 }
 
@@ -158,8 +137,8 @@ void setupStates() {
 void updateCurrentState(int t) {
 
   if (Running) {
-    if(s != null){
-    s.update();
+    if (s != null) {
+      s.update();
     }
   }
 
@@ -178,15 +157,15 @@ void updateCurrentState(int t) {
   } else {
     blendMode(NORMAL);
   }
-   
+
   renderOffScreenOnPGraphicsClean();
   switch(systemState) {
   case connectedState:
-  renderer.renderComms(s, renderContext, 1);
+    renderer.renderComms(s, renderContext, 1);
     break;
-    
+
   default:
-   renderer.render(s, renderContext, 1);
+    renderer.render(s, renderContext, 1);
     break;
   }
 
